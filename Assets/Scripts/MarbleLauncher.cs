@@ -11,6 +11,10 @@ public class MarbleLauncher : MonoBehaviour
     [SerializeField] private float LaunchForceScale = 1.0f;
     [SerializeField] private Material playerMaterial;
     [SerializeField] private Material enemyMaterial;
+
+    private List<Marble> ActiveGameplayMarbles = new List<Marble>();
+    private bool bIsMarblesMoving = false;
+    
     private void Awake()
     {
         if (ins == null)
@@ -19,6 +23,9 @@ public class MarbleLauncher : MonoBehaviour
 
     public void LaunchMarble(Vector3 Direction, float Force, Vector3 Location, MarbleTeam Team)
     {
+        if (bIsMarblesMoving)
+            return;
+        Location.y = 0.25f;
         GameObject MarbleObject = Instantiate(Marble, Location, Quaternion.identity);
         
         
@@ -27,9 +34,61 @@ public class MarbleLauncher : MonoBehaviour
 
         Marble MarbleIns = MarbleObject.GetComponent<Marble>();
         MarbleIns.Team = Team;
+        ActiveGameplayMarbles.Add(MarbleIns);
         
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
-        Direction *= LaunchForceScale;
+        Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
+        StartCoroutine(WaitForMarblesToSettle());
+    }
+
+    private IEnumerator WaitForMarblesToSettle()
+    {
+        bIsMarblesMoving = true;
+        yield return new WaitForSeconds(1.0f);
+
+        
+        while (true)
+        {
+            bool bMarblesSettled = true;
+            foreach(Marble marble in ActiveGameplayMarbles)
+            {
+                if (marble.bIsInsideGameplayCircle)
+                {
+                    Rigidbody physics = marble.GetComponent<Rigidbody>();
+                    if (physics.velocity.sqrMagnitude > 0.1f)
+                    {
+                        bMarblesSettled = false;
+                    }
+                }
+            }
+
+            if (bMarblesSettled)
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(2.0f);
+        }
+            
+        yield return new WaitForSeconds(1.0f);
+        bIsMarblesMoving = false;
+
+        List<Marble> MarblesToDelete = new List<Marble>();
+        foreach (Marble marble in ActiveGameplayMarbles)
+        {
+            if (!marble.bIsInsideScoringCircle)
+            {
+                MarblesToDelete.Add(marble);
+            }
+        }
+
+        foreach (Marble marble in MarblesToDelete)
+        {
+            ActiveGameplayMarbles.Remove(marble);
+            Destroy(marble.gameObject);
+        }
+
+        yield return null;
     }
 }
