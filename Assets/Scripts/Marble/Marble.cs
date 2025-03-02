@@ -16,5 +16,5 @@ public class Marble : MonoBehaviour
     public MarbleTeam Team;
     public bool bIsInsideGameplayCircle = true;
     public bool bIsInsideScoringCircle = false;
-    public bool cool = false;
+    //public bool cool = false;
 }
