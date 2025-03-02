@@ -20,6 +20,7 @@ public class ScoringCircle : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Marble marble = other.GetComponent<Marble>();
+        marble.bIsInsideScoringCircle = true;
         if (marble.Team == MarbleTeam.Player)
         {
             playerScore++;
@@ -33,6 +34,7 @@ public class ScoringCircle : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Marble marble = other.GetComponent<Marble>();
+        marble.bIsInsideScoringCircle = false;
         if (marble.Team == MarbleTeam.Player)
         {
             playerScore--;
