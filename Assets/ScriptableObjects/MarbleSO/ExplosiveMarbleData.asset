@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
+  m_Name: ExplosiveMarbleData
+  m_EditorClassIdentifier: 
+  MarblePrefab: {fileID: 8667816103150948522, guid: 8050337de420c114c8caa88550de5f0e,
+    type: 3}
+  marbleType: 0
+  Sprite: {fileID: 0}
+  Mass: 1
+  UniformScale: 0.5
+  Drag: 0.7
+  abilityTriggerDelay: 1.5
+  AbilityObject: {fileID: 11400000, guid: 8fa2399df0d3e8847889fbe810f1fc93, type: 2}

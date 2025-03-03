@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ef0506b6bed2b44b0df312869a5035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  marbleData: {fileID: 0}
+  marbleData: {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
   Team: 0
   bIsInsideGameplayCircle: 1
   bIsInsideScoringCircle: 0
