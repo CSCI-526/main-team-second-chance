@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
     private bool bCanShootMarble = false;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +22,7 @@ public class PlayerController : MonoBehaviour
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
             Vector2 To2DSpace = new Vector2(StartLocationMouse.x, StartLocationMouse.z);
-            bCanShootMarble = IsNotInScoringZone(To2DSpace);
+            bCanShootMarble = IsNotInScoringZone(To2DSpace) && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0;
             if(bCanShootMarble)
             {
                 LineRenderer.enabled = true;
@@ -32,7 +31,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.LogError("You are in the scoring Zone");
+                Debug.LogError("You are in the scoring Zone or your deck is empty");
             }
         }
         if (Input.GetMouseButton(0))
@@ -51,7 +50,9 @@ public class PlayerController : MonoBehaviour
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 // float DirectionMagnitude= Vector3.Magnitude(Direction);
-                MarbleLauncher.ins.LaunchMarble(Direction.normalized, 1.0f, StartLocationMouse, MarbleTeam.Player);
+                PlayerManager PlayerManager= GameManager.Instance.GetPlayerManager();
+                GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
+                MarbleLauncher.ins.LaunchMarble(Direction.normalized, 1.0f, StartLocationMouse, MarbleTeam.Player, MarbleObject);
             }
             bCanShootMarble = true;
         }

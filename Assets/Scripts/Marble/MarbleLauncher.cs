@@ -24,7 +24,9 @@ public class MarbleLauncher : MonoBehaviour
         if (GameManager.Instance.GetAreMarblesMoving())
             return;
         Location.y = 0.25f;
-        GameObject MarbleObject = Instantiate(Marble, Location, Quaternion.identity);
+
+        GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(Team);
+        MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
         
         MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
         MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;

@@ -8,46 +8,21 @@ using UnityEngine.PlayerLoop;
 
 public class ScoringCircle : MonoBehaviour
 {
-    private int playerScore = 0;
-    private int enemyScore = 0;
-    [SerializeField] private TextMeshProUGUI playerText;
-    [SerializeField] private TextMeshProUGUI enemyText;
-
-    private void Update()
-    {
-        UpdateText();
-    }
     private void OnTriggerEnter(Collider other)
     {
         Marble marble = other.GetComponent<Marble>();
         marble.bIsInsideScoringCircle = true;
-        if (marble.Team == MarbleTeam.Player)
-        {
-            playerScore++;
-        }
-        else
-        {
-            enemyScore++;
-        }
+        GameManager.Instance.UpdateEntityScore(marble.Team, true);
     }
 
     private void OnTriggerExit(Collider other)
     {
         Marble marble = other.GetComponent<Marble>();
         marble.bIsInsideScoringCircle = false;
-        if (marble.Team == MarbleTeam.Player)
-        {
-            playerScore--;
-        }
-        else
-        {
-            enemyScore--;
-        }
+        GameManager.Instance.UpdateEntityScore(marble.Team, false);
     }
 
     private void UpdateText()
     {
-        playerText.text = $"Player Score: {playerScore}";
-        enemyText.text = $"Enemy Score: {enemyScore}";
     }
 }

@@ -12,4 +12,9 @@ public static class MarbleEvents
     {
         OnMarbleSpawned?.Invoke();
     }
+    public static event Action<MarbleTeam> OnScoreChange;
+    public static void OnScoreChanged(MarbleTeam Team)
+    {
+        OnScoreChange?.Invoke(Team);
+    }
 }

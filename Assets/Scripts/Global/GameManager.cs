@@ -6,6 +6,24 @@ using static UnityEngine.Rendering.DebugUI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
+    public PlayerManager GetPlayerManager() { return PlayerManager; }
+    public DeckManager GetDeckManager() { return DeckManager; }
+    public int GetPlayerScore() { return playerScore; }
+    public int GetEnemyScore() { return enemyScore; }
+    public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone) 
+    {
+        if(Team == MarbleTeam.Player)
+        {
+            playerScore += bIsInScoreZone ? 1 : -1;
+            Mathf.Clamp(playerScore, 0, playerScore);
+        }
+        else
+        {
+            enemyScore += bIsInScoreZone ? 1 : -1;
+            Mathf.Clamp(enemyScore, 0, playerScore);
+        }
+        MarbleEvents.OnScoreChanged(Team);
+    }
     public GameObject GetScoringCircle() { return ScoringCircle; }
     public bool GetAreMarblesMoving() { return bAreMarblesMoving; }
     public List<Marble> GetMarblesList() { return MarblesList; }
@@ -57,9 +75,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject ScoringCircle;
+    [SerializeField]
+    private DeckManager DeckManager;
+    [SerializeField]
+    private PlayerManager PlayerManager;
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
-
+    private int playerScore = 0;
+    private int enemyScore = 0;
     private bool bAreMarblesMoving = false;
 
     private void Awake()
@@ -75,6 +98,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
+        MarbleEvents.OnScoreChanged(MarbleTeam.Player);
+        MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
     }
 
     private void CleanupMarbles()
