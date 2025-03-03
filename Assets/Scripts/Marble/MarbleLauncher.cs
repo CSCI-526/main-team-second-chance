@@ -7,27 +7,26 @@ using UnityEngine.UI;
 public class MarbleLauncher : MonoBehaviour
 {
     public static MarbleLauncher ins = null;
-    [SerializeField] private GameObject Marble;
+    // [SerializeField] private GameObject Marble;
     [SerializeField] private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
     [SerializeField] private Material enemyMaterial;
 
-    
+
     private void Awake()
     {
         if (ins == null)
             ins = this;
     }
 
-    public void LaunchMarble(Vector3 Direction, float Force, Vector3 Location, MarbleTeam Team)
+    public void LaunchMarble(Vector3 Direction, float Force, Vector3 Location, MarbleTeam Team, GameObject MarblePrefab)
     {
         if (GameManager.Instance.GetAreMarblesMoving())
             return;
         Location.y = 0.25f;
 
-        GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(Team);
-        MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
-        
+        GameObject MarbleObject = Instantiate(MarblePrefab, Location, Quaternion.identity);
+
         MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
         MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
 

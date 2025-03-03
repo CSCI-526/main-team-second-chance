@@ -27,7 +27,7 @@ public class MainUI : MonoBehaviour
     }
     private void UpdateScore(MarbleTeam Team)
     {
-        if(Team == MarbleTeam.Player)
+        if (Team == MarbleTeam.Player)
         {
             PlayerScore.text = $"Player Score: {GameManager.Instance.GetPlayerScore()}";
         }
@@ -38,8 +38,17 @@ public class MainUI : MonoBehaviour
     }
     private void UpdateDeckCount(MarbleTeam Team, int Count)
     {
-        if(Team == MarbleTeam.Player)
+        if (Count == 0)
         {
+            PlayerDeckCount.color = Color.red;
+        }
+        else
+        {
+            PlayerDeckCount.color = Color.white;
+        }
+        if (Team == MarbleTeam.Player)
+        {
+
             PlayerDeckCount.text = $"{Count}";
         }
         else

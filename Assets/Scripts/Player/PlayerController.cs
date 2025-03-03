@@ -22,8 +22,10 @@ public class PlayerController : MonoBehaviour
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
             Vector2 To2DSpace = new Vector2(StartLocationMouse.x, StartLocationMouse.z);
-            bCanShootMarble = IsNotInScoringZone(To2DSpace) && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0;
-            if(bCanShootMarble)
+            bCanShootMarble = IsNotInScoringZone(To2DSpace) &&
+                GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 &&
+                !GameManager.Instance.GetAreMarblesMoving();
+            if (bCanShootMarble)
             {
                 LineRenderer.enabled = true;
                 LineRenderer.SetPosition(0, StartLocationMouse);
@@ -49,10 +51,13 @@ public class PlayerController : MonoBehaviour
                 LineRenderer.enabled = false;
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
-                float DirectionMagnitude= Vector3.Magnitude(Direction);
+                float DirectionMagnitude = Vector3.Magnitude(Direction);
                 Debug.Log("Direction magnitude: " + DirectionMagnitude);
-                PlayerManager PlayerManager= GameManager.Instance.GetPlayerManager();
                 GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
+                if (!MarbleObject)
+                {
+                    return;
+                }
                 MarbleLauncher.ins.LaunchMarble(Direction.normalized, 1.0f, StartLocationMouse, MarbleTeam.Player, MarbleObject);
             }
             bCanShootMarble = true;

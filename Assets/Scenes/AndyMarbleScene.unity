@@ -421,6 +421,11 @@ PrefabInstance:
       objectReference: {fileID: 1562597394}
     - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
         type: 3}
+      propertyPath: PlayerManager
+      value: 
+      objectReference: {fileID: 2006374472}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
       propertyPath: ScoringCircle
       value: 
       objectReference: {fileID: 237148537}

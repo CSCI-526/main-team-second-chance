@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Deck : MonoBehaviour
 {
-    public int GetDeckSize() { return MarbleDeck.Count; } 
+    public int GetDeckSize() { return MarbleDeck.Count; }
     public GameObject UseMarble(MarbleTeam Team)
     {
-        if(MarbleDeck.Count != 0)
+        GameObject marble = null;
+        if (MarbleIter < MarbleDeck.Count)
         {
-            GameObject marble = MarbleDeck[0];
-            MarbleDeck.Remove(marble);
-            DeckEvents.MarbleUsed(Team, MarbleDeck.Count);
-            return marble;
+            marble = MarbleDeck[MarbleIter];
+            MarbleIter++;
         }
-        return null;
+        DeckEvents.MarbleUsed(Team, MarbleDeck.Count - MarbleIter);
+        return marble;
     }
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
@@ -22,5 +22,5 @@ public class Deck : MonoBehaviour
         DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
     }
     private List<GameObject> MarbleDeck;
-
+    private int MarbleIter = 0;
 }

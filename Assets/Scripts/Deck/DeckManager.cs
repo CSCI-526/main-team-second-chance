@@ -13,8 +13,7 @@ public class DeckManager : MonoBehaviour
         List<GameObject> marbles = new List<GameObject>();
         for (int i = 0; i < DeckSize; ++i)
         {
-            GameObject marble = Instantiate(MarblePrefabs[0], Vector3.zero, Quaternion.identity);
-            marble.SetActive(false);
+            GameObject marble = MarblePrefabs[0];
             marbles.Add(marble);
         }
         return marbles;
