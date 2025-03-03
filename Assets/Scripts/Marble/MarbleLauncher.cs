@@ -8,7 +8,7 @@ public class MarbleLauncher : MonoBehaviour
 {
     public static MarbleLauncher ins = null;
     [SerializeField] private GameObject Marble;
-    [SerializeField] private float LaunchForceScale = 1.0f;
+    [SerializeField] private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
     [SerializeField] private Material enemyMaterial;
 

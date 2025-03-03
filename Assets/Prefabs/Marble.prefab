@@ -119,11 +119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ef0506b6bed2b44b0df312869a5035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  marbleData: {fileID: 0}
+  marbleData: {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
   Team: 0
   bIsInsideGameplayCircle: 1
   bIsInsideScoringCircle: 0
-  cool: 0
 --- !u!54 &1388115626478669101
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -133,7 +132,7 @@ Rigidbody:
   m_GameObject: {fileID: 8587685720238935741}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0.7
+  m_Drag: 1
   m_AngularDrag: 0.2
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

@@ -49,7 +49,8 @@ public class PlayerController : MonoBehaviour
                 LineRenderer.enabled = false;
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
-                // float DirectionMagnitude= Vector3.Magnitude(Direction);
+                float DirectionMagnitude= Vector3.Magnitude(Direction);
+                Debug.Log("Direction magnitude: " + DirectionMagnitude);
                 PlayerManager PlayerManager= GameManager.Instance.GetPlayerManager();
                 GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
                 MarbleLauncher.ins.LaunchMarble(Direction.normalized, 1.0f, StartLocationMouse, MarbleTeam.Player, MarbleObject);
