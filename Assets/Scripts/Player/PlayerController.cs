@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
                 {
                     return;
                 }
-                MarbleLauncher.ins.LaunchMarble(Direction.normalized, 1.0f, StartLocationMouse, MarbleTeam.Player, MarbleObject);
+                MarbleLauncher.ins.LaunchMarble(Direction.normalized, DirectionMagnitude, StartLocationMouse, MarbleTeam.Player, MarbleObject);
             }
             bCanShootMarble = true;
         }

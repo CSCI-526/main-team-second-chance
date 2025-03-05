@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94a58d99d810418e8e205227380cbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Marble: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100, type: 3}
-  LaunchForceScale: 10
+  LaunchForceScale: 1.75
   playerMaterial: {fileID: 2100000, guid: 9433be0fed2d64d4eadd36892b2500f5, type: 2}
   enemyMaterial: {fileID: 2100000, guid: 4dd8f99d4ac634fa5a99fefe53bc3e7b, type: 2}
