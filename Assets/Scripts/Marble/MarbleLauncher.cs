@@ -25,16 +25,17 @@ public class MarbleLauncher : MonoBehaviour
             return;
         Location.y = 0.25f;
 
-        MarbleVariant.transform.SetPositionAndRotation(Location, Quaternion.identity);
+        GameObject MarbleObject = Instantiate(MarbleVariant);
+        MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
         
-        MeshRenderer MarbleRenderer = MarbleVariant.GetComponent<MeshRenderer>();
+        MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
         MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
 
-        Marble MarbleIns = MarbleVariant.GetComponent<Marble>();
+        Marble MarbleIns = MarbleObject.GetComponent<Marble>();
         MarbleIns.Team = Team;
         GameManager.Instance.RegisterMarble(MarbleIns);
 
-        Rigidbody MarbleRigidBody = MarbleVariant.GetComponent<Rigidbody>();
+        Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
         StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
