@@ -23,8 +23,9 @@ public class PlayerController : MonoBehaviour
             StartLocationMouse = ConvertMouseIntoWorldSpace();
             Vector2 To2DSpace = new Vector2(StartLocationMouse.x, StartLocationMouse.z);
             bCanShootMarble = IsNotInScoringZone(To2DSpace) &&
-                GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 &&
-                !GameManager.Instance.GetAreMarblesMoving();
+                              GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 &&
+                              !GameManager.Instance.GetAreMarblesMoving()
+                              && GameManager.Instance.turnState == TurnState.PlayerTurn;
             if (bCanShootMarble)
             {
                 LineRenderer.enabled = true;

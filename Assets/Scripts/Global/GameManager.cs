@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
+public enum TurnState
+{
+    PlayerTurn,
+    WaitingOnEnemyTurn,
+    EnemyTurn,
+    WaitingOnPlayerTurn
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
@@ -10,6 +18,28 @@ public class GameManager : MonoBehaviour
     public DeckManager GetDeckManager() { return DeckManager; }
     public int GetPlayerScore() { return playerScore; }
     public int GetEnemyScore() { return enemyScore; }
+
+    public TurnState turnState = TurnState.PlayerTurn;
+
+    public void IncremetTurnState()
+    {
+        if (TurnState.WaitingOnPlayerTurn == turnState)
+        {
+            turnState = TurnState.PlayerTurn;
+        }
+        else
+        {
+            turnState++;
+        }
+
+        Debug.Log(turnState);
+        
+        if (turnState == TurnState.EnemyTurn)
+        {
+            EnemyController.ins.ShootMarble();
+        }
+    }
+    
     public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone) 
     {
         if(Team == MarbleTeam.Player)
@@ -40,6 +70,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator WaitForMarblesToSettle()
     {
+        IncremetTurnState();
         bAreMarblesMoving = true;
         yield return new WaitForSeconds(1.0f);
 
@@ -70,6 +101,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         bAreMarblesMoving = false;
         CleanupMarbles();
+        IncremetTurnState();
     }
 
 
