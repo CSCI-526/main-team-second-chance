@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 6d88b1c33761da74e84673d93b0bf6cf
+  - enabled: 1
     path: Assets/Scenes/AndyMarbleScene.unity
     guid: 0e3eb5afdc5fe0545956c8a6adeb5c73
   m_configObjects: {}
