@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int GetEnemyScore() { return enemyScore; }
 
     public TurnState turnState = TurnState.PlayerTurn;
+    public TurnState GetTurnState() { return turnState; }
 
     public void IncremetTurnState()
     {
@@ -31,6 +32,8 @@ public class GameManager : MonoBehaviour
         {
             turnState++;
         }
+
+        TurnStateEvents.OnTurnProgressed(turnState);
 
         Debug.Log(turnState);
         
