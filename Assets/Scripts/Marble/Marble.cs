@@ -12,14 +12,17 @@ public class Marble : MonoBehaviour
 {
     [SerializeField]
     private MarbleData marbleData;
-
+    public string GetMarbleName() { return marbleData.MarbleName; }
+    public string GetMarbleDescription() { return marbleData.MarbleDescription; }
+    public void SetUniqueID(int ID) { UNIQUE_ID = ID; }
+    public int GetUniqueID() { return UNIQUE_ID; }
     public MarbleTeam Team;
     public bool bIsInsideGameplayCircle = true;
     public bool bIsInsideScoringCircle = false;
     //public bool cool = false;
 
     private Rigidbody rb;
-
+    private int UNIQUE_ID;
     private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
@@ -66,7 +69,7 @@ public class Marble : MonoBehaviour
     public void Explode(float radius, float power)
     {
         Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius); 
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
 
         foreach (Collider hit in colliders)
         {

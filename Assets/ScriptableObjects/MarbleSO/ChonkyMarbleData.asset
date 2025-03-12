@@ -19,5 +19,7 @@ MonoBehaviour:
   Mass: 1.5
   UniformScale: 0.75
   Drag: 0.7
+  MarbleName: Chonky Marble
+  MarbleDescription: This is the Chonky Marble
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}
