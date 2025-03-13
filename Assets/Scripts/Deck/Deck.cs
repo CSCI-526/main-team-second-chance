@@ -6,6 +6,7 @@ public class Deck : MonoBehaviour
 {
     public int GetDeckSize() { return MarbleDeck.Count; }
     public int GetHandSize() { return Hand.Count; }
+    public int GetTotalRemainingMarbles() { return MarbleDeck.Count + Hand.Count; }
     public List<GameObject> GetHand() { return Hand; }
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return SelectedMarble; }
@@ -42,6 +43,7 @@ public class Deck : MonoBehaviour
     }
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
+        Hand.Clear();
         MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(Team, DeckSize);
         DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
         ShuffleDeck();
@@ -77,7 +79,6 @@ public class Deck : MonoBehaviour
         // HandUpdated signal
         DeckEvents.HandUpdated();
     }
-
 
     private List<GameObject> MarbleDeck = new List<GameObject>();
     private List<GameObject> Hand = new List<GameObject>();

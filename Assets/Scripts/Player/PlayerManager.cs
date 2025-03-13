@@ -16,6 +16,10 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         PlayerDeck = GetComponent<Deck>();
+        InitializePlayerDeck();
+    }
+
+    public void InitializePlayerDeck() {
         PlayerDeck.InitializeDeck(Team, DeckSize);
     }
 }

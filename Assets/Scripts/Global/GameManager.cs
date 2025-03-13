@@ -8,7 +8,8 @@ public enum TurnState
     PlayerTurn,
     WaitingOnEnemyTurn,
     EnemyTurn,
-    WaitingOnPlayerTurn
+    WaitingOnPlayerTurn,
+    GameOver
 }
 
 public class GameManager : MonoBehaviour
@@ -26,23 +27,41 @@ public class GameManager : MonoBehaviour
     {
         if (TurnState.WaitingOnPlayerTurn == turnState)
         {
-            turnState = TurnState.PlayerTurn;
+            if (PlayerManager.GetPlayerDeck().GetTotalRemainingMarbles() > 0)
+            {
+                turnState = TurnState.PlayerTurn;
+            }
+            else
+            {
+                turnState = TurnState.GameOver;
+            }
         }
         else
         {
             turnState++;
+            // Skip over game over, conditions are not met here.
+            if (turnState == TurnState.GameOver) {
+                turnState = TurnState.PlayerTurn;
+            }
         }
 
-        TurnStateEvents.OnTurnProgressed(turnState);
-
         Debug.Log(turnState);
+        if (turnState == TurnState.GameOver)
+        {
+            TurnStateEvents.OnGameOvered();
+        }
+        else 
+        {
+            TurnStateEvents.OnTurnProgressed(turnState);
+        }
+
         
         if (turnState == TurnState.EnemyTurn)
         {
             EnemyController.ins.ShootMarble();
         }
     }
-    
+
     public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone) 
     {
         if(Team == MarbleTeam.Player)
@@ -133,8 +152,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
-        MarbleEvents.OnScoreChanged(MarbleTeam.Player);
-        MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
+        ForceUpdateEvents();
     }
 
     private void CleanupMarbles()
@@ -160,5 +178,29 @@ public class GameManager : MonoBehaviour
             }
             MarblesToDelete.Clear();
         }
+    }
+
+    public void ClearMarbles() {
+        MarblesToDelete.AddRange(MarblesList);
+        foreach(Marble marble in MarblesToDelete) {
+            MarblesList.Remove(marble);
+            Destroy(marble.gameObject);
+        }
+        MarblesToDelete.Clear();
+    }
+
+    public void RestartGame() {
+        ClearMarbles();
+        playerScore = 0;
+        enemyScore = 0;
+        PlayerManager.InitializePlayerDeck();
+        turnState = TurnState.PlayerTurn;
+        ForceUpdateEvents();
+    }
+
+    public void ForceUpdateEvents() {
+        TurnStateEvents.OnTurnProgressed(turnState);
+        MarbleEvents.OnScoreChanged(MarbleTeam.Player);
+        MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
     }
 }

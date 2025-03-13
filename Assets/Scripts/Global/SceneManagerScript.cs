@@ -28,6 +28,11 @@ public class SceneManagerScript : MonoBehaviour
     {
         SceneManager.LoadScene(index);
     }
+    public void reloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
 
     public void Quit()
     {
