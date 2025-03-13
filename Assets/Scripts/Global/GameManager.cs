@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour
         else
         {
             turnState++;
+            // Skip over game over, conditions are not met here.
+            if (turnState == TurnState.GameOver) {
+                turnState = TurnState.PlayerTurn;
+            }
         }
 
         Debug.Log(turnState);
