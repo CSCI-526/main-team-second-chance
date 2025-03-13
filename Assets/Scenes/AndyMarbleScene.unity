@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_HAND_SIZE: 5
-  INIT_HAND_SIZE: 3
+  INIT_HAND_SIZE: 4
 --- !u!114 &2006374472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1094,7 +1094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80178febaf84958449b4bb95a240b58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeckSize: 3
+  DeckSize: 12
   Team: 0
 --- !u!1001 &1759644512531380690
 PrefabInstance:
@@ -1104,6 +1104,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3797704203141291860, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
+      propertyPath: INIT_HAND_SIZE
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5510101932712594358, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1153,6 +1158,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
+      propertyPath: DeckSize
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
@@ -1391,7 +1401,7 @@ PrefabInstance:
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
@@ -1416,6 +1426,12 @@ PrefabInstance:
       propertyPath: MarblePrefabs.Array.data[3]
       value: 
       objectReference: {fileID: 8667816103150948522, guid: 8050337de420c114c8caa88550de5f0e,
+        type: 3}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
         type: 3}
     - target: {fileID: 6664558104299889255, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
