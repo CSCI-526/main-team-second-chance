@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
                 if (marble.bIsInsideGameplayCircle)
                 {
                     Rigidbody physics = marble.GetComponent<Rigidbody>();
-                    if (physics.velocity.sqrMagnitude > 0.1f)
+                    if (physics.velocity.sqrMagnitude > 0.05f)
                     {
                         bMarblesSettled = false;
                     }
