@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject tutorialBar;
+    public GameObject tutorial;
+
     private Vector3 StartLocationMouse = Vector3.zero;
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
@@ -28,6 +31,12 @@ public class PlayerController : MonoBehaviour
                 LineRenderer.enabled = true;
                 LineRenderer.SetPosition(0, StartLocationMouse);
                 LineRenderer.SetPosition(1, StartLocationMouse);
+
+                if(tutorialBar != null && tutorial != null)
+                {
+                    tutorialBar.SetActive(false);
+                    tutorial.SetActive(false);
+                }
             }
         }
         if (Input.GetMouseButton(0))
