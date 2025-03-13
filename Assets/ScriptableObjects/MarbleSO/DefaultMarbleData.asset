@@ -19,5 +19,7 @@ MonoBehaviour:
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
+  MarbleName: Default Marble
+  MarbleDescription: This is the Default Marble
   abilityTriggerDelay: 0.5
-  ability: {fileID: 0}
+  AbilityObject: {fileID: 0}

@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
-  m_Name: ChonkyMarbleData
+  m_Name: BlackHoleMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 6395808697406203147, guid: 5846c696bedd073409a483bdb425af51,
+  MarblePrefab: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
     type: 3}
   marbleType: 0
   Sprite: {fileID: 0}
-  Mass: 1.5
-  UniformScale: 0.75
+  Mass: 1
+  UniformScale: 0.5
   Drag: 0.7
-  MarbleName: Chonky Marble
-  MarbleDescription: This is the Chonky Marble
-  abilityTriggerDelay: 0.5
-  AbilityObject: {fileID: 0}
+  MarbleName: Black Hole Marble
+  MarbleDescription: After a delay, sucks in nearby marbles towards this marble's
+    current position.
+  abilityTriggerDelay: 1.5
+  AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}

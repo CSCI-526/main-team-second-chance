@@ -38,10 +38,12 @@ public class MarbleData : ScriptableObject
     [Min(0.1f)] public float Mass = 1f;
     [Min(0.1f)] public float UniformScale = 1f;
     [Min(0.1f)] public float Drag = 0.7f;
+    public string MarbleName;
+    public string MarbleDescription;
     //...and whatever properties we want to individually adjust
 
     [Header("Ability Properties")]
-    [Range(0f,10f)] public float abilityTriggerDelay = 1.5f;
+    [Range(0f, 10f)] public float abilityTriggerDelay = 1.5f;
     public Ability AbilityObject;
 
 }

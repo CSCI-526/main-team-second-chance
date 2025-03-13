@@ -22,19 +22,12 @@ public class PlayerController : MonoBehaviour
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
             Vector2 To2DSpace = new Vector2(StartLocationMouse.x, StartLocationMouse.z);
-            bCanShootMarble = IsNotInScoringZone(To2DSpace) &&
-                              GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 &&
-                              !GameManager.Instance.GetAreMarblesMoving()
-                              && GameManager.Instance.turnState == TurnState.PlayerTurn;
+            bCanShootMarble = CanShootMarble(To2DSpace);
             if (bCanShootMarble)
             {
                 LineRenderer.enabled = true;
                 LineRenderer.SetPosition(0, StartLocationMouse);
                 LineRenderer.SetPosition(1, StartLocationMouse);
-            }
-            else
-            {
-                Debug.LogError("You are in the scoring Zone or your deck is empty");
             }
         }
         if (Input.GetMouseButton(0))
@@ -53,6 +46,10 @@ public class PlayerController : MonoBehaviour
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 float DirectionMagnitude = Vector3.Magnitude(Direction);
+                if (DirectionMagnitude < Mathf.Epsilon)
+                {
+                    return;
+                }
                 Debug.Log("Direction magnitude: " + DirectionMagnitude);
                 GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
                 if (!MarbleObject)
@@ -88,5 +85,37 @@ public class PlayerController : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    private bool CanShootMarble(Vector2 testPoint)
+    {
+        // Valid Scoring Zone
+        bool bScoringZoneTest = IsNotInScoringZone(testPoint);
+        if (!bScoringZoneTest)
+        {
+            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You are in the scoring zone. You should try shooting outside of the scoring zone");
+        }
+        bool bValidDeckSize = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 || GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize() > 0;
+        if (!bValidDeckSize)
+        {
+            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Your deck is empty. You cannot shoot anymore");
+        }
+        bool bHasSelectedAMarble = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() >= 0;
+        if (!bHasSelectedAMarble)
+        {
+            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You have not yet selected a marble. Please pick one to shoot");
+        }
+        bool bMarblesMoving = GameManager.Instance.GetAreMarblesMoving();
+        if (bMarblesMoving)
+        {
+            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
+        }
+
+        bool bIsCorrectState = GameManager.Instance.turnState == TurnState.PlayerTurn;
+        if (!bIsCorrectState)
+        {
+            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): It is not the player's turn. Please wait");
+        }
+        return bScoringZoneTest && bValidDeckSize && bHasSelectedAMarble && !bMarblesMoving && bIsCorrectState;
     }
 }

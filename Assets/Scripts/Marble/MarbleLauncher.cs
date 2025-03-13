@@ -19,21 +19,22 @@ public class MarbleLauncher : MonoBehaviour
             ins = this;
     }
 
-    public void LaunchMarble(Vector3 Direction, float Force, Vector3 Location, MarbleTeam Team, GameObject MarbleVariant)
+    public void LaunchMarble(Vector3 Direction, float Force, Vector3 Location, MarbleTeam Team, GameObject MarbleObject)
     {
         if (GameManager.Instance.GetAreMarblesMoving())
             return;
         Location.y = 0.25f;
+        Direction.y = 0.0f;
 
-        GameObject MarbleObject = Instantiate(MarbleVariant);
         MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
-        
+
         MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
         MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
 
         Marble MarbleIns = MarbleObject.GetComponent<Marble>();
         MarbleIns.Team = Team;
         GameManager.Instance.RegisterMarble(MarbleIns);
+        MarbleObject.SetActive(true);
 
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         Direction *= LaunchForceScale * Force;

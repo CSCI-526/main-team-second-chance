@@ -11,6 +11,21 @@ public class ExplosionAbility : Ability
     {
         Debug.Log("Ability Casted: EXPLODE");
         if (marble == null) return;
-        marble.Explode(radius, power);
+        Explode(marble, radius, power);
+    }
+
+    // Explosive Marble Ability
+    private void Explode(Marble marble, float r, float p)
+    {
+        Vector3 explosionPos = marble.gameObject.transform.position;
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, r);
+
+        foreach (Collider hit in colliders)
+        {
+            Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+            if (rb != null && hit.CompareTag("Marble") && hit != marble.GetComponent<SphereCollider>())
+                rb.AddExplosionForce(p, explosionPos, r, 0.0f, ForceMode.Impulse);
+        }
     }
 }
