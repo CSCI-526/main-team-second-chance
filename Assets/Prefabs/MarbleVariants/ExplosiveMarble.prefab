@@ -69,6 +69,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ExplosiveMarble
       objectReference: {fileID: 0}
+    - target: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_TagString
+      value: Marble
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

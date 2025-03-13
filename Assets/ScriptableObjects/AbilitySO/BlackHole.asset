@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 932a19e4e5af28849b95f141db6152fa, type: 3}
-  m_Name: Explosion
+  m_Script: {fileID: 11500000, guid: a429cad199aebc040bb88b8a3db7d7aa, type: 3}
+  m_Name: BlackHole
   m_EditorClassIdentifier: 
   radius: 1.5
-  power: 7
+  power: 2
