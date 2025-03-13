@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1478161352384403374}
   - component: {fileID: 7151011619980216258}
   - component: {fileID: 5679021786991490665}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ScoringCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,8 +78,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22ef01c1d14e4a88adaf50c4c9b3f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerText: {fileID: 0}
-  enemyText: {fileID: 0}
 --- !u!1 &8437532259428276500
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +89,7 @@ GameObject:
   - component: {fileID: 7016736959944798445}
   - component: {fileID: 1109603246807807239}
   - component: {fileID: 5022494518939444772}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

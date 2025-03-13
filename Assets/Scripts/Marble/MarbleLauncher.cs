@@ -24,6 +24,7 @@ public class MarbleLauncher : MonoBehaviour
         if (GameManager.Instance.GetAreMarblesMoving())
             return;
         Location.y = 0.25f;
+        Direction.y = 0.0f;
 
         GameObject MarbleObject = Instantiate(MarbleVariant);
         MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
