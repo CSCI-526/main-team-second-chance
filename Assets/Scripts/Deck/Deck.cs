@@ -5,6 +5,7 @@ using UnityEngine;
 public class Deck : MonoBehaviour
 {
     public int GetDeckSize() { return MarbleDeck.Count; }
+    public int GetRemainingMarbles() { return MarbleDeck.Count - MarbleIter; }
     public GameObject UseMarble(MarbleTeam Team)
     {
         GameObject marble = null;
@@ -20,6 +21,10 @@ public class Deck : MonoBehaviour
     {
         MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(DeckSize);
         DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
+    }
+
+    public void ResetMarbleIterator() {
+        MarbleIter = 0;
     }
     private List<GameObject> MarbleDeck;
     private int MarbleIter = 0;
