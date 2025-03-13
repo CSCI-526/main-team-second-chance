@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     {
         if (TurnState.WaitingOnPlayerTurn == turnState)
         {
-            if (PlayerManager.GetPlayerDeck().GetRemainingMarbles() > 0)
+            if (PlayerManager.GetPlayerDeck().GetTotalRemainingMarbles() > 0)
             {
                 turnState = TurnState.PlayerTurn;
             }
@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
         ClearMarbles();
         playerScore = 0;
         enemyScore = 0;
-        PlayerManager.GetPlayerDeck().ResetMarbleIterator();
+        PlayerManager.InitializePlayerDeck();
         turnState = TurnState.PlayerTurn;
         ForceUpdateEvents();
     }
