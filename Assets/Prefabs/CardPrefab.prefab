@@ -361,3 +361,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MarbleType: {fileID: 442719943119751275}
   CardDescription: {fileID: 5886113325727259570}
+  PanelImage: {fileID: 8980790266861422820}
+  SelectedMaterial: {fileID: 2100000, guid: d43a69104b9a4db4490434baedd2b6fb, type: 2}

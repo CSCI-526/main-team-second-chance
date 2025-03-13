@@ -23,9 +23,9 @@ public static class DeckEvents
         OnHandUpdated?.Invoke();
     }
 
-    public static event Action<int> OnCardSelected;
-    public static void CardSelected(int CardID)
+    public static event Action<int> OnMarbleSelectedFromHand;
+    public static void MarbleSelectedFromHand(int CardID)
     {
-        OnCardSelected?.Invoke(CardID);
+        OnMarbleSelectedFromHand?.Invoke(CardID);
     }
 }

@@ -12,31 +12,48 @@ public class Deck : MonoBehaviour
     public GameObject UseMarble(MarbleTeam Team)
     {
         GameObject marble = null;
-        if (SelectedMarble < 0)
+
+        if (Team == MarbleTeam.Player)
         {
+            if (SelectedMarble < 0)
+            {
+                return marble;
+            }
+
+            if (SelectedMarble < Hand.Count && SelectedMarble >= 0)
+            {
+                marble = Hand[SelectedMarble];
+                UpdateHand();
+            }
+            DeckEvents.MarbleUsed(Team, MarbleDeck.Count);
             return marble;
         }
 
-        if (SelectedMarble < Hand.Count && SelectedMarble >= 0)
+        if (MarbleDeck.Count == 0)
         {
-            marble = Hand[SelectedMarble];
-            UpdateHand();
+            Debug.LogWarning("Deck.UseMarble(): EnemyMarble Deck's size is now 0.");
+
+            return null;
         }
-        DeckEvents.MarbleUsed(Team, MarbleDeck.Count);
-        return marble;
+        marble = MarbleDeck[0];
+        MarbleDeck.RemoveAt(0);
+
+        return MarbleDeck[0];
     }
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
-        MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(DeckSize);
+        MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(Team, DeckSize);
         DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
-        GenerateInitialHand();
-        DeckEvents.HandUpdated();
+        ShuffleDeck();
+        if (Team == MarbleTeam.Player)
+        {
+            GenerateInitialHand();
+            DeckEvents.HandUpdated();
+        }
     }
 
     public void UpdateHand()
     {
-        // Add the card to the graveyard
-        Graveyard.Add(Hand[SelectedMarble]);
         // Remove the selected card
         Hand.RemoveAt(SelectedMarble);
 
@@ -45,6 +62,9 @@ public class Deck : MonoBehaviour
             Debug.LogError("Deck.UpdateHand(): MarbleDeck's size is now 0. We can no longer update the hand.");
             // Set the selected marble index to -1 again
             SelectedMarble = -1;
+            // HandUpdated signal
+            DeckEvents.HandUpdated();
+
             return;
         }
         // Draw a new card from the Marble Deck
@@ -61,7 +81,6 @@ public class Deck : MonoBehaviour
 
     private List<GameObject> MarbleDeck = new List<GameObject>();
     private List<GameObject> Hand = new List<GameObject>();
-    private List<GameObject> Graveyard = new List<GameObject>();
     // The selected marble from your hand
     private int SelectedMarble = -1;
     [SerializeField]
@@ -90,11 +109,19 @@ public class Deck : MonoBehaviour
     }
     private void OnEnable()
     {
-        DeckEvents.OnCardSelected += GrabSelectedID;
+        DeckEvents.OnMarbleSelectedFromHand += GrabSelectedID;
     }
     private void OnDisable()
     {
-        DeckEvents.OnCardSelected -= GrabSelectedID;
+        DeckEvents.OnMarbleSelectedFromHand -= GrabSelectedID;
     }
     private void GrabSelectedID(int ID) { SelectedMarble = ID; }
+    private void ShuffleDeck()
+    {
+        for (int i = MarbleDeck.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            (MarbleDeck[i], MarbleDeck[randomIndex]) = (MarbleDeck[randomIndex], MarbleDeck[i]); // Swap
+        }
+    }
 }

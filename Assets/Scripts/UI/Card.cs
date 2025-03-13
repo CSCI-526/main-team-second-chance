@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void UpdateInformation(string MarblePrefab, string CardDetail)
     {
         MarbleType.SetText(MarblePrefab);
+        PanelImage.material = null;
         CardDescription.SetText(CardDetail);
     }
     /*public void OnPointerDown(PointerEventData eventData)
@@ -29,10 +31,11 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }*/
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0)
         {
             Debug.Log("Clicked on a card with ID: " + HandIndex);
-            DeckEvents.CardSelected(HandIndex);
+            PanelImage.material = SelectedMaterial;
+            DeckEvents.MarbleSelectedFromHand(HandIndex);
         }
     }
 
@@ -43,6 +46,10 @@ public class Card : MonoBehaviour, IPointerClickHandler
     private TextMeshProUGUI MarbleType;
     [SerializeField]
     private TextMeshProUGUI CardDescription;
+    [SerializeField]
+    private Image PanelImage;
+    [SerializeField]
+    private Material SelectedMaterial;
     private int HandIndex;
 
 }

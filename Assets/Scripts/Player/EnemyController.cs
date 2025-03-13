@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float CenterForce = 0.6f;
     [SerializeField] private float KnockoutForce = 5.0f;
     [SerializeField] private float KnockoutTargetRatio = 0.3f;
+    [SerializeField] private int DeckSize = 10;
     public float SkillLevel = 1.0f;
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class EnemyController : MonoBehaviour
     public void Start()
     {
         EnemyDeck = GetComponent<Deck>();
-        EnemyDeck.InitializeDeck(MarbleTeam.Enemy, 10);
+        EnemyDeck.InitializeDeck(MarbleTeam.Enemy, DeckSize);
     }
 
     IEnumerator MarbleRepeater()
@@ -61,10 +62,10 @@ public class EnemyController : MonoBehaviour
             {
                 if (Marble.Team == MarbleTeam.Player)
                 {
-                    testPoint = new Vector2(Marble.transform.position.x,Marble.transform.position.z);
+                    testPoint = new Vector2(Marble.transform.position.x, Marble.transform.position.z);
                     zoneCenter = new Vector2(scoreZone.transform.position.x, scoreZone.transform.position.z);
                     float Mag = (testPoint - zoneCenter).magnitude;
-                    
+
                     if (Mag / Rad > KnockoutTargetRatio)
                     {
                         HitOut = Marble;
@@ -76,7 +77,7 @@ public class EnemyController : MonoBehaviour
 
 
                         RaycastHit Hit;
-                        bool bBlocked = Physics.SphereCast(HitOutSpawnLocation,0.3f, HitOutDirection, out Hit, Rad * 2.0f * 2f);
+                        bool bBlocked = Physics.SphereCast(HitOutSpawnLocation, 0.3f, HitOutDirection, out Hit, Rad * 2.0f * 2f);
                         if (!bBlocked || (bBlocked && (Hit.collider.gameObject == HitOut.gameObject)))
                         {
                             Location = HitOutSpawnLocation;
@@ -86,12 +87,12 @@ public class EnemyController : MonoBehaviour
                             break;
                         }
 
-                        Quaternion Rotate = Quaternion.Euler(0.0f,90.0f,0.0f);
+                        Quaternion Rotate = Quaternion.Euler(0.0f, 90.0f, 0.0f);
                         HitOutSpawnLocation = Rotate * HitOutSpawnLocation;
                         //HitOutSpawnLocation = HitOutMarbleLocation + -1.2f * Rad * HitOutDirection;
                         HitOutDirection = (new Vector3(testPoint.x, 0.25f, testPoint.y) - HitOutSpawnLocation);
-                        
-                        bBlocked = Physics.SphereCast(HitOutSpawnLocation,0.3f, HitOutDirection, out Hit, Rad * 2.0f * 2f);
+
+                        bBlocked = Physics.SphereCast(HitOutSpawnLocation, 0.3f, HitOutDirection, out Hit, Rad * 2.0f * 2f);
                         if (!bBlocked || (bBlocked && (Hit.collider.gameObject == HitOut.gameObject)))
                         {
                             Location = HitOutSpawnLocation;
@@ -105,15 +106,15 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        if(!bTryToHitOut)
+        if (!bTryToHitOut)
         {
             float angle = Random.Range(0.0f, 360.0f);
-            Location = (new Vector3(Mathf.Cos(angle), 0.0f,Mathf.Sin(angle)) * colliderLength) + new Vector3(Random.Range(-DirectionRandomness,DirectionRandomness),0.0f,Random.Range(-DirectionRandomness,DirectionRandomness));
-            Direction = capsuleCollider.center - Location + new Vector3(Random.Range(-DirectionRandomness,DirectionRandomness),0.0f,Random.Range(-DirectionRandomness,DirectionRandomness));
-            float scale = Random.Range(1.0f, 1.0f+ForceRandomness);
+            Location = (new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle)) * colliderLength) + new Vector3(Random.Range(-DirectionRandomness, DirectionRandomness), 0.0f, Random.Range(-DirectionRandomness, DirectionRandomness));
+            Direction = capsuleCollider.center - Location + new Vector3(Random.Range(-DirectionRandomness, DirectionRandomness), 0.0f, Random.Range(-DirectionRandomness, DirectionRandomness));
+            float scale = Random.Range(1.0f, 1.0f + ForceRandomness);
             Force = scale * CenterForce;
         }
-        
-        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force,Location,MarbleTeam.Enemy,EnemyDeck.UseMarble(MarbleTeam.Enemy));
+
+        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleTeam.Enemy, EnemyDeck.UseMarble(MarbleTeam.Enemy));
     }
 }

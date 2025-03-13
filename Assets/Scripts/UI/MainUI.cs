@@ -65,8 +65,13 @@ public class MainUI : MonoBehaviour
     }
     private void UpdateHand()
     {
-        int numCardsToRep = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize();
-        List<GameObject> Hand = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHand();
+        Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
+        if (!playerDeck)
+        {
+            return;
+        }
+        int numCardsToRep = playerDeck.GetHandSize();
+        List<GameObject> Hand = playerDeck.GetHand();
         if (Cards.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetMaxHandSize(); i++)
@@ -103,7 +108,7 @@ public class MainUI : MonoBehaviour
                 Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. Or MarbleData.cs is not attached to Marble PrefabThis shouldn't happen");
                 return;
             }
-            card.UpdateInformation(marbleData.GetMarbleName() + marbleData.GetUniqueID(), marbleData.GetMarbleDescription());
+            card.UpdateInformation(marbleData.GetMarbleName(), marbleData.GetMarbleDescription());
             card.SetHandIndex(i);
             Cards[i].gameObject.transform.localPosition = Offset;
             Cards[i].SetActive(true);
