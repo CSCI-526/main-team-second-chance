@@ -27,5 +27,7 @@ public class ExplosionAbility : Ability
             if (rb != null && hit.CompareTag("Marble") && hit != marble.GetComponent<SphereCollider>())
                 rb.AddExplosionForce(p, explosionPos, r, 0.0f, ForceMode.Impulse);
         }
+        
+        marble.GetComponent<ParticleSystem>().Play();
     }
 }

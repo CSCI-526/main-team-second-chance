@@ -63,4 +63,9 @@ public class DeckManager : MonoBehaviour
 
         return marbles;
     }
+
+    public GameObject GetDefaultMarble()
+    {
+        return MarblePrefabs[0];
+    }
 }
