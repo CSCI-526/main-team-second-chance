@@ -39,7 +39,7 @@ public class Deck : MonoBehaviour
         marble = MarbleDeck[0];
         MarbleDeck.RemoveAt(0);
 
-        return MarbleDeck[0];
+        return marble;
     }
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
