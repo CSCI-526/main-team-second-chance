@@ -10,25 +10,17 @@ public class EnemyController : MonoBehaviour
 {
     // Start is called before the first frame update
     public static EnemyController ins = null;
-    private Deck EnemyDeck;
 
     [SerializeField] private float ForceRandomness = 0.1f;
     [SerializeField] private float DirectionRandomness = 0.1f;
     [SerializeField] private float CenterForce = 0.6f;
     [SerializeField] private float KnockoutForce = 5.0f;
     [SerializeField] private float KnockoutTargetRatio = 0.3f;
-    [SerializeField] private int DeckSize = 10;
     public float SkillLevel = 1.0f;
     private void Awake()
     {
         if (ins == null)
             ins = this;
-    }
-
-    public void Start()
-    {
-        EnemyDeck = GetComponent<Deck>();
-        EnemyDeck.InitializeDeck(MarbleTeam.Enemy, DeckSize);
     }
 
     IEnumerator MarbleRepeater()
@@ -60,6 +52,14 @@ public class EnemyController : MonoBehaviour
         {
             foreach (var Marble in GameManager.Instance.GetMarblesList())
             {
+                if(!Marble)
+                {
+                    continue;
+                }
+                if (!Marble.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
                 if (Marble.Team == MarbleTeam.Player)
                 {
                     testPoint = new Vector2(Marble.transform.position.x, Marble.transform.position.z);
@@ -114,7 +114,14 @@ public class EnemyController : MonoBehaviour
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness);
             Force = scale * CenterForce;
         }
-
-        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleTeam.Enemy, EnemyDeck.UseMarble(MarbleTeam.Enemy));
+        GameObject MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
+        if (!MarbleObject)
+        {
+            // probably just turn to like end game or something
+            GameManager.Instance.turnState = TurnState.CardSelect;
+            TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
+            return;
+        }
+        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleObject);
     }
 }

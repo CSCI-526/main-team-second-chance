@@ -28,4 +28,16 @@ public static class DeckEvents
     {
         OnMarbleSelectedFromHand?.Invoke(CardID);
     }
+    public static event Action<List<GameObject>> OnSelectNewMarbleToAdd;
+    public static void SelectNewMarbleToAdd(List<GameObject> MarblesToAdd)
+    {
+        OnSelectNewMarbleToAdd?.Invoke(MarblesToAdd);
+    }
+
+    public static event Action<GameObject> OnAddNewMarbleToDeck;
+    public static void AddNewMarbleToDeck(GameObject MarbleObject)
+    {
+        OnAddNewMarbleToDeck?.Invoke(MarbleObject);
+    }
+
 }

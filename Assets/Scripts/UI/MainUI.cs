@@ -10,6 +10,8 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI PlayerScore;
     [SerializeField]
+    private TextMeshProUGUI PlayerRoundsWon;
+    [SerializeField]
     private TextMeshProUGUI EnemyScore;
     [SerializeField]
     private Transform HandStartingPoint;
@@ -21,6 +23,7 @@ public class MainUI : MonoBehaviour
     private void OnEnable()
     {
         MarbleEvents.OnScoreChange += UpdateScore;
+        MarbleEvents.OnRoundsWonChanged += UpdateRoundsWon;
         DeckEvents.OnDeckGenerated += UpdateDeckCount;
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
@@ -28,9 +31,15 @@ public class MainUI : MonoBehaviour
     private void OnDisable()
     {
         MarbleEvents.OnScoreChange -= UpdateScore;
+        MarbleEvents.OnRoundsWonChanged -= UpdateRoundsWon;
+
         DeckEvents.OnDeckGenerated -= UpdateDeckCount;
         DeckEvents.OnMarbleUsed -= UpdateDeckCount;
         DeckEvents.OnHandUpdated -= UpdateHand;
+    }
+    private void UpdateRoundsWon(int RoundsWon)
+    {
+        PlayerRoundsWon.text = $"{RoundsWon} / 3 Games Won";
     }
     private void UpdateScore(MarbleTeam Team)
     {

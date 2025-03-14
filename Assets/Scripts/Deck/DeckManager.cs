@@ -11,17 +11,17 @@ public class DeckManager : MonoBehaviour
         List<GameObject> marbles;
         if (Team == MarbleTeam.Player)
         {
-            marbles = GeneratePlayerInitialDeck(DeckSize);
+            marbles = GeneratePlayerInitialDeck(Team, DeckSize);
         }
         else
         {
-            marbles = GenerateEnemyDeck(DeckSize);
+            marbles = GenerateEnemyDeck(Team, DeckSize);
         }
 
         return marbles;
     }
 
-    public List<GameObject> GeneratePlayerInitialDeck(int DeckSize)
+    public List<GameObject> GeneratePlayerInitialDeck(MarbleTeam Team, int DeckSize)
     {
         List<GameObject> marbles = new List<GameObject>();
 
@@ -33,6 +33,8 @@ public class DeckManager : MonoBehaviour
             GameObject marble = Instantiate(MarblePrefabs[0]);
             marble.SetActive(false);
             Marble marbleComp = marble.GetComponent<Marble>();
+            marbleComp.Team = Team;
+            GameManager.Instance.RegisterMarble(marbleComp);
             marbles.Add(marble);
         }
 
@@ -43,6 +45,8 @@ public class DeckManager : MonoBehaviour
             GameObject marble = Instantiate(MarblePrefabs[randomIndex]);
             marble.SetActive(false);
             Marble marbleComp = marble.GetComponent<Marble>();
+            marbleComp.Team = Team;
+            GameManager.Instance.RegisterMarble(marbleComp);
             marbles.Add(marble);
         }
 
@@ -50,7 +54,7 @@ public class DeckManager : MonoBehaviour
         return marbles;
     }
 
-    public List<GameObject> GenerateEnemyDeck(int DeckSize)
+    public List<GameObject> GenerateEnemyDeck(MarbleTeam Team, int DeckSize)
     {
         List<GameObject> marbles = new List<GameObject>();
         for (int i = 0; i < DeckSize; ++i)
@@ -58,6 +62,24 @@ public class DeckManager : MonoBehaviour
             GameObject marble = Instantiate(MarblePrefabs[0]); // Generates only basics initially
             marble.SetActive(false);
             Marble marbleComp = marble.GetComponent<Marble>();
+            marbleComp.Team = Team;
+            GameManager.Instance.RegisterMarble(marbleComp);
+            marbles.Add(marble);
+        }
+
+        return marbles;
+    }
+
+    public List<GameObject> GenerateNewMarbles()
+    {
+        List<GameObject> marbles = new List<GameObject>();
+        for (int i = 0; i < 3; ++i)
+        {
+            int randomIndex = Random.Range(0, MarblePrefabs.Count);
+            GameObject marble = Instantiate(MarblePrefabs[randomIndex]);
+            marble.SetActive(false);
+            Marble marbleComp = marble.GetComponent<Marble>();
+            marbleComp.Team = MarbleTeam.Player;
             marbles.Add(marble);
         }
 

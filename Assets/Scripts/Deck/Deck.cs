@@ -10,6 +10,16 @@ public class Deck : MonoBehaviour
     public List<GameObject> GetHand() { return Hand; }
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return SelectedMarble; }
+    public void AddMarbleToDeck(GameObject marble)
+    {
+        GameManager.Instance.RegisterMarble(marble.GetComponent<Marble>());
+        MarbleDeck.Add(marble);
+        ResetDeck();
+        ShuffleDeck();
+        GenerateInitialHand();
+        GameManager.Instance.turnState = TurnState.PlayerTurn;
+        GameManager.Instance.ForceUpdateEvents();
+    }
     public GameObject UseMarble(MarbleTeam Team)
     {
         GameObject marble = null;
@@ -21,12 +31,14 @@ public class Deck : MonoBehaviour
                 return marble;
             }
 
-            if (SelectedMarble < Hand.Count && SelectedMarble >= 0)
+            if (SelectedMarble < Hand.Count)
             {
                 marble = Hand[SelectedMarble];
+                Graveyard.Add(marble);
                 UpdateHand();
             }
             DeckEvents.MarbleUsed(Team, MarbleDeck.Count);
+
             return marble;
         }
 
@@ -79,9 +91,9 @@ public class Deck : MonoBehaviour
         // HandUpdated signal
         DeckEvents.HandUpdated();
     }
-
-    private List<GameObject> MarbleDeck = new List<GameObject>();
-    private List<GameObject> Hand = new List<GameObject>();
+    public List<GameObject> Graveyard = new List<GameObject>();
+    public List<GameObject> MarbleDeck = new List<GameObject>();
+    public List<GameObject> Hand = new List<GameObject>();
     // The selected marble from your hand
     private int SelectedMarble = -1;
     [SerializeField]
@@ -106,6 +118,7 @@ public class Deck : MonoBehaviour
             }
             MarbleDeck.RemoveAt(0);
         }
+        DeckEvents.HandUpdated();
         DeckEvents.MarbleUsed(GameManager.Instance.GetPlayerManager().GetTeam(), MarbleDeck.Count);
     }
     private void OnEnable()
@@ -124,5 +137,13 @@ public class Deck : MonoBehaviour
             int randomIndex = Random.Range(0, i + 1);
             (MarbleDeck[i], MarbleDeck[randomIndex]) = (MarbleDeck[randomIndex], MarbleDeck[i]); // Swap
         }
+    }
+    private void ResetDeck()
+    {
+        for (int i = 0; i < Graveyard.Count; i++)
+        {
+            MarbleDeck.Add(Graveyard[i]);
+        }
+        Graveyard.Clear();
     }
 }

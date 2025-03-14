@@ -17,4 +17,9 @@ public static class MarbleEvents
     {
         OnScoreChange?.Invoke(Team);
     }
+    public static event Action<int> OnRoundsWonChanged;
+    public static void OnRoundsWonChange(int RoundsWon)
+    {
+        OnRoundsWonChanged?.Invoke(RoundsWon);
+    }
 }

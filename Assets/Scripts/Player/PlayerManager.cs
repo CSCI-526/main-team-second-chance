@@ -18,8 +18,27 @@ public class PlayerManager : MonoBehaviour
         PlayerDeck = GetComponent<Deck>();
         InitializePlayerDeck();
     }
+    private void OnEnable()
+    {
+        DeckEvents.OnAddNewMarbleToDeck += AddMarbleToDeck;
+    }
+    private void OnDisable()
+    {
+        DeckEvents.OnAddNewMarbleToDeck -= AddMarbleToDeck;
 
-    public void InitializePlayerDeck() {
+    }
+    public void InitializePlayerDeck()
+    {
         PlayerDeck.InitializeDeck(Team, DeckSize);
+    }
+    private void AddMarbleToDeck(GameObject gameObject)
+    {
+        if (!gameObject)
+        {
+            return;
+        }
+        PlayerDeck.AddMarbleToDeck(gameObject);
+        GameManager.Instance.turnState = TurnState.PlayerTurn;
+        TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
     }
 }
