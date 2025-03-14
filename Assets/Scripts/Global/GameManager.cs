@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour
         {
             turnState++;
             // Skip over game over, conditions are not met here.
-            if (turnState == TurnState.GameOver) {
+            if (turnState == TurnState.GameOver)
+            {
                 turnState = TurnState.PlayerTurn;
             }
         }
@@ -50,21 +51,21 @@ public class GameManager : MonoBehaviour
         {
             TurnStateEvents.OnGameOvered();
         }
-        else 
+        else
         {
             TurnStateEvents.OnTurnProgressed(turnState);
         }
 
-        
+
         if (turnState == TurnState.EnemyTurn)
         {
             EnemyController.ins.ShootMarble();
         }
     }
 
-    public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone) 
+    public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone)
     {
-        if(Team == MarbleTeam.Player)
+        if (Team == MarbleTeam.Player)
         {
             playerScore += bIsInScoreZone ? 1 : -1;
             Mathf.Clamp(playerScore, 0, playerScore);
@@ -121,6 +122,7 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.0f);
+
         bAreMarblesMoving = false;
         CleanupMarbles();
         IncremetTurnState();
@@ -153,6 +155,13 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
         ForceUpdateEvents();
+
+        TurnStateEvents.OnGameOver += OnGameOver;
+    }
+
+    private void OnDestroy()
+    {
+        TurnStateEvents.OnGameOver -= OnGameOver;
     }
 
     private void CleanupMarbles()
@@ -180,16 +189,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ClearMarbles() {
+    public void ClearMarbles()
+    {
         MarblesToDelete.AddRange(MarblesList);
-        foreach(Marble marble in MarblesToDelete) {
+        foreach (Marble marble in MarblesToDelete)
+        {
             MarblesList.Remove(marble);
             Destroy(marble.gameObject);
         }
         MarblesToDelete.Clear();
     }
 
-    public void RestartGame() {
+    public void RestartGame()
+    {
         ClearMarbles();
         playerScore = 0;
         enemyScore = 0;
@@ -198,9 +210,17 @@ public class GameManager : MonoBehaviour
         ForceUpdateEvents();
     }
 
-    public void ForceUpdateEvents() {
+    public void ForceUpdateEvents()
+    {
         TurnStateEvents.OnTurnProgressed(turnState);
         MarbleEvents.OnScoreChanged(MarbleTeam.Player);
         MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
+    }
+
+    private void OnGameOver()
+    {
+        // me when ternary 🤩
+        string gameResult = GetPlayerScore() == GetEnemyScore() ? "draw" : GetPlayerScore() > GetEnemyScore() ? "win" : "lose";
+        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.StringMetric(gameResult));
     }
 }

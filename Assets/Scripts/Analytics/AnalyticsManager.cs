@@ -7,7 +7,18 @@ using UnityEngine.Networking;
 
 public class AnalyticsManager : MonoBehaviour
 {
-    public struct MetricItem
+    public struct BoolMetric
+    {
+        public bool value;
+        public BoolMetric(bool val) { value = val; }
+    }
+    public struct StringMetric
+    {
+        public string value;
+        public StringMetric(string val) { value = val; }
+    }
+
+    private struct MetricItem
     {
         public string metricId;
         public object metricData;
@@ -23,7 +34,7 @@ public class AnalyticsManager : MonoBehaviour
     private const string API_KEY = "AIzaSyAoXTy6p6rtSSHtduwgQ86zpAdlCNtq08w";
     private static readonly string BASE_URL = $"https://{PROJECT_ID}-default-rtdb.firebaseio.com";
 
-    private const int GAME_VERSION = 1; // increment this as we release new versions of the game
+    private const int GAME_VERSION = 2; // increment this as we release new versions of the game
 
     private const string DEVICE_ID_KEY = "FirebaseMetrics_DeviceId";
 
@@ -138,6 +149,11 @@ public class AnalyticsManager : MonoBehaviour
 
     private static IEnumerator _SendMetricInternal(string metricId, object metricData, Action<bool, string> onComplete)
     {
+        if (Application.isEditor)
+        {
+            yield break;
+        }
+
         string deviceId = GetDeviceIdentifier();
         string sessionId = GetSessionId();
         string timestamp = DateTime.UtcNow.ToString("o");
@@ -176,19 +192,6 @@ public class AnalyticsManager : MonoBehaviour
             }
 
             onComplete?.Invoke(success, response);
-        }
-    }
-
-    public static IEnumerator SendMetricBatch(MetricItem[] metricsData)
-    {
-        if (metricsData == null || metricsData.Length == 0)
-        {
-            yield break;
-        }
-
-        foreach (MetricItem item in metricsData)
-        {
-            yield return _SendMetric(item.metricId, item.metricData);
         }
     }
 }
