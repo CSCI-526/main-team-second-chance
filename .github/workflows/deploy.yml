@@ -47,3 +47,4 @@ jobs:
                   branch: gh-pages
                   folder: build/WebGL/Build
                   clean: true
+                  target-folder: ${{ vars.CURRENT_GAME_VERSION }}
