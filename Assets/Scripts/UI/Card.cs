@@ -38,6 +38,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }*/
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("Clicked on a card with ID: " + HandIndex);
         if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetTurnState() == TurnState.CardSelect)
         {
             Debug.Log("Clicked on a card with ID: " + HandIndex);
