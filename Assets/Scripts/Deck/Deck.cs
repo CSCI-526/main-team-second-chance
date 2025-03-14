@@ -55,6 +55,7 @@ public class Deck : MonoBehaviour
     }
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
+        Graveyard.Clear();
         Hand.Clear();
         MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(Team, DeckSize);
         DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
