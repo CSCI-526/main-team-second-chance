@@ -17,6 +17,11 @@ public class AnalyticsManager : MonoBehaviour
         public string value;
         public StringMetric(string val) { value = val; }
     }
+    public struct IntMetric
+    {
+        public int value;
+        public IntMetric(int val) { value = val; }
+    }
 
     private struct MetricItem
     {

@@ -316,7 +316,8 @@ public class GameManager : MonoBehaviour
     private void OnGameOver()
     {
         // me when ternary 🤩
-        string gameResult = numWins == numLosses ? "draw" : numWins > numLosses ? "win" : "lose";
-        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.StringMetric(gameResult));
+        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.IntMetric(
+            GetPlayerScore() - GetEnemyScore()
+        ));
     }
 }
