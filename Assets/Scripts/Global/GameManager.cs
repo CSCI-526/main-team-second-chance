@@ -281,7 +281,7 @@ public class GameManager : MonoBehaviour
         }
         totalGames = numWins + numLosses;
         MarbleEvents.OnRoundsWonChange(numWins);
-        if (totalGames == 3) // prob not a magic num but w/e
+        if (totalGames % 3 == 0) // prob not a magic num but w/e
         {
             turnState = TurnState.GameOver;
             ForceUpdateEvents();
@@ -300,6 +300,8 @@ public class GameManager : MonoBehaviour
         HardClearMarbles();
         playerScore = 0;
         enemyScore = 0;
+        numWins = 0;
+        numLosses = 0;
         PlayerManager.InitializePlayerDeck();
         EnemyManager.InitializeEnemyDeck();
         turnState = TurnState.PlayerTurn;
