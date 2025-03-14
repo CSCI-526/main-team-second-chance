@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 932a19e4e5af28849b95f141db6152fa, type: 3}
-  m_Name: Explosion
+  m_Script: {fileID: 11500000, guid: cef8182f179934022877bd9ef5c94271, type: 3}
+  m_Name: Split
   m_EditorClassIdentifier: 
-  radius: 1.5
-  power: 5
