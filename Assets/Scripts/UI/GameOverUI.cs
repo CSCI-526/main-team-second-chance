@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
+
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField]
@@ -57,7 +57,6 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
         GameOverText.gameObject.SetActive(false);
         PlayAgainButton.gameObject.SetActive(false);
-
     }
 
     private void ShowPanel()

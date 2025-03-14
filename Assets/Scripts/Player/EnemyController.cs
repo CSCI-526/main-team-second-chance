@@ -52,7 +52,7 @@ public class EnemyController : MonoBehaviour
         {
             foreach (var Marble in GameManager.Instance.GetMarblesList())
             {
-                if(!Marble)
+                if (!Marble)
                 {
                     continue;
                 }
@@ -118,8 +118,9 @@ public class EnemyController : MonoBehaviour
         if (!MarbleObject)
         {
             // probably just turn to like end game or something
-            GameManager.Instance.turnState = TurnState.CardSelect;
+            GameManager.Instance.turnState = TurnState.GameOver;
             TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
+            TurnStateEvents.OnGameOvered();
             return;
         }
         MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleObject);
