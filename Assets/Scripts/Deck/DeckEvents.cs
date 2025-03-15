@@ -17,25 +17,25 @@ public static class DeckEvents
         OnMarbleUsed?.Invoke(Team, Count);
     }
 
-    public static event Action OnHandUpdated;
-    public static void HandUpdated()
+    public static event Action<MarbleTeam, List<MarbleData>> OnHandUpdated;
+    public static void HandUpdated(MarbleTeam Team, List<MarbleData> dataList)
     {
-        OnHandUpdated?.Invoke();
+        OnHandUpdated?.Invoke(Team, dataList);
     }
 
-    public static event Action<int> OnMarbleSelectedFromHand;
-    public static void MarbleSelectedFromHand(int CardID)
+    public static event Action<MarbleTeam, int> OnMarbleSelectedFromHand;
+    public static void MarbleSelectedFromHand(MarbleTeam Team, int CardID)
     {
-        OnMarbleSelectedFromHand?.Invoke(CardID);
+        OnMarbleSelectedFromHand?.Invoke(Team, CardID);
     }
-    public static event Action<List<GameObject>> OnSelectNewMarbleToAdd;
-    public static void SelectNewMarbleToAdd(List<GameObject> MarblesToAdd)
+    public static event Action<List<MarbleData>> OnSelectNewMarbleToAdd;
+    public static void SelectNewMarbleToAdd(List<MarbleData> MarblesToAdd)
     {
         OnSelectNewMarbleToAdd?.Invoke(MarblesToAdd);
     }
 
-    public static event Action<GameObject> OnAddNewMarbleToDeck;
-    public static void AddNewMarbleToDeck(GameObject MarbleObject)
+    public static event Action<MarbleData> OnAddNewMarbleToDeck;
+    public static void AddNewMarbleToDeck(MarbleData MarbleObject)
     {
         OnAddNewMarbleToDeck?.Invoke(MarbleObject);
     }

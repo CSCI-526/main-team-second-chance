@@ -8,7 +8,7 @@ public class NewCardSelectPanel : MonoBehaviour
     [SerializeField]
     List<GameObject> Cards;
     [SerializeField]
-    List<GameObject> MarblesReference;
+    List<MarbleData> MarblesReference;
     private void OnEnable()
     {
         DeckEvents.OnSelectNewMarbleToAdd += RevealCards;
@@ -22,25 +22,13 @@ public class NewCardSelectPanel : MonoBehaviour
         TurnStateEvents.OnTurnProgress -= UpdateTurnPanel;
         DeckEvents.OnAddNewMarbleToDeck -= Cleanup;
     }
-    private void Cleanup(GameObject MarbleObject)
+    private void Cleanup(MarbleData MarbleObject)
     {
         if (MarblesReference.Count == 0)
         {
             return;
         }
-        List<GameObject> DeleteList = new List<GameObject>();
-        for (int i = 0; i < MarblesReference.Count; ++i)
-        {
-            if (MarblesReference[i] != MarbleObject)
-            {
-                DeleteList.Add(MarblesReference[i]);
-            }
-        }
-        for (int i = 0; i < DeleteList.Count; ++i)
-        {
-            MarblesReference.Remove(DeleteList[i]);
-            Destroy(DeleteList[i]);
-        }
+        MarblesReference.Clear();
     }
     void Start()
     {
@@ -54,7 +42,7 @@ public class NewCardSelectPanel : MonoBehaviour
         }
     }
 
-    private void RevealCards(List<GameObject> MarblesToAdd)
+    private void RevealCards(List<MarbleData> MarblesToAdd)
     {
         MarblesReference = MarblesToAdd;
         ShowPanel();
@@ -62,13 +50,12 @@ public class NewCardSelectPanel : MonoBehaviour
         {
             // Activate a corresponding UI Prefab
             Card card = Cards[i].GetComponent<Card>();
-            Marble marbleData = MarblesReference[i].GetComponent<Marble>();
-            if (!card || !marbleData)
+            if (!card)
             {
-                Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. Or MarbleData.cs is not attached to Marble PrefabThis shouldn't happen");
+                Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. This shouldn't happen");
                 return;
             }
-            card.UpdateInformation(marbleData.GetMarbleName(), marbleData.GetMarbleDescription(), MarblesReference[i]);
+            card.UpdateInformation(MarblesReference[i].MarbleName, MarblesReference[i].MarbleDescription, MarblesReference[i]);
             card.SetHandIndex(i);
             Cards[i].SetActive(true);
         }

@@ -15,7 +15,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         PanelImage.material = null;
         CardDescription.SetText(CardDetail);
     }
-    public void UpdateInformation(string MarblePrefab, string CardDetail, GameObject MarbleObject)
+    public void UpdateInformation(string MarblePrefab, string CardDetail, MarbleData MarbleObject)
     {
         MarbleType.SetText(MarblePrefab);
         PanelImage.material = null;
@@ -49,7 +49,7 @@ public class Card : MonoBehaviour, IPointerClickHandler
         {
             Debug.Log("Clicked on a card with ID: " + HandIndex);
             PanelImage.material = SelectedMaterial;
-            DeckEvents.MarbleSelectedFromHand(HandIndex);
+            DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
         }
     }
 
@@ -65,6 +65,5 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private Material SelectedMaterial;
     private int HandIndex;
-    [SerializeField]
-    private GameObject NewMarbleToAdd;
+    private MarbleData NewMarbleToAdd;
 }

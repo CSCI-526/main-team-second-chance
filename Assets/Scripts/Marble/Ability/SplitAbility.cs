@@ -6,7 +6,7 @@ public class SplitAbility : Ability
 {
     public override void Cast(Marble marble)
     {
-        Debug.Log("Ability Casted: EXPLODE");
+        Debug.Log("Ability Casted: Split");
         if (marble == null) return;
 
         Rigidbody rb = marble.GetComponent<Rigidbody>();
@@ -14,11 +14,6 @@ public class SplitAbility : Ability
         Vector3 Offset = rotation * rb.velocity;
         Vector3 Position = marble.transform.position + 0.1f * Offset.normalized;
         
-        Marble MarbleIns = Instantiate(GameManager.Instance.GetDeckManager().GetDefaultMarble(),Position,Quaternion.identity).GetComponent<Marble>();
-        Rigidbody newRB = MarbleIns.GetComponent<Rigidbody>();
-        newRB.velocity = Offset;
-        
-        MarbleIns.Team = marble.Team;
-        GameManager.Instance.RegisterMarble(MarbleIns);
+        MarbleEvents.MarbleReadyToLaunch(marble.Team, GameManager.Instance.GetDeckManager().GetDefaultMarble(), Offset.normalized, Offset.magnitude, Position);
     }
 }

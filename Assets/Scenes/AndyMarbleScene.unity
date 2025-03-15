@@ -812,6 +812,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefab
+      value: 
+      objectReference: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1387,10 +1393,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
+      propertyPath: MarblePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: d47ff3bfdbc0d2542991a47fd60b8f89,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: aaede1b88a05db64db45f043b3a2e38a,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
       propertyPath: MarblePrefabs.Array.data[5]
       value: 
-      objectReference: {fileID: 8896970215918674003, guid: 21cf31e8a3d7249faad097cfd0fad973,
-        type: 3}
+      objectReference: {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816,
+        type: 2}
     - target: {fileID: 6664558104299889255, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: m_Name

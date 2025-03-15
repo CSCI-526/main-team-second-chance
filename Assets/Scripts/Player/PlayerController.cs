@@ -60,12 +60,14 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
                 Debug.Log("Direction magnitude: " + DirectionMagnitude);
-                GameObject MarbleObject = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
-                if (!MarbleObject)
+                MarbleData MarbleData = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
+                if (!MarbleData)
                 {
+                    Debug.LogError("PlayerController.Update(): MarbleData requested is Null");
                     return;
                 }
-                MarbleLauncher.ins.LaunchMarble(Direction.normalized, DirectionMagnitude, StartLocationMouse, MarbleObject);
+
+                MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData, Direction, DirectionMagnitude, StartLocationMouse);
             }
             bCanShootMarble = true;
         }

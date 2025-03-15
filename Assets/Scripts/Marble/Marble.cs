@@ -12,11 +12,26 @@ public class Marble : MonoBehaviour
 {
     [SerializeField]
     private MarbleData marbleData;
-    public string GetMarbleName() { return marbleData.MarbleName; }
-    public string GetMarbleDescription() { return marbleData.MarbleDescription; }
-    public MarbleTeam Team;
+    public void UpdateMarbleData(MarbleData NewMarbleData, MarbleTeam Team) 
+    { 
+        marbleData = NewMarbleData;
+        if (marbleData != null)
+        {
+            rb = GetComponent<Rigidbody>();
+            var currentScale = gameObject.transform.localScale;
+
+            gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
+            rb.mass = marbleData.Mass;
+            rb.drag = marbleData.Drag;
+            this.Team = Team;
+        }
+    }
+    public MarbleData GetMarbleData() { return marbleData; }
+    public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
+    public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
     public bool bIsInsideGameplayCircle = true;
     public bool bIsInsideScoringCircle = false;
+    public MarbleTeam Team;
     //public bool cool = false;
 
     private Rigidbody rb;
@@ -34,11 +49,6 @@ public class Marble : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        // For now, cast ability once marble is instantiated
-        
-    }
     private void OnEnable()
     {
         CastAbility();

@@ -31,13 +31,16 @@ public class PlayerManager : MonoBehaviour
     {
         PlayerDeck.InitializeDeck(Team, DeckSize);
     }
-    private void AddMarbleToDeck(GameObject gameObject)
+    private void AddMarbleToDeck(MarbleData gameObject)
     {
         if (!gameObject)
         {
             return;
         }
-        PlayerDeck.AddMarbleToDeck(gameObject);
+        DeckItem item = new DeckItem();
+        item.MarbleData = gameObject;
+        item.bHasBeenUsed = false;
+        PlayerDeck.AddMarbleToDeck(Team ,item);
         GameManager.Instance.turnState = TurnState.PlayerTurn;
         TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
     }

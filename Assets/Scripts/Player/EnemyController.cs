@@ -114,8 +114,8 @@ public class EnemyController : MonoBehaviour
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness);
             Force = scale * CenterForce;
         }
-        GameObject MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
-        if (!MarbleObject)
+        MarbleData MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
+        if (MarbleObject == null)
         {
             // probably just turn to like end game or something
             GameManager.Instance.turnState = TurnState.GameOver;
@@ -123,6 +123,6 @@ public class EnemyController : MonoBehaviour
             TurnStateEvents.OnGameOvered();
             return;
         }
-        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleObject);
+        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location);
     }
 }

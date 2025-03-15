@@ -5,10 +5,10 @@ public class DeckManager : MonoBehaviour
 {
     // The different possible marble prefabs that we want to give
     [SerializeField]
-    private List<GameObject> MarblePrefabs;
-    public List<GameObject> GenerateDeck(MarbleTeam Team, int DeckSize)
+    private List<MarbleData> MarblePrefabs;
+    public List<DeckItem> GenerateDeck(MarbleTeam Team, int DeckSize)
     {
-        List<GameObject> marbles;
+        List<DeckItem> marbles;
         if (Team == MarbleTeam.Player)
         {
             marbles = GeneratePlayerInitialDeck(Team, DeckSize);
@@ -21,72 +21,64 @@ public class DeckManager : MonoBehaviour
         return marbles;
     }
 
-    public List<GameObject> GeneratePlayerInitialDeck(MarbleTeam Team, int DeckSize)
+    public List<DeckItem> GeneratePlayerInitialDeck(MarbleTeam Team, int DeckSize)
     {
-        List<GameObject> marbles = new List<GameObject>();
+        List<DeckItem> marbles = new List<DeckItem>();
 
         int firstHalf = DeckSize / 2;
         int secondHalf = DeckSize - firstHalf;
         // first half is basic
         for (int i = 0; i < firstHalf; ++i)
         {
-            GameObject marble = Instantiate(MarblePrefabs[0]);
-            marble.SetActive(false);
-            Marble marbleComp = marble.GetComponent<Marble>();
-            marbleComp.Team = Team;
-            GameManager.Instance.RegisterMarble(marbleComp);
-            marbles.Add(marble);
+            DeckItem newItem = new DeckItem();
+            newItem.MarbleData = MarblePrefabs[0];
+            newItem.bHasBeenUsed = false;
+            marbles.Add(newItem);
         }
 
         // second half is random
         for (int i = 0; i < secondHalf; ++i)
         {
             int randomIndex = Random.Range(1, MarblePrefabs.Count);
-            GameObject marble = Instantiate(MarblePrefabs[randomIndex]);
-            marble.SetActive(false);
-            Marble marbleComp = marble.GetComponent<Marble>();
-            marbleComp.Team = Team;
-            GameManager.Instance.RegisterMarble(marbleComp);
-            marbles.Add(marble);
+            DeckItem newItem = new DeckItem();
+            newItem.MarbleData = MarblePrefabs[randomIndex];
+            newItem.bHasBeenUsed = false;
+            marbles.Add(newItem);
         }
 
 
         return marbles;
     }
 
-    public List<GameObject> GenerateEnemyDeck(MarbleTeam Team, int DeckSize)
+    public List<DeckItem> GenerateEnemyDeck(MarbleTeam Team, int DeckSize)
     {
-        List<GameObject> marbles = new List<GameObject>();
+        // For now only generate default data
+        List<DeckItem> marbles = new List<DeckItem>();
         for (int i = 0; i < DeckSize; ++i)
         {
-            GameObject marble = Instantiate(MarblePrefabs[0]); // Generates only basics initially
-            marble.SetActive(false);
-            Marble marbleComp = marble.GetComponent<Marble>();
-            marbleComp.Team = Team;
-            GameManager.Instance.RegisterMarble(marbleComp);
-            marbles.Add(marble);
+            DeckItem newItem = new DeckItem();
+            newItem.MarbleData = MarblePrefabs[0];
+            newItem.bHasBeenUsed = false;
+            marbles.Add(newItem);
         }
 
         return marbles;
     }
 
-    public List<GameObject> GenerateNewMarbles()
+    /* TO DO REFACTOR*/
+    public List<MarbleData> GenerateNewMarbles()
     {
-        List<GameObject> marbles = new List<GameObject>();
+        List<MarbleData> marbles = new List<MarbleData>();
         for (int i = 0; i < 3; ++i)
         {
             int randomIndex = Random.Range(0, MarblePrefabs.Count);
-            GameObject marble = Instantiate(MarblePrefabs[randomIndex]);
-            marble.SetActive(false);
-            Marble marbleComp = marble.GetComponent<Marble>();
-            marbleComp.Team = MarbleTeam.Player;
-            marbles.Add(marble);
+            MarbleData marble = MarblePrefabs[randomIndex];
         }
 
         return marbles;
     }
 
-    public GameObject GetDefaultMarble()
+    public MarbleData GetDefaultMarble()
     {
         return MarblePrefabs[0];
     }
