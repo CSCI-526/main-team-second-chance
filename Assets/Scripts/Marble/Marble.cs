@@ -25,6 +25,7 @@ public class Marble : MonoBehaviour
             rb.drag = marbleData.Drag;
             this.Team = Team;
         }
+        CastAbility();
     }
     public MarbleData GetMarbleData() { return marbleData; }
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
@@ -35,7 +36,7 @@ public class Marble : MonoBehaviour
     //public bool cool = false;
 
     private Rigidbody rb;
-    private void Awake()
+    /*private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
         if (marbleData != null)
@@ -47,12 +48,12 @@ public class Marble : MonoBehaviour
             rb.mass = marbleData.Mass;
             rb.drag = marbleData.Drag;
         }
-    }
+    }*/
 
-    private void OnEnable()
+   /* private void OnEnable()
     {
         CastAbility();
-    }
+    }*/
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

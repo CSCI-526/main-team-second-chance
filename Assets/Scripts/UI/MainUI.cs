@@ -54,6 +54,10 @@ public class MainUI : MonoBehaviour
     }
     private void UpdateDeckCount(MarbleTeam Team, int Count)
     {
+        if (Team != MarbleTeam.Player)
+        {
+            return;
+        }
         if (Count == 0)
         {
             PlayerDeckCount.color = Color.red;
@@ -62,15 +66,8 @@ public class MainUI : MonoBehaviour
         {
             PlayerDeckCount.color = Color.white;
         }
-        if (Team == MarbleTeam.Player)
-        {
+        PlayerDeckCount.text = $"{Count}";
 
-            PlayerDeckCount.text = $"{Count}";
-        }
-        else
-        {
-            PlayerDeckCount.text = $"{Count}";
-        }
     }
 
     /* TO DO REFACTOR*/
@@ -82,8 +79,10 @@ public class MainUI : MonoBehaviour
         }
         if(dataList == null)
         {
+            Debug.LogError("MainUI.UpdateHand(): The marbledata list being sent in is null. This probably shouldn't happen");
             return;
         }
+
         if (Cards.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetMaxHandSize(); i++)

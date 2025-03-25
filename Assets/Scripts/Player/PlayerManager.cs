@@ -37,10 +37,7 @@ public class PlayerManager : MonoBehaviour
         {
             return;
         }
-        DeckItem item = new DeckItem();
-        item.MarbleData = gameObject;
-        item.bHasBeenUsed = false;
-        PlayerDeck.AddMarbleToDeck(Team ,item);
+        PlayerDeck.AddMarbleToDeck(Team , gameObject);
         GameManager.Instance.turnState = TurnState.PlayerTurn;
         TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
     }

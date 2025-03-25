@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     {
         if (TurnState.WaitingOnPlayerTurn == turnState)
         {
-            if (PlayerManager.GetPlayerDeck().GetTotalRemainingMarbles() > 0)
+            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() < PlayerManager.GetPlayerDeck().GetDeckSize())
             {
                 turnState = TurnState.PlayerTurn;
             }
@@ -188,37 +188,6 @@ public class GameManager : MonoBehaviour
 
     private void CleanupMarbles()
     {
-        List<int> cleanupIndices = new List<int>();
-
-        if (MarblesList.Count != 0)
-        {
-            for (int i = 0; i < MarblesList.Count; ++i)
-            {
-                if (!MarblesList[i])
-                {
-                    cleanupIndices.Add(i);
-                }
-                else
-                {
-                    if (!MarblesList[i].bIsInsideScoringCircle)
-                    {
-                        MarblesList[i].gameObject.SetActive(false);
-                    }
-                }
-            }
-        }
-
-        if (cleanupIndices.Count != 0)
-        {
-            foreach (int marble in cleanupIndices)
-            {
-                MarblesList.RemoveAt(marble);
-            }
-        }
-
-    }
-    public void HardClearMarbles()
-    {
         if (MarblesList.Count != 0)
         {
             foreach (Marble marble in MarblesList)
@@ -237,40 +206,13 @@ public class GameManager : MonoBehaviour
             MarblesToDelete.Clear();
         }
         MarblesToDelete.Clear();
-    }
-    public void ClearMarbles()
-    {
-        // only Delete the marbles that are enemy
-        if (MarblesList.Count != 0)
-        {
-            foreach (Marble marble in MarblesList)
-            {
-                if (marble.Team != MarbleTeam.Player)
-                {
-                    MarblesToDelete.Add(marble);
-                }
-                else
-                {
-                    marble.gameObject.SetActive(false);
-                }
-            }
-        }
 
-        if (MarblesToDelete.Count != 0)
-        {
-            foreach (Marble marble in MarblesToDelete)
-            {
-                MarblesList.Remove(marble);
-                Destroy(marble.gameObject);
-            }
-            MarblesToDelete.Clear();
-        }
-        MarblesToDelete.Clear();
     }
+
 
     public void GoToNextRound()
     {
-        ClearMarbles();
+        CleanupMarbles();
         if (playerScore > enemyScore)
         {
             numWins++;
@@ -297,7 +239,7 @@ public class GameManager : MonoBehaviour
     }
     public void RestartGame()
     {
-        HardClearMarbles();
+        CleanupMarbles();
         playerScore = 0;
         enemyScore = 0;
         numWins = 0;

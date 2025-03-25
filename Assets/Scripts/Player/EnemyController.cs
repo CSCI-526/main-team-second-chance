@@ -117,10 +117,6 @@ public class EnemyController : MonoBehaviour
         MarbleData MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
         if (MarbleObject == null)
         {
-            // probably just turn to like end game or something
-            GameManager.Instance.turnState = TurnState.GameOver;
-            TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
-            TurnStateEvents.OnGameOvered();
             return;
         }
         MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location);
