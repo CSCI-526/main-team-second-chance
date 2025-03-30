@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
                 LineRenderer.SetPosition(0, StartLocationMouse);
                 LineRenderer.SetPosition(1, StartLocationMouse);
 
-                if(tutorialBar != null && tutorial != null)
+                if (tutorialBar != null && tutorial != null)
                 {
                     tutorialBar.SetActive(false);
                     tutorial.SetActive(false);
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
 
-                MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData, Direction, DirectionMagnitude, StartLocationMouse);
+                MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData.MarbleType, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
             bCanShootMarble = true;
         }

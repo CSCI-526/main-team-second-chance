@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class MarbleLauncher : MonoBehaviour
 {
-    [SerializeField] 
-    private GameObject MarblePrefab;
+    [SerializeField]
+    private List<GameObject> MarblePrefabs;
     [SerializeField] private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
     [SerializeField] private Material enemyMaterial;
@@ -19,27 +19,47 @@ public class MarbleLauncher : MonoBehaviour
     {
         MarbleEvents.OnMarbleReadyToLaunch -= LaunchMarble;
     }
-    public void LaunchMarble(MarbleTeam Team, MarbleData Data, Vector3 Direction, float Force, Vector3 Location)
+    public void LaunchMarble(MarbleTeam Team, MarbleType Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
     {
-        if (GameManager.Instance.GetAreMarblesMoving())
+        if (GameManager.Instance.GetAreMarblesMoving() && !bOverrideWaiting)
         {
             Debug.LogWarning("MarbleLauncher.LaunchMarble(): Marbles are still moving");
             return;
         }
         Location.y = 0.25f;
         Direction.y = 0.0f;
-
-        GameObject MarbleObject = Instantiate(MarblePrefab);
+        int MarblePrefabIndex = 0;
+        switch (Type)
+        {
+            case MarbleType.EXPLOSIVE:
+                MarblePrefabIndex = 1;
+                break;
+            case MarbleType.SPLITTER:
+                MarblePrefabIndex = 2;
+                break;
+            case MarbleType.BLACKHOLE:
+                MarblePrefabIndex = 3;
+                break;
+            case MarbleType.THICC:
+                MarblePrefabIndex = 4;
+                break;
+            case MarbleType.TINY:
+                MarblePrefabIndex = 5;
+                break;
+            default:
+                MarblePrefabIndex = 0;
+                break;
+        }
+        GameObject MarbleObject = Instantiate(MarblePrefabs[MarblePrefabIndex]);
         MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
-        
+
         Marble MarbleIns = MarbleObject.GetComponent<Marble>();
-        if(!MarbleIns)
+        if (!MarbleIns)
         {
             Debug.LogError("MarbleLauncher.LaunchMarble(): Marble.cs is not attached to marble prefab");
             return;
         }
-        MarbleIns.UpdateMarbleData(Data, Team);
-
+        MarbleIns.Team = Team;
         // Register the marble 
         GameManager.Instance.RegisterMarble(MarbleIns);
         MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
@@ -53,6 +73,9 @@ public class MarbleLauncher : MonoBehaviour
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
-        StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
+        if(!bOverrideWaiting)
+        {
+            StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
+        }
     }
 }

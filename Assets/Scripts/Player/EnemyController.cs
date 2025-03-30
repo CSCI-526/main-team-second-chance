@@ -115,10 +115,10 @@ public class EnemyController : MonoBehaviour
             Force = scale * CenterForce;
         }
         MarbleData MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
-        if (MarbleObject == null)
+        if (!MarbleObject)
         {
             return;
         }
-        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location);
+        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject.MarbleType, Direction, Force, Location, false);
     }
 }

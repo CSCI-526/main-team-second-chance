@@ -56,17 +56,16 @@ public class DeckManager : MonoBehaviour
         return marbles;
     }
 
-    /* TO DO REFACTOR*/
     public List<MarbleData> GenerateNewMarbles()
     {
-        List<MarbleData> marbles = new List<MarbleData>();
+        List<MarbleData> PossibleMarbleData = new List<MarbleData>();
         for (int i = 0; i < 3; ++i)
         {
             int randomIndex = Random.Range(0, MarblePrefabs.Count);
-            MarbleData marble = MarblePrefabs[randomIndex];
+            PossibleMarbleData.Add(MarblePrefabs[randomIndex]);
         }
 
-        return marbles;
+        return PossibleMarbleData;
     }
 
     public MarbleData GetDefaultMarble()

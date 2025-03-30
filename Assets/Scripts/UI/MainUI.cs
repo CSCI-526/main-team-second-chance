@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class MainUI : MonoBehaviour
     private TextMeshProUGUI EnemyScore;
     [SerializeField]
     private Transform HandStartingPoint;
+    [SerializeField]
+    private HorizontalLayoutGroup HandLayoutGroup;
     [SerializeField]
     private float CardOffsetDistance = 50.0f;
     [SerializeField]
@@ -99,18 +102,8 @@ public class MainUI : MonoBehaviour
             Debug.LogError("MainUI.UpdateHand(): NumCardsToRep is larger than the actual number of spawn points. This shouldn't happen \n" + Cards.Count + " <" + dataList.Count);
             return;
         }
-
-        int negation = -1;
-        int offsetIter = 0;
         for (int i = 0; i < dataList.Count; i++)
         {
-            // Calculate where to put the card in UI
-            Vector3 Offset = new Vector3(offsetIter * CardOffsetDistance * negation, 50.0f, 0);
-            negation *= -1;
-            if (i % 2 == 0)
-            {
-                offsetIter++;
-            }
             // Activate a corresponding UI Prefab
             Card card = Cards[i].GetComponent<Card>();
             MarbleData marbleData = dataList[i];
@@ -121,7 +114,6 @@ public class MainUI : MonoBehaviour
             }
             card.UpdateInformation(marbleData.MarbleName, marbleData.MarbleDescription);
             card.SetHandIndex(i);
-            Cards[i].gameObject.transform.localPosition = Offset;
             Cards[i].SetActive(true);
         }
         // cleanup the rest of the available cards if there are more than the hand size ie if 

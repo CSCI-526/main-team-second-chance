@@ -12,21 +12,7 @@ public class Marble : MonoBehaviour
 {
     [SerializeField]
     private MarbleData marbleData;
-    public void UpdateMarbleData(MarbleData NewMarbleData, MarbleTeam Team) 
-    { 
-        marbleData = NewMarbleData;
-        if (marbleData != null)
-        {
-            rb = GetComponent<Rigidbody>();
-            var currentScale = gameObject.transform.localScale;
 
-            gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
-            rb.mass = marbleData.Mass;
-            rb.drag = marbleData.Drag;
-            this.Team = Team;
-        }
-        CastAbility();
-    }
     public MarbleData GetMarbleData() { return marbleData; }
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
@@ -36,7 +22,7 @@ public class Marble : MonoBehaviour
     //public bool cool = false;
 
     private Rigidbody rb;
-    /*private void Awake()
+    private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
         if (marbleData != null)
@@ -48,12 +34,12 @@ public class Marble : MonoBehaviour
             rb.mass = marbleData.Mass;
             rb.drag = marbleData.Drag;
         }
-    }*/
+    }
 
-   /* private void OnEnable()
+    private void OnEnable()
     {
         CastAbility();
-    }*/
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

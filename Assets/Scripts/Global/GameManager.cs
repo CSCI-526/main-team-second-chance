@@ -192,6 +192,30 @@ public class GameManager : MonoBehaviour
         {
             foreach (Marble marble in MarblesList)
             {
+                if (!marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
+                {
+                    MarblesToDelete.Add(marble);
+                }
+            }
+        }
+
+        if (MarblesToDelete.Count != 0)
+        {
+            foreach (Marble marble in MarblesToDelete)
+            {
+                MarblesList.Remove(marble);
+                Destroy(marble.gameObject);
+            }
+            MarblesToDelete.Clear();
+        }
+        MarblesToDelete.Clear();
+    }
+    private void ClearMarbles()
+    {
+        if (MarblesList.Count != 0)
+        {
+            foreach (Marble marble in MarblesList)
+            {
                 MarblesToDelete.Add(marble);
             }
         }
@@ -206,13 +230,11 @@ public class GameManager : MonoBehaviour
             MarblesToDelete.Clear();
         }
         MarblesToDelete.Clear();
-
     }
-
 
     public void GoToNextRound()
     {
-        CleanupMarbles();
+        ClearMarbles();
         if (playerScore > enemyScore)
         {
             numWins++;
@@ -239,7 +261,7 @@ public class GameManager : MonoBehaviour
     }
     public void RestartGame()
     {
-        CleanupMarbles();
+        ClearMarbles();
         playerScore = 0;
         enemyScore = 0;
         numWins = 0;

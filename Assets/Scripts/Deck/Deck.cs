@@ -21,6 +21,7 @@ public class Deck : MonoBehaviour
     public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
     {
         MarbleDeck.Add(marble);
+        NumMarblesUsed = 0;
         ShuffleDeck();
         GenerateInitialHand(Team);
         GameManager.Instance.turnState = TurnState.PlayerTurn;
@@ -30,11 +31,15 @@ public class Deck : MonoBehaviour
     {
         MarbleData marbleData = null;
 
+        if(Team == MarbleTeam.Enemy)
+        {
+            EnemyChooseHandIndex();
+        }
         // This means that we didn't select a marble from the hand
         if (IndexOfHand < 0 || IndexOfHand >= Hand.Count)
         {
             Debug.LogWarning("Deck.UseMarble(): The IndexOfHand is not valid. Something Wrong has happened");
-            return marbleData;
+            return null;
         }
         int DeckIndex = Hand[IndexOfHand];
         if(Team == MarbleTeam.Enemy)
@@ -45,7 +50,7 @@ public class Deck : MonoBehaviour
         if (DeckIndex < 0 || DeckIndex >= MarbleDeck.Count)
         {
             Debug.LogWarning("Deck.UseMarble(): The DeckIndex is not valid. Something Wrong has happened");
-            return marbleData;
+            return null;
         }
 
         marbleData = MarbleDeck[DeckIndex];
@@ -69,6 +74,7 @@ public class Deck : MonoBehaviour
         // Clear the hand, make sure that we do not have anything in the hand at the moment
         Hand.Clear();
         NextIndexToDrawToHand = 0;
+        NumMarblesUsed = 0;
         MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(Team, DeckSize);
         ShuffleDeck();
         GenerateInitialHand(Team);
@@ -154,10 +160,6 @@ public class Deck : MonoBehaviour
         if(this == GameManager.Instance.GetPlayerManager().GetPlayerDeck())
         {
             IndexOfHand = ID;
-        }
-        else
-        {
-            EnemyChooseHandIndex();
         }
     }
     private void EnemyChooseHandIndex()

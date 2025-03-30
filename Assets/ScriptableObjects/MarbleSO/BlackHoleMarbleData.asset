@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MarblePrefab: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
     type: 3}
-  marbleType: 0
+  marbleType: 4
   Sprite: {fileID: 0}
   Mass: 1
   UniformScale: 0.5
