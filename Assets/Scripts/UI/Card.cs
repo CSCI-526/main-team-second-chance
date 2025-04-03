@@ -15,6 +15,13 @@ public class Card : MonoBehaviour, IPointerClickHandler
         PanelImage.material = null;
         CardDescription.SetText(CardDetail);
     }
+    public void UpdateInformation(string MarblePrefab, string CardDetail, MarbleData MarbleObject)
+    {
+        MarbleType.SetText(MarblePrefab);
+        PanelImage.material = null;
+        CardDescription.SetText(CardDetail);
+        NewMarbleToAdd = MarbleObject;
+    }
     /*public void OnPointerDown(PointerEventData eventData)
     {
         throw new System.NotImplementedException();
@@ -31,11 +38,18 @@ public class Card : MonoBehaviour, IPointerClickHandler
     }*/
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0)
+        Debug.Log("Clicked on a card with ID: " + HandIndex);
+        if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetTurnState() == TurnState.CardSelect)
         {
             Debug.Log("Clicked on a card with ID: " + HandIndex);
             PanelImage.material = SelectedMaterial;
-            DeckEvents.MarbleSelectedFromHand(HandIndex);
+            DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
+        }
+        else if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0)
+        {
+            Debug.Log("Clicked on a card with ID: " + HandIndex);
+            PanelImage.material = SelectedMaterial;
+            DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
         }
     }
 
@@ -51,5 +65,5 @@ public class Card : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private Material SelectedMaterial;
     private int HandIndex;
-
+    private MarbleData NewMarbleToAdd;
 }

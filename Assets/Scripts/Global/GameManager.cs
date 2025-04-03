@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public enum TurnState
 {
@@ -9,15 +8,18 @@ public enum TurnState
     WaitingOnEnemyTurn,
     EnemyTurn,
     WaitingOnPlayerTurn,
-    GameOver
+    GameOver,
+    CardSelect
 }
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
+    public EnemyManager GetEnemyManager() { return EnemyManager; }
     public PlayerManager GetPlayerManager() { return PlayerManager; }
     public DeckManager GetDeckManager() { return DeckManager; }
     public int GetPlayerScore() { return playerScore; }
+    public int GetNumWins() { return numWins; }
     public int GetEnemyScore() { return enemyScore; }
 
     public TurnState turnState = TurnState.PlayerTurn;
@@ -27,13 +29,14 @@ public class GameManager : MonoBehaviour
     {
         if (TurnState.WaitingOnPlayerTurn == turnState)
         {
-            if (PlayerManager.GetPlayerDeck().GetTotalRemainingMarbles() > 0)
+            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() < PlayerManager.GetPlayerDeck().GetDeckSize())
             {
                 turnState = TurnState.PlayerTurn;
             }
             else
             {
-                turnState = TurnState.GameOver;
+                // Changing to card select for now
+                turnState = TurnState.CardSelect;
             }
         }
         else
@@ -47,14 +50,20 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log(turnState);
-        if (turnState == TurnState.GameOver)
+        if (turnState == TurnState.CardSelect)
         {
+            GoToNextRound();
+        }
+        else if (turnState == TurnState.GameOver)
+        {
+            // don't think we're ever hitting this naturally but
             TurnStateEvents.OnGameOvered();
         }
         else
         {
             TurnStateEvents.OnTurnProgressed(turnState);
         }
+
 
 
         if (turnState == TurnState.EnemyTurn)
@@ -103,6 +112,15 @@ public class GameManager : MonoBehaviour
             bool bMarblesSettled = true;
             foreach (Marble marble in MarblesList)
             {
+                if (!marble)
+                {
+                    MarblesToDelete.Add(marble);
+                    continue;
+                }
+                if (!marble.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
                 if (marble.bIsInsideGameplayCircle)
                 {
                     Rigidbody physics = marble.GetComponent<Rigidbody>();
@@ -135,12 +153,16 @@ public class GameManager : MonoBehaviour
     private DeckManager DeckManager;
     [SerializeField]
     private PlayerManager PlayerManager;
+    [SerializeField]
+    private EnemyManager EnemyManager;
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
     private int enemyScore = 0;
     private bool bAreMarblesMoving = false;
-
+    private int numWins = 0;
+    private int numLosses = 0;
+    private int totalGames = 0;
     private void Awake()
     {
         if (Instance == null)
@@ -170,13 +192,12 @@ public class GameManager : MonoBehaviour
         {
             foreach (Marble marble in MarblesList)
             {
-                if (!marble.bIsInsideScoringCircle)
+                if (!marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
                 {
                     MarblesToDelete.Add(marble);
                 }
             }
         }
-
 
         if (MarblesToDelete.Count != 0)
         {
@@ -187,25 +208,66 @@ public class GameManager : MonoBehaviour
             }
             MarblesToDelete.Clear();
         }
+        MarblesToDelete.Clear();
     }
-
-    public void ClearMarbles()
+    private void ClearMarbles()
     {
-        MarblesToDelete.AddRange(MarblesList);
-        foreach (Marble marble in MarblesToDelete)
+        if (MarblesList.Count != 0)
         {
-            MarblesList.Remove(marble);
-            Destroy(marble.gameObject);
+            foreach (Marble marble in MarblesList)
+            {
+                MarblesToDelete.Add(marble);
+            }
+        }
+
+        if (MarblesToDelete.Count != 0)
+        {
+            foreach (Marble marble in MarblesToDelete)
+            {
+                MarblesList.Remove(marble);
+                Destroy(marble.gameObject);
+            }
+            MarblesToDelete.Clear();
         }
         MarblesToDelete.Clear();
     }
 
+    public void GoToNextRound()
+    {
+        ClearMarbles();
+        if (playerScore > enemyScore)
+        {
+            numWins++;
+        }
+        else
+        {
+            numLosses++;
+        }
+        totalGames = numWins + numLosses;
+        MarbleEvents.OnRoundsWonChange(numWins);
+        if (totalGames % 3 == 0) // prob not a magic num but w/e
+        {
+            turnState = TurnState.GameOver;
+            ForceUpdateEvents();
+            TurnStateEvents.OnGameOvered();
+            return;
+        }
+        playerScore = 0;
+        enemyScore = 0;
+        DeckEvents.SelectNewMarbleToAdd(DeckManager.GenerateNewMarbles());
+        EnemyManager.InitializeEnemyDeck();
+        ForceUpdateEvents();
+
+    }
     public void RestartGame()
     {
         ClearMarbles();
         playerScore = 0;
         enemyScore = 0;
+        numWins = 0;
+        numLosses = 0;
         PlayerManager.InitializePlayerDeck();
+        EnemyManager.InitializeEnemyDeck();
         turnState = TurnState.PlayerTurn;
         ForceUpdateEvents();
     }
@@ -220,7 +282,8 @@ public class GameManager : MonoBehaviour
     private void OnGameOver()
     {
         // me when ternary 🤩
-        string gameResult = GetPlayerScore() == GetEnemyScore() ? "draw" : GetPlayerScore() > GetEnemyScore() ? "win" : "lose";
-        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.StringMetric(gameResult));
+        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.IntMetric(
+            GetPlayerScore() - GetEnemyScore()
+        ));
     }
 }

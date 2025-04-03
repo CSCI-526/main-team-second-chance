@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5510101932712594358}
   - component: {fileID: 7923564224615749207}
   - component: {fileID: 3797704203141291860}
+  - component: {fileID: 8379333905397335880}
   m_Layer: 0
   m_Name: EnemyManager
   m_TagString: Untagged
@@ -45,6 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4cf98e92f48e4d7da942bda5903a461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ForceRandomness: 0.1
+  DirectionRandomness: 0.1
+  CenterForce: 0.9
+  KnockoutForce: 5
+  KnockoutTargetRatio: 0.3
+  SkillLevel: 1
 --- !u!114 &3797704203141291860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,3 +64,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34c15c9e667adbd4fb653ae8e46e3034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_HAND_SIZE: 5
+  INIT_HAND_SIZE: 4
+--- !u!114 &8379333905397335880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097856259149185956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7b859f32244b54cb8d7280f307b44f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeckSize: 12
+  Team: 1

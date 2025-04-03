@@ -223,6 +223,11 @@ PrefabInstance:
       objectReference: {fileID: 1562597394}
     - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
         type: 3}
+      propertyPath: EnemyManager
+      value: 
+      objectReference: {fileID: 1759644512531380692}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
       propertyPath: PlayerManager
       value: 
       objectReference: {fileID: 2006374472}
@@ -614,12 +619,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1102569286 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1381759383390061962, guid: e96beefb821ae7f489adda0abf44eb0b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1659263865}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1108926594
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,9 +814,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
         type: 3}
-      propertyPath: LaunchForceScale
-      value: 1.75
+      propertyPath: MarblePrefab
+      value: 
+      objectReference: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.size
+      value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 517083609669004653, guid: d81f836efd54d47fcbc76a33824af480,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 8667816103150948522, guid: 8050337de420c114c8caa88550de5f0e,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 8896970215918674003, guid: 21cf31e8a3d7249faad097cfd0fad973,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 6395808697406203147, guid: 5846c696bedd073409a483bdb425af51,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 2147782361639434371, guid: 24267b2042fb89448b41c2d2d76a309e,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1055,47 +1096,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5165991448613288286, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: DeckSize
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7097381210181642104, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: MAX_HAND_SIZE
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7097381210181642104, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: INIT_HAND_SIZE
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1381759383390061962, guid: e96beefb821ae7f489adda0abf44eb0b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2006374471}
-    - targetCorrespondingSourceObject: {fileID: 1381759383390061962, guid: e96beefb821ae7f489adda0abf44eb0b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2006374472}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e96beefb821ae7f489adda0abf44eb0b, type: 3}
---- !u!114 &2006374471
+--- !u!114 &2006374472 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5165991448613288286, guid: e96beefb821ae7f489adda0abf44eb0b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1659263865}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102569286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34c15c9e667adbd4fb653ae8e46e3034, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MAX_HAND_SIZE: 5
-  INIT_HAND_SIZE: 4
---- !u!114 &2006374472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102569286}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80178febaf84958449b4bb95a240b58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeckSize: 12
-  Team: 0
 --- !u!1001 &1759644512531380690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1106,8 +1138,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3797704203141291860, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
+      propertyPath: MAX_HAND_SIZE
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3797704203141291860, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
       propertyPath: INIT_HAND_SIZE
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5510101932712594358, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
@@ -1159,26 +1196,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
-        type: 3}
-      propertyPath: DeckSize
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
-        type: 3}
-      propertyPath: CenterForce
-      value: 0.9
-      objectReference: {fileID: 0}
     - target: {fileID: 8097856259149185956, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
       propertyPath: m_Name
       value: EnemyManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8379333905397335880, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
+      propertyPath: DeckSize
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f, type: 3}
+--- !u!114 &1759644512531380692 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8379333905397335880, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1759644512531380690}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7b859f32244b54cb8d7280f307b44f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4705280167257534983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1287,25 +1331,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5194466231351404419, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
-        type: 3}
-      propertyPath: enemyColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5194466231351404419, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
-        type: 3}
-      propertyPath: playerColor.a
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7036687276133781887, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_Name
       value: MainUICanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7118059358343182899, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1401,38 +1430,44 @@ PrefabInstance:
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 517083609669004653, guid: d81f836efd54d47fcbc76a33824af480,
-        type: 3}
+      objectReference: {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8,
+        type: 2}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 2147782361639434371, guid: 24267b2042fb89448b41c2d2d76a309e,
-        type: 3}
+      objectReference: {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b,
+        type: 2}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 6395808697406203147, guid: 5846c696bedd073409a483bdb425af51,
-        type: 3}
+      objectReference: {fileID: 11400000, guid: d47ff3bfdbc0d2542991a47fd60b8f89,
+        type: 2}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.data[3]
       value: 
-      objectReference: {fileID: 8667816103150948522, guid: 8050337de420c114c8caa88550de5f0e,
-        type: 3}
+      objectReference: {fileID: 11400000, guid: aaede1b88a05db64db45f043b3a2e38a,
+        type: 2}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.data[4]
       value: 
-      objectReference: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
+      objectReference: {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
+      propertyPath: MarblePrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816,
+        type: 2}
     - target: {fileID: 6664558104299889255, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: m_Name

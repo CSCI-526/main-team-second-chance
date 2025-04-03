@@ -12,17 +12,16 @@ public class Marble : MonoBehaviour
 {
     [SerializeField]
     private MarbleData marbleData;
-    public string GetMarbleName() { return marbleData.MarbleName; }
-    public string GetMarbleDescription() { return marbleData.MarbleDescription; }
-    public void SetUniqueID(int ID) { UNIQUE_ID = ID; }
-    public int GetUniqueID() { return UNIQUE_ID; }
-    public MarbleTeam Team;
+
+    public MarbleData GetMarbleData() { return marbleData; }
+    public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
+    public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
     public bool bIsInsideGameplayCircle = true;
     public bool bIsInsideScoringCircle = false;
+    public MarbleTeam Team;
     //public bool cool = false;
 
     private Rigidbody rb;
-    private int UNIQUE_ID;
     private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
@@ -37,12 +36,10 @@ public class Marble : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        // For now, cast ability once marble is instantiated
         CastAbility();
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

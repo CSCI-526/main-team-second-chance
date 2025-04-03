@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour
 {
@@ -10,9 +11,13 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI PlayerScore;
     [SerializeField]
+    private TextMeshProUGUI PlayerRoundsWon;
+    [SerializeField]
     private TextMeshProUGUI EnemyScore;
     [SerializeField]
     private Transform HandStartingPoint;
+    [SerializeField]
+    private HorizontalLayoutGroup HandLayoutGroup;
     [SerializeField]
     private float CardOffsetDistance = 50.0f;
     [SerializeField]
@@ -21,6 +26,7 @@ public class MainUI : MonoBehaviour
     private void OnEnable()
     {
         MarbleEvents.OnScoreChange += UpdateScore;
+        MarbleEvents.OnRoundsWonChanged += UpdateRoundsWon;
         DeckEvents.OnDeckGenerated += UpdateDeckCount;
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
@@ -28,9 +34,15 @@ public class MainUI : MonoBehaviour
     private void OnDisable()
     {
         MarbleEvents.OnScoreChange -= UpdateScore;
+        MarbleEvents.OnRoundsWonChanged -= UpdateRoundsWon;
+
         DeckEvents.OnDeckGenerated -= UpdateDeckCount;
         DeckEvents.OnMarbleUsed -= UpdateDeckCount;
         DeckEvents.OnHandUpdated -= UpdateHand;
+    }
+    private void UpdateRoundsWon(int RoundsWon)
+    {
+        PlayerRoundsWon.text = $"{RoundsWon} / 3 Games Won";
     }
     private void UpdateScore(MarbleTeam Team)
     {
@@ -45,6 +57,10 @@ public class MainUI : MonoBehaviour
     }
     private void UpdateDeckCount(MarbleTeam Team, int Count)
     {
+        if (Team != MarbleTeam.Player)
+        {
+            return;
+        }
         if (Count == 0)
         {
             PlayerDeckCount.color = Color.red;
@@ -53,25 +69,23 @@ public class MainUI : MonoBehaviour
         {
             PlayerDeckCount.color = Color.white;
         }
-        if (Team == MarbleTeam.Player)
-        {
+        PlayerDeckCount.text = $"{Count}";
 
-            PlayerDeckCount.text = $"{Count}";
-        }
-        else
-        {
-            PlayerDeckCount.text = $"{Count}";
-        }
     }
-    private void UpdateHand()
+
+    /* TO DO REFACTOR*/
+    private void UpdateHand(MarbleTeam Team, List<MarbleData> dataList)
     {
-        Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
-        if (!playerDeck)
+        if(Team != MarbleTeam.Player)
         {
             return;
         }
-        int numCardsToRep = playerDeck.GetHandSize();
-        List<GameObject> Hand = playerDeck.GetHand();
+        if(dataList == null)
+        {
+            Debug.LogError("MainUI.UpdateHand(): The marbledata list being sent in is null. This probably shouldn't happen");
+            return;
+        }
+
         if (Cards.Count == 0)
         {
             for (int i = 0; i < GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetMaxHandSize(); i++)
@@ -82,41 +96,30 @@ public class MainUI : MonoBehaviour
                 Cards.Add(prefab);
             }
         }
-        // if the number of cards to rep is greater than the maximum hand size
-        if (Cards.Count < numCardsToRep)
+        // if the number of cards to rep is greater than the hand size
+        if (Cards.Count < dataList.Count)
         {
-            Debug.LogError("MainUI.UpdateHand(): NumCardsToRep" + numCardsToRep + " is larger than the actual number of spawn points" + Cards.Count + ". This shouldn't happen");
+            Debug.LogError("MainUI.UpdateHand(): NumCardsToRep is larger than the actual number of spawn points. This shouldn't happen \n" + Cards.Count + " <" + dataList.Count);
             return;
         }
-
-        int negation = -1;
-        int offsetIter = 0;
-        for (int i = 0; i < numCardsToRep; i++)
+        for (int i = 0; i < dataList.Count; i++)
         {
-            // Calculate where to put the card in UI
-            Vector3 Offset = new Vector3(offsetIter * CardOffsetDistance * negation, 50.0f, 0);
-            negation *= -1;
-            if (i % 2 == 0)
-            {
-                offsetIter++;
-            }
             // Activate a corresponding UI Prefab
             Card card = Cards[i].GetComponent<Card>();
-            Marble marbleData = Hand[i].GetComponent<Marble>();
+            MarbleData marbleData = dataList[i];
             if (!card || !marbleData)
             {
-                Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. Or MarbleData.cs is not attached to Marble PrefabThis shouldn't happen");
+                Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. Or input data has is incorrect This shouldn't happen");
                 return;
             }
-            card.UpdateInformation(marbleData.GetMarbleName(), marbleData.GetMarbleDescription());
+            card.UpdateInformation(marbleData.MarbleName, marbleData.MarbleDescription);
             card.SetHandIndex(i);
-            Cards[i].gameObject.transform.localPosition = Offset;
             Cards[i].SetActive(true);
         }
         // cleanup the rest of the available cards if there are more than the hand size ie if 
-        if (numCardsToRep < Cards.Count)
+        if (dataList.Count < Cards.Count)
         {
-            for (int i = numCardsToRep; i < Cards.Count; i++)
+            for (int i = dataList.Count; i < Cards.Count; i++)
             {
                 if (Cards[i].activeInHierarchy)
                 {

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
-  m_Name: BabyMarbleData
+  m_Name: GhostMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 2147782361639434371, guid: 24267b2042fb89448b41c2d2d76a309e,
+  MarblePrefab: {fileID: 8896970215918674003, guid: 21cf31e8a3d7249faad097cfd0fad973,
     type: 3}
-  marbleType: 6
+  marbleType: 2
   Sprite: {fileID: 0}
   Mass: 1
-  UniformScale: 0.25
+  UniformScale: 0.5
   Drag: 0.7
-  MarbleName: Baby Marble
-  MarbleDescription: This is the Baby Marble
-  abilityTriggerDelay: 0.5
+  MarbleName: Ghost
+  MarbleDescription: Phases Through Other Marbles
+  abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 0}

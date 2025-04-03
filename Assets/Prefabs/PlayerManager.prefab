@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4475100409864456308}
   - component: {fileID: 3171527999687031990}
   - component: {fileID: 6989260733789769048}
+  - component: {fileID: 7097381210181642104}
+  - component: {fileID: 5165991448613288286}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -45,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b752311b7aacf459e92f78436b197e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialBar: {fileID: 0}
+  tutorial: {fileID: 0}
 --- !u!120 &6989260733789769048
 LineRenderer:
   serializedVersion: 2
@@ -149,3 +153,31 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &7097381210181642104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381759383390061962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c15c9e667adbd4fb653ae8e46e3034, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MAX_HAND_SIZE: 5
+  INIT_HAND_SIZE: 4
+--- !u!114 &5165991448613288286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381759383390061962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80178febaf84958449b4bb95a240b58e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DeckSize: 12
+  Team: 0

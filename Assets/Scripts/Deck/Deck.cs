@@ -1,112 +1,151 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Deck : MonoBehaviour
 {
     public int GetDeckSize() { return MarbleDeck.Count; }
     public int GetHandSize() { return Hand.Count; }
-    public int GetTotalRemainingMarbles() { return MarbleDeck.Count + Hand.Count; }
-    public List<GameObject> GetHand() { return Hand; }
-    public int GetMaxHandSize() { return MAX_HAND_SIZE; }
-    public int GetSelectedMarbleIndex() { return SelectedMarble; }
-    public GameObject UseMarble(MarbleTeam Team)
+    public int GetTotalRemainingMarbles() 
     {
-        GameObject marble = null;
+        return Mathf.Clamp((GetDeckSize() - NumMarblesUsed - GetHandSize()), 0, GetDeckSize());
+    }
+    public int GetNumMarblesUsed()
+    {
+        return NumMarblesUsed;
+    }
+    public List<int> GetHand() { return Hand; }
+    public int GetMaxHandSize() { return MAX_HAND_SIZE; }
+    public int GetSelectedMarbleIndex() { return IndexOfHand; }
+    public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
+    {
+        MarbleDeck.Add(marble);
+        NumMarblesUsed = 0;
+        ShuffleDeck();
+        GenerateInitialHand(Team);
+        GameManager.Instance.turnState = TurnState.PlayerTurn;
+        GameManager.Instance.ForceUpdateEvents();
+    }
+    public MarbleData UseMarble(MarbleTeam Team)
+    {
+        MarbleData marbleData = null;
 
-        if (Team == MarbleTeam.Player)
+        if(Team == MarbleTeam.Enemy)
         {
-            if (SelectedMarble < 0)
-            {
-                return marble;
-            }
-
-            if (SelectedMarble < Hand.Count && SelectedMarble >= 0)
-            {
-                marble = Hand[SelectedMarble];
-                UpdateHand();
-            }
-            DeckEvents.MarbleUsed(Team, MarbleDeck.Count);
-            return marble;
+            EnemyChooseHandIndex();
         }
-
-        if (MarbleDeck.Count == 0)
+        // This means that we didn't select a marble from the hand
+        if (IndexOfHand < 0 || IndexOfHand >= Hand.Count)
         {
-            Debug.LogWarning("Deck.UseMarble(): EnemyMarble Deck's size is now 0.");
-
+            Debug.LogWarning("Deck.UseMarble(): The IndexOfHand is not valid. Something Wrong has happened");
             return null;
         }
-        marble = MarbleDeck[0];
-        MarbleDeck.RemoveAt(0);
+        int DeckIndex = Hand[IndexOfHand];
+        if(Team == MarbleTeam.Enemy)
+        {
+            Debug.Log("Enemy Index of Hand: " + IndexOfHand + " \nEnemy DeckIndex: " + DeckIndex);
+        }
 
-        return marble;
+        if (DeckIndex < 0 || DeckIndex >= MarbleDeck.Count)
+        {
+            Debug.LogWarning("Deck.UseMarble(): The DeckIndex is not valid. Something Wrong has happened");
+            return null;
+        }
+
+        marbleData = MarbleDeck[DeckIndex];
+        NumMarblesUsed++;
+        if (NumMarblesUsed > MarbleDeck.Count)
+        {
+            Debug.LogWarning("We have used up all our marbles.");
+            return null;
+        }
+
+        UpdateHand(Team);
+
+        DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
+        
+
+        return marbleData;
     }
+
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
+        // Clear the hand, make sure that we do not have anything in the hand at the moment
         Hand.Clear();
+        NextIndexToDrawToHand = 0;
+        NumMarblesUsed = 0;
         MarbleDeck = GameManager.Instance.GetDeckManager().GenerateDeck(Team, DeckSize);
-        DeckEvents.DeckGenerated(Team, MarbleDeck.Count);
         ShuffleDeck();
-        if (Team == MarbleTeam.Player)
-        {
-            GenerateInitialHand();
-            DeckEvents.HandUpdated();
-        }
+        GenerateInitialHand(Team);
+        DeckEvents.DeckGenerated(Team, GetTotalRemainingMarbles());
     }
-
-    public void UpdateHand()
+    public void UpdateHand(MarbleTeam Team)
     {
         // Remove the selected card
-        Hand.RemoveAt(SelectedMarble);
+        Hand.RemoveAt(IndexOfHand);
 
-        if (MarbleDeck.Count <= 0)
+        List<MarbleData> data = new List<MarbleData>();
+        if (NextIndexToDrawToHand >= MarbleDeck.Count)
         {
-            Debug.LogError("Deck.UpdateHand(): MarbleDeck's size is now 0. We can no longer update the hand.");
+            Debug.LogError("Deck.UpdateHand():" + Team + " We are out of marbles that we can add to hand.");
             // Set the selected marble index to -1 again
-            SelectedMarble = -1;
+            IndexOfHand = -1;
             // HandUpdated signal
-            DeckEvents.HandUpdated();
-
+            for (int i = 0; i < Hand.Count; ++i)
+            {
+                data.Add(MarbleDeck[Hand[i]]);
+            }
+            DeckEvents.HandUpdated(Team, data);
             return;
         }
         // Draw a new card from the Marble Deck
-        Hand.Add(MarbleDeck[0]);
-        // Remove it from the Deck
-        MarbleDeck.RemoveAt(0);
-
+        Hand.Add(NextIndexToDrawToHand++);
         // Reset the selected marble index
-        SelectedMarble = -1;
+        IndexOfHand = -1;
+        for (int i = 0; i < Hand.Count; ++i)
+        {
+            data.Add(MarbleDeck[Hand[i]]);
+        }
         // HandUpdated signal
-        DeckEvents.HandUpdated();
+        DeckEvents.HandUpdated(Team, data);
     }
 
-    private List<GameObject> MarbleDeck = new List<GameObject>();
-    private List<GameObject> Hand = new List<GameObject>();
+    public List<MarbleData> MarbleDeck = new List<MarbleData>();
+    // Contains Indices of cards in the hand
+    public List<int> Hand = new List<int>();
+    // Index that keeps track of the next card to draw to the hand
+    private int NextIndexToDrawToHand = 0;
     // The selected marble from your hand
-    private int SelectedMarble = -1;
+    private int IndexOfHand = -1;
+    // Number of marbles used so far
+    private int NumMarblesUsed = 0;
     [SerializeField]
     private int MAX_HAND_SIZE = 5;
     [SerializeField]
     private int INIT_HAND_SIZE = 3;
-    private void GenerateInitialHand()
+    private void GenerateInitialHand(MarbleTeam Team)
     {
         if (MarbleDeck.Count == 0)
         {
-            Debug.LogError("Deck.GenerateInitialHand() The Marble Deck is currently empty.");
+            Debug.LogWarning("Deck.GenerateInitialHand() The Marble Deck is currently empty.");
+            NextIndexToDrawToHand = -1;
             return;
         }
 
         for (int i = 0; i < INIT_HAND_SIZE; ++i)
         {
-            Hand.Add(MarbleDeck[0]);
-            if (MarbleDeck.Count == 0)
-            {
-                Debug.LogError("Deck.GenerateInitialHand() The Marble Deck is now empty. We cannot draw any more");
-                return;
-            }
-            MarbleDeck.RemoveAt(0);
+            Hand.Add(i);
         }
-        DeckEvents.MarbleUsed(GameManager.Instance.GetPlayerManager().GetTeam(), MarbleDeck.Count);
+        NextIndexToDrawToHand = INIT_HAND_SIZE;
+
+        List<MarbleData> data = new List<MarbleData>();
+        for (int i = 0; i < Hand.Count; ++i)
+        {
+            data.Add(MarbleDeck[Hand[i]]);
+        }
+        DeckEvents.HandUpdated(Team, data);
+        DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
     }
     private void OnEnable()
     {
@@ -116,7 +155,17 @@ public class Deck : MonoBehaviour
     {
         DeckEvents.OnMarbleSelectedFromHand -= GrabSelectedID;
     }
-    private void GrabSelectedID(int ID) { SelectedMarble = ID; }
+    private void GrabSelectedID(MarbleTeam Team, int ID) 
+    {
+        if(this == GameManager.Instance.GetPlayerManager().GetPlayerDeck())
+        {
+            IndexOfHand = ID;
+        }
+    }
+    private void EnemyChooseHandIndex()
+    {
+        IndexOfHand = Random.Range(0, Hand.Count);
+    }
     private void ShuffleDeck()
     {
         for (int i = MarbleDeck.Count - 1; i > 0; i--)

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField]
@@ -21,12 +22,12 @@ public class GameOverUI : MonoBehaviour
         TurnStateEvents.OnGameOver -= UpdateGameOverPanel;
     }
 
-    void Start () {
+    void Start()
+    {
         HidePanel();
-        PlayAgainButton.onClick.AddListener(OnClickPlayAgain);
     }
-
-    public void OnClickPlayAgain() {
+    public void OnClickPlayAgain()
+    {
         GameManager.Instance.RestartGame();
         HidePanel();
     }
@@ -51,15 +52,18 @@ public class GameOverUI : MonoBehaviour
         ShowPanel();
     }
 
-    private void HidePanel() {
+    private void HidePanel()
+    {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
         GameOverText.gameObject.SetActive(false);
         PlayAgainButton.gameObject.SetActive(false);
     }
 
-    private void ShowPanel() {
+    private void ShowPanel()
+    {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         GameOverText.gameObject.SetActive(true);
         PlayAgainButton.gameObject.SetActive(true);
+
     }
 }

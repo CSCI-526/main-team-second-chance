@@ -17,7 +17,6 @@ public class EnemyController : MonoBehaviour
 {
     // Start is called before the first frame update
     public static EnemyController ins = null;
-    private Deck EnemyDeck;
 
     [SerializeField] private float ForceRandomness = 0.1f;
     [SerializeField] private float DirectionRandomness = 0.1f;
@@ -33,17 +32,11 @@ public class EnemyController : MonoBehaviour
         SkillLevel = newSkill;
         Aggression = newLevel;
     }
-    
+
     private void Awake()
     {
         if (ins == null)
             ins = this;
-    }
-
-    public void Start()
-    {
-        EnemyDeck = GetComponent<Deck>();
-        EnemyDeck.InitializeDeck(MarbleTeam.Enemy, DeckSize);
     }
 
     IEnumerator MarbleRepeater()
@@ -77,6 +70,14 @@ public class EnemyController : MonoBehaviour
             {
                 foreach (var Marble in GameManager.Instance.GetMarblesList())
                 {
+                if (!Marble)
+                {
+                    continue;
+                }
+                if (!Marble.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
                     if (Marble.Team == MarbleTeam.Player)
                     {
                         testPoint = new Vector2(Marble.transform.position.x, Marble.transform.position.z);
@@ -139,8 +140,12 @@ public class EnemyController : MonoBehaviour
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness * SkillLevel);
             Force = scale * CenterForce;
         }
-
-        MarbleLauncher.ins.LaunchMarble(Direction.normalized, Force, Location, MarbleTeam.Enemy, EnemyDeck.UseMarble(MarbleTeam.Enemy));
+        MarbleData MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
+        if (!MarbleObject)
+        {
+            return;
+        }
+        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject.MarbleType, Direction, Force, Location, false);
     }
 
     private Vector3 GenerateDirectionOffset()
