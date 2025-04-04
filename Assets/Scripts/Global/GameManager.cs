@@ -54,15 +54,15 @@ public class GameManager : MonoBehaviour
         // At the start of the enemy turn, we want to check whether or not if we use another player marble, if it will be greater. if so we should override and move to card select
         // We go to card select since we assume that we have not yet finished all matches yet
         // This may need to be refactored later.
-        if(turnState == TurnState.EnemyTurn)
+        if (turnState == TurnState.EnemyTurn)
         {
-            if(PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize())
+            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize())
             {
                 OverrideTurnState(TurnState.CardSelect);
                 return;
             }
         }
-        
+
         Debug.Log(turnState);
         TurnStateEvents.OnTurnProgressed(turnState);
     }
