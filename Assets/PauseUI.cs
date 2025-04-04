@@ -26,13 +26,13 @@ public class PauseUI : MonoBehaviour
 
     public void Unpause()
     {
-        Time.timeScale = 1.0f;
+        Time.timeScale = 2.0f;
         pausePanel.SetActive(false);
     }
 
     public void ToMainMenu()
     {
-        Time.timeScale = 1.0f;
+        Time.timeScale = 2.0f;
         pausePanel.SetActive(false);
         SceneManagerScript.Instance.loadSceneByIndex(0);
     }
