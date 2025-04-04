@@ -25,7 +25,6 @@ public class PlayerManager : MonoBehaviour
     private void OnDisable()
     {
         DeckEvents.OnAddNewMarbleToDeck -= AddMarbleToDeck;
-
     }
     public void InitializePlayerDeck()
     {
@@ -37,8 +36,10 @@ public class PlayerManager : MonoBehaviour
         {
             return;
         }
-        PlayerDeck.AddMarbleToDeck(Team , gameObject);
-        GameManager.Instance.IncremetTurnState();
-        TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
+        PlayerDeck.AddMarbleToDeck(Team, gameObject);
+
+        // We need to override the turn back to enemy turn since we just added a new marble 
+        // Eventually we probably want to just turn this to like the levelselect state
+        GameManager.Instance.OverrideTurnState(TurnState.EnemyTurn);
     }
 }

@@ -19,14 +19,18 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private HorizontalLayoutGroup HandLayoutGroup;
     [SerializeField]
-    private float CardOffsetDistance = 50.0f;
-    [SerializeField]
     private GameObject CardPrefab;
+    [SerializeField]
+    private Image[] BestOfIndicators;
     private List<GameObject> Cards = new List<GameObject>();
+    private int previouslyWonRounds = 0;
     private void OnEnable()
     {
         MarbleEvents.OnScoreChange += UpdateScore;
         MarbleEvents.OnRoundsWonChanged += UpdateRoundsWon;
+
+        TurnStateEvents.OnGameOver += ResetColors;
+
         DeckEvents.OnDeckGenerated += UpdateDeckCount;
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
@@ -36,13 +40,37 @@ public class MainUI : MonoBehaviour
         MarbleEvents.OnScoreChange -= UpdateScore;
         MarbleEvents.OnRoundsWonChanged -= UpdateRoundsWon;
 
+        TurnStateEvents.OnGameOver -= ResetColors;
+
         DeckEvents.OnDeckGenerated -= UpdateDeckCount;
         DeckEvents.OnMarbleUsed -= UpdateDeckCount;
         DeckEvents.OnHandUpdated -= UpdateHand;
     }
-    private void UpdateRoundsWon(int RoundsWon)
+    private void ResetColors()
+    {
+        foreach (Image i in BestOfIndicators)
+        {
+            i.color = Color.white;
+        }
+
+        PlayerRoundsWon.text = "";
+    }
+    private void UpdateRoundsWon(int RoundNum, int RoundsWon)
     {
         PlayerRoundsWon.text = $"{RoundsWon} / 3 Games Won";
+
+        // Round Num will always sum to 3 
+        // --> 0 index round num to indicate which index we are modifying
+        // --> save previous rounds won value. if it is less than incoming, means we won a new round, otherwise we lost
+        if (previouslyWonRounds < RoundsWon)
+        {
+            BestOfIndicators[RoundNum - 1].color = Color.green;
+        }
+        else
+        {
+            BestOfIndicators[RoundNum - 1].color = Color.red;
+        }
+        previouslyWonRounds = RoundsWon;
     }
     private void UpdateScore(MarbleTeam Team)
     {
@@ -72,15 +100,13 @@ public class MainUI : MonoBehaviour
         PlayerDeckCount.text = $"{Count}";
 
     }
-
-    /* TO DO REFACTOR*/
     private void UpdateHand(MarbleTeam Team, List<MarbleData> dataList)
     {
-        if(Team != MarbleTeam.Player)
+        if (Team != MarbleTeam.Player)
         {
             return;
         }
-        if(dataList == null)
+        if (dataList == null)
         {
             Debug.LogError("MainUI.UpdateHand(): The marbledata list being sent in is null. This probably shouldn't happen");
             return;

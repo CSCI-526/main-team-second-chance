@@ -7,7 +7,7 @@ public class Deck : MonoBehaviour
 {
     public int GetDeckSize() { return MarbleDeck.Count; }
     public int GetHandSize() { return Hand.Count; }
-    public int GetTotalRemainingMarbles() 
+    public int GetTotalRemainingMarbles()
     {
         return Mathf.Clamp((GetDeckSize() - NumMarblesUsed - GetHandSize()), 0, GetDeckSize());
     }
@@ -24,14 +24,12 @@ public class Deck : MonoBehaviour
         NumMarblesUsed = 0;
         ShuffleDeck();
         GenerateInitialHand(Team);
-        GameManager.Instance.IncremetTurnState();
-        GameManager.Instance.ForceUpdateEvents();
     }
     public MarbleData UseMarble(MarbleTeam Team)
     {
         MarbleData marbleData = null;
 
-        if(Team == MarbleTeam.Enemy)
+        if (Team == MarbleTeam.Enemy)
         {
             EnemyChooseHandIndex();
         }
@@ -42,7 +40,7 @@ public class Deck : MonoBehaviour
             return null;
         }
         int DeckIndex = Hand[IndexOfHand];
-        if(Team == MarbleTeam.Enemy)
+        if (Team == MarbleTeam.Enemy)
         {
             Debug.Log("Enemy Index of Hand: " + IndexOfHand + " \nEnemy DeckIndex: " + DeckIndex);
         }
@@ -64,7 +62,7 @@ public class Deck : MonoBehaviour
         UpdateHand(Team);
 
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
-        
+
 
         return marbleData;
     }
@@ -155,9 +153,9 @@ public class Deck : MonoBehaviour
     {
         DeckEvents.OnMarbleSelectedFromHand -= GrabSelectedID;
     }
-    private void GrabSelectedID(MarbleTeam Team, int ID) 
+    private void GrabSelectedID(MarbleTeam Team, int ID)
     {
-        if(this == GameManager.Instance.GetPlayerManager().GetPlayerDeck())
+        if (this == GameManager.Instance.GetPlayerManager().GetPlayerDeck())
         {
             IndexOfHand = ID;
         }

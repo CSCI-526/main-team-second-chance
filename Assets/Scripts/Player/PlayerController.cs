@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
         }
 
-        bool bIsCorrectState = GameManager.Instance.turnState == TurnState.PlayerTurn;
+        bool bIsCorrectState = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
         if (!bIsCorrectState)
         {
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): It is not the player's turn. Please wait");

@@ -12,9 +12,10 @@ public class TurnUI : MonoBehaviour
     private Image EnemyTurnArrow;
     [SerializeField]
     private TextMeshProUGUI TurnText;
-
+    [SerializeField]
+    private float HideTime = 2.0f;
     private Color color;
-
+    private Coroutine timerCoroutine;
     private void OnEnable()
     {
         TurnStateEvents.OnTurnProgress += UpdateTurnPanel;
@@ -26,39 +27,44 @@ public class TurnUI : MonoBehaviour
 
     private void Start()
     {
-        color = PlayerTurnArrow.color;
+        color = EnemyTurnArrow.color;
         TurnText.color = color;
-        TurnText.text = "PLAYER TURN";
-        PlayerTurnArrow.enabled = true;
-        EnemyTurnArrow.enabled = false;
+        TurnText.text = "ENEMY TURN";
+        PlayerTurnArrow.enabled = false;
+        EnemyTurnArrow.enabled = true;
     }
 
     private void UpdateTurnPanel(TurnState turn)
     {
-        switch ((int)turn)
+        if(timerCoroutine != null)
         {
-            case 0:
+            StopCoroutine(timerCoroutine);
+        }
+
+        switch (turn)
+        {
+            case TurnState.PlayerTurn:
                 color = PlayerTurnArrow.color;
                 TurnText.color = color;
                 TurnText.text = "PLAYER TURN";
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
                 break;
-            case 1:
+            case TurnState.WaitingOnEnemyTurn:
                 color = EnemyTurnArrow.color;
                 TurnText.color = color;
                 TurnText.text = "WAITING ON ENEMY TURN";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
-            case 2:
+            case TurnState.EnemyTurn:
                 color = EnemyTurnArrow.color;
                 TurnText.color = color;
                 TurnText.text = "ENEMY TURN";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
-            case 3:
+            case TurnState.WaitingOnPlayerTurn:
                 color = PlayerTurnArrow.color;
                 TurnText.color = color;
                 TurnText.text = "WAITING ON PLAYER TURN";
@@ -66,11 +72,21 @@ public class TurnUI : MonoBehaviour
                 EnemyTurnArrow.enabled = false;
                 break;
             default:
-                TurnText.text = "DEFAULT TURN STATE";
-                PlayerTurnArrow.enabled = true;
-                EnemyTurnArrow.enabled = true;
+                // We can just hide this if it isn't a turn 
+                TurnText.text = "";
+                PlayerTurnArrow.enabled = false;
+                EnemyTurnArrow.enabled = false;
                 break;
         }
+        timerCoroutine = StartCoroutine(TimeUntilHide(HideTime));
     }
 
+    private IEnumerator TimeUntilHide(float Duration)
+    {
+        yield return new WaitForSecondsRealtime(Duration);
+
+        TurnText.text = "";
+        PlayerTurnArrow.enabled = false;
+        EnemyTurnArrow.enabled = false;
+    }
 }

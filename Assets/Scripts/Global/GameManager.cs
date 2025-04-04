@@ -22,35 +22,14 @@ public class GameManager : MonoBehaviour
     public int GetPlayerScore() { return playerScore; }
     public int GetNumWins() { return numWins; }
     public int GetEnemyScore() { return enemyScore; }
-
-    public TurnState turnState = TurnState.EnemyTurn;
     public TurnState GetTurnState() { return turnState; }
 
-    public void IncremetTurnState()
+    public void OverrideTurnState(TurnState newTurnState)
     {
-        if (TurnState.WaitingOnPlayerTurn == turnState)
-        {
-            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() < PlayerManager.GetPlayerDeck().GetDeckSize())
-            {
-                turnState = TurnState.PlayerTurn;
-            }
-            else
-            {
-                // Changing to card select for now
-                turnState = TurnState.CardSelect;
-            }
-        }
-        else
-        {
-            turnState++;
-            // Skip over game over, conditions are not met here.
-            if (turnState == TurnState.GameOver)
-            {
-                turnState = TurnState.EnemyTurn;
-            }
-        }
-
+        turnState = newTurnState;
         Debug.Log(turnState);
+        TurnStateEvents.OnTurnProgressed(turnState);
+
         if (turnState == TurnState.CardSelect)
         {
             GoToNextRound();
@@ -60,15 +39,32 @@ public class GameManager : MonoBehaviour
             // don't think we're ever hitting this naturally but
             TurnStateEvents.OnGameOvered();
         }
+    }
+    public void IncremetTurnState()
+    {
+        if (turnState == TurnState.WaitingOnEnemyTurn)
+        {
+            turnState = TurnState.EnemyTurn;
+        }
         else
         {
-            TurnStateEvents.OnTurnProgressed(turnState);
+            turnState++;
         }
 
-        if (turnState == TurnState.EnemyTurn)
+        // At the start of the enemy turn, we want to check whether or not if we use another player marble, if it will be greater. if so we should override and move to card select
+        // We go to card select since we assume that we have not yet finished all matches yet
+        // This may need to be refactored later.
+        if(turnState == TurnState.EnemyTurn)
         {
-            EnemyManager.EnemyShootMarble();
+            if(PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize())
+            {
+                OverrideTurnState(TurnState.CardSelect);
+                return;
+            }
         }
+        
+        Debug.Log(turnState);
+        TurnStateEvents.OnTurnProgressed(turnState);
     }
 
     public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone)
@@ -154,6 +150,9 @@ public class GameManager : MonoBehaviour
     private PlayerManager PlayerManager;
     [SerializeField]
     private EnemyManager EnemyManager;
+    [SerializeField]
+    private TurnState turnState = TurnState.EnemyTurn;
+
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
@@ -176,9 +175,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
 
-        turnState = TurnState.EnemyTurn;
-        EnemyManager.EnemyShootMarble();
-        ForceUpdateEvents();
+        ForceUpdateEvents(TurnState.EnemyTurn);
 
         TurnStateEvents.OnGameOver += OnGameOver;
     }
@@ -246,11 +243,10 @@ public class GameManager : MonoBehaviour
             numLosses++;
         }
         totalGames = numWins + numLosses;
-        MarbleEvents.OnRoundsWonChange(numWins);
+        MarbleEvents.OnRoundsWonChange(totalGames, numWins);
         if (totalGames % 3 == 0) // prob not a magic num but w/e
         {
-            turnState = TurnState.GameOver;
-            ForceUpdateEvents();
+            ForceUpdateEvents(TurnState.GameOver);
             TurnStateEvents.OnGameOvered();
             return;
         }
@@ -258,8 +254,6 @@ public class GameManager : MonoBehaviour
         enemyScore = 0;
         DeckEvents.SelectNewMarbleToAdd(DeckManager.GenerateNewMarbles());
         EnemyManager.InitializeEnemyDeck();
-        ForceUpdateEvents();
-
     }
     public void RestartGame()
     {
@@ -270,13 +264,12 @@ public class GameManager : MonoBehaviour
         numLosses = 0;
         PlayerManager.InitializePlayerDeck();
         EnemyManager.InitializeEnemyDeck();
-        turnState = TurnState.PlayerTurn;
-        ForceUpdateEvents();
+        ForceUpdateEvents(TurnState.EnemyTurn);
     }
 
-    public void ForceUpdateEvents()
+    public void ForceUpdateEvents(TurnState turnState)
     {
-        TurnStateEvents.OnTurnProgressed(turnState);
+        OverrideTurnState(turnState);
         MarbleEvents.OnScoreChanged(MarbleTeam.Player);
         MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
     }

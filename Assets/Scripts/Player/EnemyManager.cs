@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 [RequireComponent(typeof(Deck))]
 [RequireComponent(typeof(EnemyController))]
@@ -14,25 +13,36 @@ public class EnemyManager : MonoBehaviour
     private MarbleTeam Team = MarbleTeam.Enemy;
     private Deck EnemyDeck;
     private EnemyController EnemyController;
-    // Start is called before the first frame update
+
     void Start()
     {
-        if(!EnemyDeck || !EnemyController)
+        if (!EnemyDeck || !EnemyController)
         {
             EnemyDeck = GetComponent<Deck>();
             EnemyController = GetComponent<EnemyController>();
             InitializeEnemyDeck();
         }
     }
-
+    private void OnEnable()
+    {
+        TurnStateEvents.OnTurnProgress += EnemyShootMarble;
+    }
+    private void OnDisable()
+    {
+        TurnStateEvents.OnTurnProgress -= EnemyShootMarble;
+    }
     public void InitializeEnemyDeck()
     {
         EnemyDeck.InitializeDeck(Team, DeckSize);
     }
-
-    public void EnemyShootMarble()
+    private void EnemyShootMarble(TurnState turnState)
     {
-        if(!EnemyDeck)
+        if (turnState != TurnState.EnemyTurn)
+        {
+            return;
+        }
+
+        if (!EnemyDeck)
         {
             EnemyDeck = GetComponent<Deck>();
             InitializeEnemyDeck();
@@ -43,13 +53,13 @@ public class EnemyManager : MonoBehaviour
         {
             return;
         }
-        if(!EnemyController)
+        if (!EnemyController)
         {
             EnemyController = GetComponent<EnemyController>();
         }
         EnemyController.ShootMarble(MarbleObject);
     }
-
+    // LEGACY
     IEnumerator MarbleRepeater()
     {
         while (true)
