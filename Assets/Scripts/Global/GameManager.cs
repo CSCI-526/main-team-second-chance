@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public int GetEnemyScore() { return enemyScore; }
     public TurnState GetTurnState() { return turnState; }
 
+    public bool PlayerHasSelectedMarble() { return PlayerManager.GetPlayerDeck().GetSelectedMarbleIndex() >= 0; }
+
     public void OverrideTurnState(TurnState newTurnState)
     {
         turnState = newTurnState;
@@ -178,6 +180,8 @@ public class GameManager : MonoBehaviour
         ForceUpdateEvents(TurnState.EnemyTurn);
 
         TurnStateEvents.OnGameOver += OnGameOver;
+
+        Time.timeScale = 10f;
     }
 
     private void OnDestroy()
@@ -244,7 +248,7 @@ public class GameManager : MonoBehaviour
         }
         totalGames = numWins + numLosses;
         MarbleEvents.OnRoundsWonChange(totalGames, numWins);
-        if (totalGames % 3 == 0) // prob not a magic num but w/e
+        if (numLosses >= 2) // prob not a magic num but w/e
         {
             ForceUpdateEvents(TurnState.GameOver);
             TurnStateEvents.OnGameOvered();

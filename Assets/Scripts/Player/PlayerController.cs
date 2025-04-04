@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool readyToShoot = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() >= 0 && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
+        bool readyToShoot = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
         if (readyToShoot)
         {
             if (!bShowedTutorial)
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Your deck is empty. You cannot shoot anymore");
         }
-        bool bHasSelectedAMarble = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() >= 0;
+        bool bHasSelectedAMarble = GameManager.Instance.PlayerHasSelectedMarble();
         if (!bHasSelectedAMarble)
         {
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You have not yet selected a marble. Please pick one to shoot");

@@ -19,11 +19,17 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private HorizontalLayoutGroup HandLayoutGroup;
     [SerializeField]
+    private CanvasGroup HandLayoutCanvasGroup;
+    [SerializeField]
     private GameObject CardPrefab;
     [SerializeField]
     private Image[] BestOfIndicators;
     private List<GameObject> Cards = new List<GameObject>();
     private int previouslyWonRounds = 0;
+
+    private RectOffset handPadding;
+    private int prevCanSelectMarble = -1;
+
     private void OnEnable()
     {
         MarbleEvents.OnScoreChange += UpdateScore;
@@ -34,6 +40,8 @@ public class MainUI : MonoBehaviour
         DeckEvents.OnDeckGenerated += UpdateDeckCount;
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
+
+        handPadding = HandLayoutGroup.padding;
     }
     private void OnDisable()
     {
@@ -46,6 +54,32 @@ public class MainUI : MonoBehaviour
         DeckEvents.OnMarbleUsed -= UpdateDeckCount;
         DeckEvents.OnHandUpdated -= UpdateHand;
     }
+
+    private void Update()
+    {
+        int canSelectMarble = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && !GameManager.Instance.PlayerHasSelectedMarble() ? 1 : 0;
+        if (canSelectMarble != prevCanSelectMarble)
+        {
+            if (canSelectMarble == 0)
+            {
+                HandLayoutGroup.padding = new RectOffset(
+                    handPadding.left,
+                    handPadding.right,
+                    handPadding.top + 200,
+                    handPadding.bottom
+                );
+                HandLayoutCanvasGroup.alpha = 0.5f;
+            }
+            else
+            {
+                HandLayoutGroup.padding = handPadding;
+                HandLayoutCanvasGroup.alpha = 1f;
+            }
+
+            prevCanSelectMarble = canSelectMarble;
+        }
+    }
+
     private void ResetColors()
     {
         foreach (Image i in BestOfIndicators)
