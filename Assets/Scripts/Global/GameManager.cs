@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour
         }
         totalGames = numWins + numLosses;
         MarbleEvents.OnRoundsWonChange(totalGames, numWins);
-        if (numLosses >= 2) // prob not a magic num but w/e
+        if (numLosses >= 2 || numWins >= 2) // If the player has lost 2 or won 2 
         {
             ForceUpdateEvents(TurnState.GameOver);
             TurnStateEvents.OnGameOvered();

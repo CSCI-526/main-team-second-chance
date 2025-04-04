@@ -88,6 +88,7 @@ public class MainUI : MonoBehaviour
         }
 
         PlayerRoundsWon.text = "";
+        previouslyWonRounds = 0;
     }
     private void UpdateRoundsWon(int RoundNum, int RoundsWon)
     {
