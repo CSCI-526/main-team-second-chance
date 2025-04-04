@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
         TurnStateEvents.OnGameOver += OnGameOver;
 
-        Time.timeScale = 1.0f;
+        Time.timeScale = 2.0f;
     }
 
     private void OnDestroy()
