@@ -1017,8 +1017,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.shadowBias
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.textureMode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a1de531ead20a9469bcb9a4636fac30, type: 2}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.numCapVertices
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
       propertyPath: m_Parameters.widthMultiplier
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.numCornerVertices
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989260733789769048, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7097381210181642104, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
