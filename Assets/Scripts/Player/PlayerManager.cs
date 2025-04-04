@@ -38,7 +38,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
         PlayerDeck.AddMarbleToDeck(Team , gameObject);
-        GameManager.Instance.turnState = TurnState.PlayerTurn;
+        GameManager.Instance.IncremetTurnState();
         TurnStateEvents.OnTurnProgressed(GameManager.Instance.turnState);
     }
 }

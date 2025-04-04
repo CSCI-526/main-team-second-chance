@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public enum TurnState
 {
-    PlayerTurn,
-    WaitingOnEnemyTurn,
     EnemyTurn,
     WaitingOnPlayerTurn,
+    PlayerTurn,
+    WaitingOnEnemyTurn,
     GameOver,
     CardSelect
 }
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
     public int GetNumWins() { return numWins; }
     public int GetEnemyScore() { return enemyScore; }
 
-    public TurnState turnState = TurnState.PlayerTurn;
+    public TurnState turnState = TurnState.EnemyTurn;
     public TurnState GetTurnState() { return turnState; }
 
     public void IncremetTurnState()
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
             // Skip over game over, conditions are not met here.
             if (turnState == TurnState.GameOver)
             {
-                turnState = TurnState.PlayerTurn;
+                turnState = TurnState.EnemyTurn;
             }
         }
 
@@ -64,11 +65,9 @@ public class GameManager : MonoBehaviour
             TurnStateEvents.OnTurnProgressed(turnState);
         }
 
-
-
         if (turnState == TurnState.EnemyTurn)
         {
-            EnemyController.ins.ShootMarble();
+            EnemyManager.EnemyShootMarble();
         }
     }
 
@@ -176,6 +175,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
+
+        turnState = TurnState.EnemyTurn;
+        EnemyManager.EnemyShootMarble();
         ForceUpdateEvents();
 
         TurnStateEvents.OnGameOver += OnGameOver;

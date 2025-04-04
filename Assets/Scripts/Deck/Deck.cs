@@ -24,7 +24,7 @@ public class Deck : MonoBehaviour
         NumMarblesUsed = 0;
         ShuffleDeck();
         GenerateInitialHand(Team);
-        GameManager.Instance.turnState = TurnState.PlayerTurn;
+        GameManager.Instance.IncremetTurnState();
         GameManager.Instance.ForceUpdateEvents();
     }
     public MarbleData UseMarble(MarbleTeam Team)

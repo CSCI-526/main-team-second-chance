@@ -8,32 +8,14 @@ using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public static EnemyController ins = null;
-
     [SerializeField] private float ForceRandomness = 0.1f;
     [SerializeField] private float DirectionRandomness = 0.1f;
     [SerializeField] private float CenterForce = 0.6f;
     [SerializeField] private float KnockoutForce = 5.0f;
     [SerializeField] private float KnockoutTargetRatio = 0.3f;
     public float SkillLevel = 1.0f;
-    private void Awake()
-    {
-        if (ins == null)
-            ins = this;
-    }
 
-    IEnumerator MarbleRepeater()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            ShootMarble();
-            yield return new WaitForSeconds(2.0f);
-        }
-    }
-
-    public void ShootMarble()
+    public void ShootMarble(MarbleData MarbleObject)
     {
         Vector3 Direction = Vector3.zero;
         Vector3 Location = Vector3.zero;
@@ -113,11 +95,6 @@ public class EnemyController : MonoBehaviour
             Direction = capsuleCollider.center - Location + new Vector3(Random.Range(-DirectionRandomness, DirectionRandomness), 0.0f, Random.Range(-DirectionRandomness, DirectionRandomness));
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness);
             Force = scale * CenterForce;
-        }
-        MarbleData MarbleObject = GameManager.Instance.GetEnemyManager().GetEnemyDeck().UseMarble(MarbleTeam.Enemy);
-        if (!MarbleObject)
-        {
-            return;
         }
         MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject.MarbleType, Direction, Force, Location, false);
     }
