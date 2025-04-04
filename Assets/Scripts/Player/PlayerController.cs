@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,7 +12,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
     private bool bCanShootMarble = false;
-    // Start is called before the first frame update
+
+    public Texture2D restrictedCursorTexture;
+    private bool bAimingOverScoreZone = false;
+    private bool bShowedTutorial = false;
+
     void Start()
     {
         LineRenderer = GetComponent<LineRenderer>();
@@ -21,6 +26,50 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool readyToShoot = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
+        if (readyToShoot)
+        {
+            if (!bShowedTutorial)
+            {
+                if (tutorialBar != null && tutorial != null)
+                {
+                    tutorialBar.SetActive(true);
+                    tutorial.SetActive(true);
+                }
+                bShowedTutorial = true;
+            }
+
+            bool newHovering = !IsNotInScoringZone(ConvertMouseIntoWorldSpace());
+            if (newHovering != bAimingOverScoreZone)
+            {
+                if (!newHovering)
+                {
+                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                }
+                else
+                {
+                    Cursor.SetCursor(restrictedCursorTexture, new Vector2(8, 8), CursorMode.Auto);
+                }
+
+                bAimingOverScoreZone = newHovering;
+            }
+        }
+        else
+        {
+            if (tutorialBar != null && tutorial != null)
+            {
+                if (tutorialBar.activeSelf)
+                {
+                    tutorialBar.SetActive(false);
+                }
+                if (tutorial.activeSelf)
+                {
+                    tutorial.SetActive(false);
+                }
+            }
+        }
+
+
         if (Input.GetMouseButtonDown(0))
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
@@ -111,7 +160,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Your deck is empty. You cannot shoot anymore");
         }
-        bool bHasSelectedAMarble = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() >= 0;
+        bool bHasSelectedAMarble = GameManager.Instance.PlayerHasSelectedMarble();
         if (!bHasSelectedAMarble)
         {
             Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You have not yet selected a marble. Please pick one to shoot");

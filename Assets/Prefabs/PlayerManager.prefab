@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialBar: {fileID: 0}
   tutorial: {fileID: 0}
+  restrictedCursorTexture: {fileID: 2800000, guid: c33cb522b88db457ea88f1277d8eaeb9,
+    type: 3}
 --- !u!120 &6989260733789769048
 LineRenderer:
   serializedVersion: 2
@@ -165,6 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34c15c9e667adbd4fb653ae8e46e3034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MarbleDeck: []
+  Hand: 
   MAX_HAND_SIZE: 5
   INIT_HAND_SIZE: 4
 --- !u!114 &5165991448613288286
