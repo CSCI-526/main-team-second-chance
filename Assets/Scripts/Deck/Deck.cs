@@ -18,6 +18,7 @@ public class Deck : MonoBehaviour
     public List<int> GetHand() { return Hand; }
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return IndexOfHand; }
+    public void ResetSelectedMarbleIndex() { IndexOfHand = -1; }
     public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
     {
         MarbleDeck.Add(marble);

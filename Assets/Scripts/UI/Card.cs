@@ -39,17 +39,31 @@ public class Card : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("Clicked on a card with ID: " + HandIndex);
-        if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetTurnState() == TurnState.CardSelect)
-        {
-            Debug.Log("Clicked on a card with ID: " + HandIndex);
-            PanelImage.material = SelectedMaterial;
-            DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
+        if (eventData.button != PointerEventData.InputButton.Left) {
+            return;
         }
-        else if (eventData.button == PointerEventData.InputButton.Left && GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0)
-        {
-            Debug.Log("Clicked on a card with ID: " + HandIndex);
-            PanelImage.material = SelectedMaterial;
-            DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
+
+        switch (GameManager.Instance.GetTurnState()) {
+            case TurnState.CardSelect:
+            {
+                Debug.Log("Clicked on a card with ID: " + HandIndex);
+                PanelImage.material = SelectedMaterial;
+                DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
+                break;
+            }
+            case TurnState.PlayerTurn:
+            {
+                if (PanelImage.material == SelectedMaterial) {
+                    PanelImage.material = null;
+                    GameManager.Instance.GetPlayerManager().GetPlayerDeck().ResetSelectedMarbleIndex();
+                }
+                else if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0) {
+                    Debug.Log("Clicked on a card with ID: " + HandIndex);
+                    PanelImage.material = SelectedMaterial;
+                    DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
+                }
+                break;
+            }
         }
     }
 
