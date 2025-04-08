@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour
                     tutorialBar.SetActive(true);
                     tutorial.SetActive(true);
                 }
-                bShowedTutorial = true;
             }
 
             bool newHovering = !IsNotInScoringZone(ConvertMouseIntoWorldSpace());
@@ -48,7 +47,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    Cursor.SetCursor(restrictedCursorTexture, new Vector2(8, 8), CursorMode.Auto);
+                    Cursor.SetCursor(restrictedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
                 }
 
                 bAimingOverScoreZone = newHovering;
@@ -104,7 +103,9 @@ public class PlayerController : MonoBehaviour
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 float DirectionMagnitude = Vector3.Magnitude(Direction);
-                if (DirectionMagnitude < Mathf.Epsilon)
+                
+                // Ignore launches that are too weak. 
+                if (DirectionMagnitude < 0.7f)
                 {
                     return;
                 }
@@ -114,6 +115,10 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.LogError("PlayerController.Update(): MarbleData requested is Null");
                     return;
+                }
+
+                if (!bShowedTutorial) {
+                    bShowedTutorial = true;
                 }
 
                 MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData.MarbleType, Direction, DirectionMagnitude, StartLocationMouse, false);

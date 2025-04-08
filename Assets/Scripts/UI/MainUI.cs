@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,6 +31,9 @@ public class MainUI : MonoBehaviour
 
     private RectOffset handPadding;
     private int prevCanSelectMarble = -1;
+    private bool isAnimatingHand = false;
+
+    private const int HAND_OFFSET = 480;
 
     private void OnEnable()
     {
@@ -42,6 +47,7 @@ public class MainUI : MonoBehaviour
         DeckEvents.OnHandUpdated += UpdateHand;
 
         handPadding = HandLayoutGroup.padding;
+        isAnimatingHand = true;
     }
     private void OnDisable()
     {
@@ -57,26 +63,43 @@ public class MainUI : MonoBehaviour
 
     private void Update()
     {
-        int canSelectMarble = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && !GameManager.Instance.PlayerHasSelectedMarble() ? 1 : 0;
+        int canSelectMarble = 
+            GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && !GameManager.Instance.PlayerHasSelectedMarble() ? 1 : 0;
         if (canSelectMarble != prevCanSelectMarble)
         {
-            if (canSelectMarble == 0)
-            {
-                HandLayoutGroup.padding = new RectOffset(
-                    handPadding.left,
-                    handPadding.right,
-                    handPadding.top + 200,
-                    handPadding.bottom
-                );
-                HandLayoutCanvasGroup.alpha = 0.5f;
+            isAnimatingHand = true;
+            prevCanSelectMarble = canSelectMarble;
+        }
+
+        if (isAnimatingHand) {
+            int newTopPadding;
+            if (prevCanSelectMarble == 0) {
+                newTopPadding = (int)Mathf.MoveTowards(
+                    HandLayoutGroup.padding.top, 
+                    handPadding.top + HAND_OFFSET, 
+                    HAND_OFFSET * 2f * Time.deltaTime);
+
+                if (newTopPadding == handPadding.top + HAND_OFFSET) {
+                    isAnimatingHand = false;
+                }
             }
-            else
-            {
-                HandLayoutGroup.padding = handPadding;
-                HandLayoutCanvasGroup.alpha = 1f;
+            else {
+                newTopPadding = (int)Mathf.MoveTowards(
+                    HandLayoutGroup.padding.top, 
+                    handPadding.top, 
+                    HAND_OFFSET * 2f * Time.deltaTime);
+
+                if (newTopPadding == handPadding.top) {
+                    isAnimatingHand = false;
+                }
             }
 
-            prevCanSelectMarble = canSelectMarble;
+            HandLayoutGroup.padding = new RectOffset(
+                handPadding.left,
+                handPadding.right,
+                newTopPadding,
+                handPadding.bottom
+            );
         }
     }
 
