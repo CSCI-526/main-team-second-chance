@@ -15,6 +15,9 @@ public enum AggressionLevel
 
 public class EnemyController : MonoBehaviour
 {
+    public static EnemyController ins = null;
+    private Deck EnemyDeck;
+
     [SerializeField] private float ForceRandomness = 0.1f;
     [SerializeField] private float DirectionRandomness = 0.1f;
     [SerializeField] private float CenterForce = 1.2f;
