@@ -50,7 +50,7 @@ public class TurnUI : MonoBehaviour
                 break;
             case TurnState.WaitingOnEnemyTurn:
                 UpdateTurnTextForEnemy();
-                TurnText.text = "WAITING ON ENEMY TURN";
+                TurnText.text = "WAITING";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
@@ -62,7 +62,7 @@ public class TurnUI : MonoBehaviour
                 break;
             case TurnState.WaitingOnPlayerTurn:
                 UpdateTurnTextForPlayer();
-                TurnText.text = "WAITING ON YOUR TURN";
+                TurnText.text = "WAITING";
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
                 break;
