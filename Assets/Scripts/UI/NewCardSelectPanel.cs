@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class NewCardSelectPanel : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class NewCardSelectPanel : MonoBehaviour
     List<GameObject> Cards;
     [SerializeField]
     List<MarbleData> MarblesReference;
+
+    [SerializeField]
+    private TextMeshProUGUI NewCardSelectText;
+
     private void OnEnable()
     {
         DeckEvents.OnSelectNewMarbleToAdd += RevealCards;
@@ -64,6 +69,7 @@ public class NewCardSelectPanel : MonoBehaviour
     private void HidePanel()
     {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
+        NewCardSelectText.canvasRenderer.SetAlpha(0);
         for (int i = 0; i < Cards.Count; i++)
         {
             Cards[i].SetActive(false);
@@ -73,6 +79,7 @@ public class NewCardSelectPanel : MonoBehaviour
     private void ShowPanel()
     {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
+        NewCardSelectText.canvasRenderer.SetAlpha(1);
     }
 
 }

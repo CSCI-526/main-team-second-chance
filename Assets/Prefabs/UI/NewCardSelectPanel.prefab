@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cards: []
+  MarblesReference: []
 --- !u!1001 &2757587040910481923
 PrefabInstance:
   m_ObjectHideFlags: 0
