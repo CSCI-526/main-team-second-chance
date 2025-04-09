@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Card : MonoBehaviour, IPointerClickHandler
+public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public void UpdateInformation(string MarblePrefab, string CardDetail)
     {
@@ -26,19 +26,25 @@ public class Card : MonoBehaviour, IPointerClickHandler
     {
         throw new System.NotImplementedException();
     }
+    */
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn) {
+            GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
-    }*/
+        Debug.Log("Exiting");
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn) {
+            GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Clicked on a card with ID: " + HandIndex);
         if (eventData.button != PointerEventData.InputButton.Left) {
             return;
         }
@@ -53,13 +59,20 @@ public class Card : MonoBehaviour, IPointerClickHandler
             }
             case TurnState.PlayerTurn:
             {
-                if (PanelImage.material == SelectedMaterial) {
-                    PanelImage.material = null;
-                    GameManager.Instance.GetPlayerManager().GetPlayerDeck().ResetSelectedMarbleIndex();
+                Debug.Log("Clicked on a card with ID: " + HandIndex);
+
+                Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
+                if (playerDeck.SelectedMarbleRef == PanelImage) {
+                    playerDeck.SelectedMarbleRef.material = null;
+                    playerDeck.SelectedMarbleRef = null;
+                    playerDeck.ResetSelectedMarbleIndex();
                 }
-                else if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetSelectedMarbleIndex() < 0) {
-                    Debug.Log("Clicked on a card with ID: " + HandIndex);
-                    PanelImage.material = SelectedMaterial;
+                else {
+                    if (playerDeck.SelectedMarbleRef != null) {
+                        playerDeck.SelectedMarbleRef.material = null;
+                    }
+                    playerDeck.SelectedMarbleRef = PanelImage;
+                    playerDeck.SelectedMarbleRef.material = SelectedMaterial;
                     DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
                 }
                 break;

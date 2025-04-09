@@ -27,8 +27,7 @@ public class TurnUI : MonoBehaviour
 
     private void Start()
     {
-        color = EnemyTurnArrow.color;
-        TurnText.color = color;
+        UpdateTurnTextForEnemy();
         TurnText.text = "ENEMY TURN";
         PlayerTurnArrow.enabled = false;
         EnemyTurnArrow.enabled = true;
@@ -44,30 +43,26 @@ public class TurnUI : MonoBehaviour
         switch (turn)
         {
             case TurnState.PlayerTurn:
-                color = PlayerTurnArrow.color;
-                TurnText.color = color;
-                TurnText.text = "PLAYER TURN";
+                UpdateTurnTextForPlayer();
+                TurnText.text = "YOUR TURN";
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
                 break;
             case TurnState.WaitingOnEnemyTurn:
-                color = EnemyTurnArrow.color;
-                TurnText.color = color;
+                UpdateTurnTextForEnemy();
                 TurnText.text = "WAITING ON ENEMY TURN";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
             case TurnState.EnemyTurn:
-                color = EnemyTurnArrow.color;
-                TurnText.color = color;
+                UpdateTurnTextForEnemy();
                 TurnText.text = "ENEMY TURN";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
             case TurnState.WaitingOnPlayerTurn:
-                color = PlayerTurnArrow.color;
-                TurnText.color = color;
-                TurnText.text = "WAITING ON PLAYER TURN";
+                UpdateTurnTextForPlayer();
+                TurnText.text = "WAITING ON YOUR TURN";
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
                 break;
@@ -79,6 +74,28 @@ public class TurnUI : MonoBehaviour
                 break;
         }
         timerCoroutine = StartCoroutine(TimeUntilHide(HideTime));
+    }
+
+    private void UpdateTurnTextForPlayer() {
+        TurnText.alignment = TextAlignmentOptions.Left;
+
+        Vector3 newTurnTextPosition = TurnText.rectTransform.anchoredPosition;
+        newTurnTextPosition.x = -220;
+        TurnText.rectTransform.anchoredPosition = newTurnTextPosition;
+
+        color = PlayerTurnArrow.color;
+        TurnText.color = color;
+    }
+
+    private void UpdateTurnTextForEnemy() {
+        TurnText.alignment = TextAlignmentOptions.Right;
+
+        Vector3 newTurnTextPosition = TurnText.rectTransform.anchoredPosition;
+        newTurnTextPosition.x = 220;
+        TurnText.rectTransform.anchoredPosition = newTurnTextPosition;
+
+        color = EnemyTurnArrow.color;
+        TurnText.color = color;
     }
 
     private IEnumerator TimeUntilHide(float Duration)

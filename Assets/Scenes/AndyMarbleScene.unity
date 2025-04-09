@@ -960,6 +960,16 @@ PrefabInstance:
       propertyPath: tutorialBar
       value: 
       objectReference: {fileID: 1178786234}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: allowedCursorTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 5c694a9342e51934786a6d3d653bf7a5, type: 3}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: launchingCursorTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: ea86be07a97f4994e9639dba5b41b988, type: 3}
     - target: {fileID: 4475100409864456308, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1090,6 +1100,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e96beefb821ae7f489adda0abf44eb0b, type: 3}
+--- !u!224 &1735324655 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4609848899191707205, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4705280167257534983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2006374472 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5165991448613288286, guid: e96beefb821ae7f489adda0abf44eb0b,
@@ -1325,6 +1341,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3132241134396585105, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3537201056337787073, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1364,11 +1385,38 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763253195758455561, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_text
+      value: 'You
+
+        Score: 000'
       objectReference: {fileID: 0}
     - target: {fileID: 7036687276133781887, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_Name
       value: MainUICanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637027231050098352, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7695603251714503079, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: bestOfIndicator
+      value: 
+      objectReference: {fileID: 1735324655}
+    - target: {fileID: 8190465054275762357, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -220
+      objectReference: {fileID: 0}
+    - target: {fileID: 8190465054275762357, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 8603796027416253247, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
