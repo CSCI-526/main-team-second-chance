@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviour
     private bool bCanShootMarble = false;
 
     public Texture2D restrictedCursorTexture;
-    private bool bAimingOverScoreZone = false;
+    public Texture2D allowedCursorTexture;
+    public Texture2D launchingCursorTexture;
     private bool bShowedTutorial = false;
 
     void Start()
@@ -26,8 +27,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool readyToShoot = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
-        if (readyToShoot)
+        bool bMarbleSelectedAndPlayerTurn = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
+        if (bMarbleSelectedAndPlayerTurn)
         {
             if (!bShowedTutorial)
             {
@@ -36,23 +37,9 @@ public class PlayerController : MonoBehaviour
                     tutorialBar.SetActive(true);
                     tutorial.SetActive(true);
                 }
-                bShowedTutorial = true;
             }
 
-            bool newHovering = !IsNotInScoringZone(ConvertMouseIntoWorldSpace());
-            if (newHovering != bAimingOverScoreZone)
-            {
-                if (!newHovering)
-                {
-                    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-                }
-                else
-                {
-                    Cursor.SetCursor(restrictedCursorTexture, new Vector2(8, 8), CursorMode.Auto);
-                }
-
-                bAimingOverScoreZone = newHovering;
-            }
+            UpdateCursor();
         }
         else
         {
@@ -67,13 +54,23 @@ public class PlayerController : MonoBehaviour
                     tutorial.SetActive(false);
                 }
             }
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
 
-
+        // Currently dragging mouse
+        if (Input.GetMouseButton(0))
+        {
+            if (bCanShootMarble)
+            {
+                EndLocationMouse = ConvertMouseIntoWorldSpace();
+                LineRenderer.SetPosition(1, EndLocationMouse);
+            }
+        }
+        // Start mouse drag
         if (Input.GetMouseButtonDown(0))
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
-            Vector2 To2DSpace = new Vector2(StartLocationMouse.x, StartLocationMouse.z);
+            Vector2 To2DSpace = new(StartLocationMouse.x, StartLocationMouse.z);
             bCanShootMarble = CanShootMarble(To2DSpace);
             if (bCanShootMarble)
             {
@@ -88,14 +85,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        if (Input.GetMouseButton(0))
-        {
-            if (bCanShootMarble)
-            {
-                EndLocationMouse = ConvertMouseIntoWorldSpace();
-                LineRenderer.SetPosition(1, EndLocationMouse);
-            }
-        }
+        // Release mouse drag
         if (Input.GetMouseButtonUp(0))
         {
             if (bCanShootMarble)
@@ -104,11 +94,12 @@ public class PlayerController : MonoBehaviour
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 float DirectionMagnitude = Vector3.Magnitude(Direction);
-                if (DirectionMagnitude < Mathf.Epsilon)
+                
+                // Ignore launches that are too weak.
+                if (DirectionMagnitude < 0.5f)
                 {
                     return;
                 }
-                Debug.Log("Direction magnitude: " + DirectionMagnitude);
                 MarbleData MarbleData = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
                 if (!MarbleData)
                 {
@@ -116,19 +107,44 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
 
+                if (!bShowedTutorial) {
+                    bShowedTutorial = true;
+                }
+
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
                 MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData.MarbleType, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
             bCanShootMarble = true;
         }
     }
 
+    private void UpdateCursor() {
+        Vector3 mousePos = ConvertMouseIntoWorldSpace();
+        Vector2 To2DSpace = new(mousePos.x, mousePos.z);
+        if (!IsNotInScoringZone(To2DSpace))
+        {
+            Cursor.SetCursor(restrictedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
+        }
+        else if (LineRenderer.enabled) 
+        {
+            Cursor.SetCursor(launchingCursorTexture, new Vector2(12, 12), CursorMode.Auto);
+        }
+        else if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck)
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        }
+        else
+        {
+            Cursor.SetCursor(allowedCursorTexture, new Vector2(12,12), CursorMode.Auto);
+        }
+    }
+
     Vector3 ConvertMouseIntoWorldSpace()
     {
-        float y = 1.0f;
-        Vector3 WorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float x = WorldPoint.x;
-        float z = WorldPoint.z;
-        return new Vector3(x, y, z);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // To put the cursor point above the play plane.
+        worldPos.y = 1;
+        return worldPos;
     }
 
     private bool IsNotInScoringZone(Vector2 testPoint)
@@ -136,10 +152,10 @@ public class PlayerController : MonoBehaviour
         GameObject scoreZone = GameManager.Instance.GetScoringCircle();
         CapsuleCollider capsuleCollider = scoreZone.GetComponent<CapsuleCollider>();
 
-        Vector2 zoneCenter = new Vector2(scoreZone.transform.position.x, scoreZone.transform.position.z);
+        Vector2 zoneCenter = new(scoreZone.transform.position.x, scoreZone.transform.position.z);
 
         float sqrMag = Vector2.SqrMagnitude(testPoint - zoneCenter);
-        float sqrRad = (capsuleCollider.radius * capsuleCollider.radius);
+        float sqrRad = capsuleCollider.radius * capsuleCollider.radius;
         if (sqrMag <= sqrRad)
         {
             return false;

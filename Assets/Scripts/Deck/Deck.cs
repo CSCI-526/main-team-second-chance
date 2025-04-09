@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Deck : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class Deck : MonoBehaviour
     public List<int> GetHand() { return Hand; }
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return IndexOfHand; }
+    public void ResetSelectedMarbleIndex() { IndexOfHand = -1; }
+    public Image SelectedMarbleRef {get; set;}
+    public bool bIsHoveringDeck {get; set;}
     public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
     {
         MarbleDeck.Add(marble);
@@ -77,6 +81,11 @@ public class Deck : MonoBehaviour
         ShuffleDeck();
         GenerateInitialHand(Team);
         DeckEvents.DeckGenerated(Team, GetTotalRemainingMarbles());
+
+        if (Team == MarbleTeam.Player) {
+            SelectedMarbleRef = null;
+            bIsHoveringDeck = false;
+        }
     }
     public void UpdateHand(MarbleTeam Team)
     {
