@@ -27,18 +27,18 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private Image[] BestOfIndicators;
     [SerializeField]
-    private Transform bestOfIndicator;
+    private VerticalLayoutGroup bestOfIndicatorLayoutGroup;
     private List<GameObject> Cards = new List<GameObject>();
     private int previouslyWonRounds = 0;
 
-    private RectOffset handPadding;
-    private Vector3 bestOfIndicatorDefaultPosition;
+    private RectOffset handDefaultPadding;
+    private RectOffset bestOfIndicatorDefaultPadding;
     private int prevCanSelectMarble = -1;
     private bool bisAnimatingHand = false;
     private bool bisAnimatingBestOfIndicator = false;
 
-    private const int HAND_OFFSET = 480;
-    private const int BEST_OF_INDICATOR_OFFSET = 70;
+    private const int HAND_PADDING_TOP_OFFSET = 400;
+    private const int BEST_OF_INDICATOR_PADDING_TOP_OFFSET = 300;
 
     private void OnEnable()
     {
@@ -51,8 +51,8 @@ public class MainUI : MonoBehaviour
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
 
-        handPadding = HandLayoutGroup.padding;
-        bestOfIndicatorDefaultPosition = bestOfIndicator.position;
+        handDefaultPadding = HandLayoutGroup.padding;
+        bestOfIndicatorDefaultPadding = bestOfIndicatorLayoutGroup.padding;
         bisAnimatingHand = true;
         bisAnimatingBestOfIndicator = true;
     }
@@ -88,28 +88,34 @@ public class MainUI : MonoBehaviour
 
     private void AnimateBestOfIndicator() {
         if (bisAnimatingBestOfIndicator) {
-            float newYOffset;
+            int newTopPadding;
             if (prevCanSelectMarble == 0) {
-                 newYOffset = Mathf.MoveTowards(
-                        bestOfIndicator.position.y, 
-                        bestOfIndicatorDefaultPosition.y + BEST_OF_INDICATOR_OFFSET, 
-                        BEST_OF_INDICATOR_OFFSET * 2f * Time.deltaTime);
+                newTopPadding = (int)Mathf.MoveTowards(
+                    bestOfIndicatorLayoutGroup.padding.top, 
+                    bestOfIndicatorDefaultPadding.top - BEST_OF_INDICATOR_PADDING_TOP_OFFSET, 
+                    BEST_OF_INDICATOR_PADDING_TOP_OFFSET * 2f * Time.deltaTime);
 
-                if (newYOffset == bestOfIndicatorDefaultPosition.y + BEST_OF_INDICATOR_OFFSET) {
+                if (newTopPadding == bestOfIndicatorDefaultPadding.top - BEST_OF_INDICATOR_PADDING_TOP_OFFSET) {
                     bisAnimatingBestOfIndicator = false;
                 }
             }
             else {
-                newYOffset = Mathf.MoveTowards(
-                        bestOfIndicator.position.y, 
-                        bestOfIndicatorDefaultPosition.y, 
-                        BEST_OF_INDICATOR_OFFSET * 2f * Time.deltaTime);
+                newTopPadding = (int)Mathf.MoveTowards(
+                    bestOfIndicatorLayoutGroup.padding.top, 
+                    bestOfIndicatorDefaultPadding.top, 
+                    BEST_OF_INDICATOR_PADDING_TOP_OFFSET * 2f * Time.deltaTime);
 
-                if (newYOffset == bestOfIndicatorDefaultPosition.y) {
+                if (newTopPadding == bestOfIndicatorDefaultPadding.top) {
                     bisAnimatingBestOfIndicator = false;
                 }
             }
-            bestOfIndicator.position = new Vector3(bestOfIndicator.position.x, newYOffset, bestOfIndicator.position.z);
+
+            bestOfIndicatorLayoutGroup.padding = new RectOffset(
+                bestOfIndicatorDefaultPadding.left,
+                bestOfIndicatorDefaultPadding.right,
+                newTopPadding,
+                bestOfIndicatorDefaultPadding.bottom
+            );
         }
     }
 
@@ -119,29 +125,29 @@ public class MainUI : MonoBehaviour
             if (prevCanSelectMarble == 0) {
                 newTopPadding = (int)Mathf.MoveTowards(
                     HandLayoutGroup.padding.top, 
-                    handPadding.top + HAND_OFFSET, 
-                    HAND_OFFSET * 2f * Time.deltaTime);
+                    handDefaultPadding.top + HAND_PADDING_TOP_OFFSET, 
+                    HAND_PADDING_TOP_OFFSET * 2f * Time.deltaTime);
 
-                if (newTopPadding == handPadding.top + HAND_OFFSET) {
+                if (newTopPadding == handDefaultPadding.top + HAND_PADDING_TOP_OFFSET) {
                     bisAnimatingHand = false;
                 }
             }
             else {
                 newTopPadding = (int)Mathf.MoveTowards(
                     HandLayoutGroup.padding.top, 
-                    handPadding.top, 
-                    HAND_OFFSET * 2f * Time.deltaTime);
+                    handDefaultPadding.top, 
+                    HAND_PADDING_TOP_OFFSET * 2f * Time.deltaTime);
 
-                if (newTopPadding == handPadding.top) {
+                if (newTopPadding == handDefaultPadding.top) {
                     bisAnimatingHand = false;
                 }
             }
 
             HandLayoutGroup.padding = new RectOffset(
-                handPadding.left,
-                handPadding.right,
+                handDefaultPadding.left,
+                handDefaultPadding.right,
                 newTopPadding,
-                handPadding.bottom
+                handDefaultPadding.bottom
             );
         }
     }
