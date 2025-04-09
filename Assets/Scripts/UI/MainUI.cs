@@ -38,7 +38,7 @@ public class MainUI : MonoBehaviour
     private bool bisAnimatingBestOfIndicator = false;
 
     private const int HAND_OFFSET = 480;
-    private const int BEST_OF_INDICATOR_OFFSET = 55;
+    private const int BEST_OF_INDICATOR_OFFSET = 70;
 
     private void OnEnable()
     {
