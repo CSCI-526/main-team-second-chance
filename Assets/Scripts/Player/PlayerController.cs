@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     public GameObject tutorialBar;
     public GameObject tutorial;
-
     private Vector3 StartLocationMouse = Vector3.zero;
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
@@ -64,6 +63,11 @@ public class PlayerController : MonoBehaviour
             {
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 LineRenderer.SetPosition(1, EndLocationMouse);
+                GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
+            }
+            else
+            {
+                GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
             }
         }
         // Start mouse drag
@@ -90,6 +94,7 @@ public class PlayerController : MonoBehaviour
         {
             if (bCanShootMarble)
             {
+                GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
                 LineRenderer.enabled = false;
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;

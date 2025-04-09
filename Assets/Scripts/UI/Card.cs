@@ -30,15 +30,16 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn) {
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("Exiting");
-        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn) {
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
         }
     }

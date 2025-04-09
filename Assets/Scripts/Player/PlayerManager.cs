@@ -6,11 +6,14 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public Deck GetPlayerDeck() { return PlayerDeck; }
+    public bool isLaunchingMarble {get; set;}
+
     public MarbleTeam GetTeam() { return Team; }
     [SerializeField]
     private int DeckSize = 3;
     [SerializeField]
     private MarbleTeam Team = MarbleTeam.Player;
+    [SerializeField]
     private Deck PlayerDeck;
     // Start is called before the first frame update
     void Start()
