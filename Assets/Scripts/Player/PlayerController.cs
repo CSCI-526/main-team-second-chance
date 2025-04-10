@@ -26,8 +26,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool bMarbleSelectedAndPlayerTurn = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
-        if (bMarbleSelectedAndPlayerTurn)
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            SceneManagerScript.Instance.loadSceneByIndex(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            SceneManagerScript.Instance.loadSceneByIndex(1);
+
+        }
+
+        bool readyToShoot = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
+        if (readyToShoot)
         {
             if (!bShowedTutorial)
             {
@@ -101,7 +111,7 @@ public class PlayerController : MonoBehaviour
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 float DirectionMagnitude = Vector3.Magnitude(Direction);
-                
+
                 // Ignore launches that are too weak.
                 if (DirectionMagnitude < 0.5f)
                 {
@@ -114,7 +124,8 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
 
-                if (!bShowedTutorial) {
+                if (!bShowedTutorial)
+                {
                     bShowedTutorial = true;
                 }
 
@@ -125,13 +136,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdateCursor() {
+    private void UpdateCursor()
+    {
         Vector3 mousePos = ConvertMouseIntoWorldSpace();
         if (!IsNotInScoringZone(mousePos))
         {
             Cursor.SetCursor(restrictedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
-        else if (LineRenderer.enabled) 
+        else if (LineRenderer.enabled)
         {
             Cursor.SetCursor(launchingCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
@@ -141,7 +153,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Cursor.SetCursor(allowedCursorTexture, new Vector2(12,12), CursorMode.Auto);
+            Cursor.SetCursor(allowedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
     }
 

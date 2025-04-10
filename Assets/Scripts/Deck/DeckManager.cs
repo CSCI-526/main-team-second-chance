@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyDeckType
+{
+    DEFAULT,
+    RANDOM
+}
+
 public class DeckManager : MonoBehaviour
 {
     // The different possible marble prefabs that we want to give

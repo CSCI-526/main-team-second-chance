@@ -34,12 +34,12 @@ public class GameOverUI : MonoBehaviour
     }
     public void OnClickPlayAgain()
     {
-        SceneManager.LoadScene(gameScene);
+        SceneManagerScript.Instance.loadSceneByIndex(2);
     }
 
     public void OnClickTitle()
     {
-        SceneManager.LoadScene(titleScene);
+        SceneManagerScript.Instance.loadSceneByIndex(1);
     }
 
     private void UpdateGameOverPanel()
@@ -74,7 +74,16 @@ public class GameOverUI : MonoBehaviour
     {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         GameOverText.gameObject.SetActive(true);
-        PlayAgainButton.gameObject.SetActive(true);
+
+        if (GameManager.Instance.GetPlayerScore() == GameManager.Instance.GetEnemyScore() || GameManager.Instance.GetPlayerScore() > GameManager.Instance.GetEnemyScore())
+        {
+            PlayAgainButton.gameObject.SetActive(true);
+        }
+        else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
+        {
+            PlayAgainButton.gameObject.SetActive(false);
+        }
+        
         QuitButton.gameObject.SetActive(true);
     }
 }
