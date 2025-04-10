@@ -16,9 +16,45 @@ public enum TurnState
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
-    public EnemyManager GetEnemyManager() { return EnemyManager; }
-    public PlayerManager GetPlayerManager() { return PlayerManager; }
-    public DeckManager GetDeckManager() { return DeckManager; }
+    public EnemyManager GetEnemyManager() 
+    {
+        if(!EnemyManager)
+        {
+            GameObject EnemyManagerGO = GameObject.Find("EnemyManager");
+            if (EnemyManagerGO)
+            {
+                EnemyManager = EnemyManagerGO.GetComponent<EnemyManager>();
+            }
+        }
+
+        return EnemyManager; 
+    }
+    public PlayerManager GetPlayerManager() 
+    {
+        if(!PlayerManager)
+        {
+            GameObject PlayerManagerGO = GameObject.Find("PlayerManager");
+            if (PlayerManagerGO)
+            {
+                PlayerManager = PlayerManagerGO.GetComponent<PlayerManager>();
+            }
+        }
+
+        return PlayerManager; 
+    }
+    public DeckManager GetDeckManager() 
+    {
+        if(!DeckManager)
+        {
+            GameObject DeckManagerGO = GameObject.Find("DeckManager");
+            if (DeckManagerGO)
+            {
+                DeckManager = DeckManagerGO.GetComponent<DeckManager>();
+            }
+        }
+
+        return DeckManager; 
+    }
     public int GetPlayerScore() { return playerScore; }
     public int GetNumWins() { return numWins; }
     public int GetEnemyScore() { return enemyScore; }
@@ -83,7 +119,14 @@ public class GameManager : MonoBehaviour
         }
         MarbleEvents.OnScoreChanged(Team);
     }
-    public GameObject GetScoringCircle() { return ScoringCircle; }
+    public GameObject GetScoringCircle() 
+    { 
+        if(!ScoringCircle)
+        {
+            ScoringCircle = GameObject.Find("ScoringCircle");
+        }
+        return ScoringCircle; 
+    }
     public bool GetAreMarblesMoving() { return bAreMarblesMoving; }
     public List<Marble> GetMarblesList() { return MarblesList; }
     public void RegisterMarble(Marble MarbleObject)
@@ -142,7 +185,16 @@ public class GameManager : MonoBehaviour
         CleanupMarbles();
         IncremetTurnState();
     }
-
+    // Potentially deprecated
+    public void SetCurrentLevelDataSO(LevelDataSO Value)
+    {
+        if(Value == null)
+        {
+            Debug.LogError("New Value to set LevelDataSO to is Null. This is bad");
+            return;
+        }
+        EnemyManager.InitializeLevelData(Value.GetAggressionLevel(), Value.GetEnemyDifficulty());
+    }
 
     [SerializeField]
     private GameObject ScoringCircle;
@@ -154,7 +206,6 @@ public class GameManager : MonoBehaviour
     private EnemyManager EnemyManager;
     [SerializeField]
     private TurnState turnState = TurnState.EnemyTurn;
-
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
@@ -165,7 +216,9 @@ public class GameManager : MonoBehaviour
     private int totalGames = 0;
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
+            Destroy(this.gameObject);
+        else
         {
             Instance = this;
         }
@@ -176,8 +229,20 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Scoring Circle Reference is null (GameManager)");
         }
-
-        ForceUpdateEvents(TurnState.EnemyTurn);
+        if (EnemyManager)
+        {
+            GameObject MapManager = GameObject.Find("MapManager");
+            if(MapManager)
+            {
+                NodeManager NodeManager = MapManager.GetComponent<NodeManager>();
+                if(NodeManager)
+                {
+                    LevelDataSO LevelData = NodeManager.GetLevelData();
+                    EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
+                    ForceUpdateEvents(TurnState.EnemyTurn);
+                }
+            }
+        }
 
         TurnStateEvents.OnGameOver += OnGameOver;
 

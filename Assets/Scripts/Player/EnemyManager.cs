@@ -35,6 +35,18 @@ public class EnemyManager : MonoBehaviour
     {
         EnemyDeck.InitializeDeck(Team, DeckSize);
     }
+    public void InitializeLevelData(AggressionLevel newLevel, float newSkill)
+    {
+        Debug.Log("New AggressionLevel " + newLevel + " new Skill: " + newSkill);
+        if (!EnemyDeck || !EnemyController)
+        {
+            EnemyDeck = GetComponent<Deck>();
+            EnemyController = GetComponent<EnemyController>();
+            InitializeEnemyDeck();
+        }
+
+        EnemyController.SetAggression(newLevel, newSkill);
+    }
     private void EnemyShootMarble(TurnState turnState)
     {
         if (turnState != TurnState.EnemyTurn)

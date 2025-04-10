@@ -6,7 +6,8 @@ public class TitleUI : MonoBehaviour
 {
     public void Play()
     {
-        SceneManagerScript.Instance.loadSceneByIndex(1);
+        // we move to the level select now instead
+        SceneManagerScript.Instance.loadSceneByIndex(2);
     }
 
     public void Quit()

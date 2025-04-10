@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AndyMarbleScene.unity
     guid: 0e3eb5afdc5fe0545956c8a6adeb5c73
+  - enabled: 1
+    path: Assets/Scenes/LevelSelectScene.unity
+    guid: bd4b586e5349e4642af0262420bfe2d2
   m_configObjects: {}

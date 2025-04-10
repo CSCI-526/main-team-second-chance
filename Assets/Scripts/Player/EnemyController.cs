@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
     private float SkillLevel = 1.0f;
     private AggressionLevel Aggression = AggressionLevel.HyperAggressive;
 
-    public void SetAgression(AggressionLevel newLevel, float newSkill)
+    public void SetAggression(AggressionLevel newLevel, float newSkill)
     {
         SkillLevel = newSkill;
         Aggression = newLevel;
@@ -35,8 +35,6 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
-        if (ins == null)
-            ins = this;
     }
 
     public void ShootMarble(MarbleData MarbleObject)
@@ -60,14 +58,14 @@ public class EnemyController : MonoBehaviour
             {
                 foreach (var Marble in GameManager.Instance.GetMarblesList())
                 {
-                if (!Marble)
-                {
-                    continue;
-                }
-                if (!Marble.gameObject.activeInHierarchy)
-                {
-                    continue;
-                }
+                    if (!Marble)
+                    {
+                        continue;
+                    }
+                    if (!Marble.gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
                     if (Marble.Team == MarbleTeam.Player)
                     {
                         testPoint = new Vector2(Marble.transform.position.x, Marble.transform.position.z);
@@ -135,7 +133,7 @@ public class EnemyController : MonoBehaviour
 
     private Vector3 GenerateDirectionOffset()
     {
-        return new Vector3(Random.Range(-DirectionRandomness*SkillLevel, DirectionRandomness*SkillLevel), 0.0f,
-            Random.Range(-DirectionRandomness*SkillLevel, DirectionRandomness*SkillLevel));
+        return new Vector3(Random.Range(-DirectionRandomness * SkillLevel, DirectionRandomness * SkillLevel), 0.0f,
+            Random.Range(-DirectionRandomness * SkillLevel, DirectionRandomness * SkillLevel));
     }
 }
