@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour
     private bool IsNotInButtonsZone(Vector3 testWorldPoint) {
         Vector3 testScreenPoint =  Camera.main.WorldToScreenPoint(testWorldPoint);
         Vector2 ScreenPoint2D = new(testScreenPoint.x, testScreenPoint.y);
+        Debug.Log($"PlayerController.IsNotInButtonsZone(Vector2 testWorldPoint): X: {ScreenPoint2D.x}, Y: {ScreenPoint2D.y}");
         RectTransform buttonsRect = GameManager.Instance.GetMainUIButtons().GetComponent<RectTransform>();
         return !RectTransformUtility.RectangleContainsScreenPoint(buttonsRect, ScreenPoint2D);
     }
@@ -185,6 +186,7 @@ public class PlayerController : MonoBehaviour
         bool bRestrictedZoneTest = IsNotInRestrictedZones(testWorldPoint);
         if (!bRestrictedZoneTest)
         {
+            Debug.Log($"PlayerController.CanShootMarble(Vector3 testWorldPoint): X: {testWorldPoint.x}, Y: {testWorldPoint.y}, Z: {testWorldPoint.z}");
             Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
         }
         bool bValidDeckSize = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 || GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize() > 0;
