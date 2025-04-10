@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
             if (bCanShootMarble)
             {
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
+                EndLocationMouse.y = 1;
                 LineRenderer.SetPosition(1, EndLocationMouse);
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
             }
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
+            StartLocationMouse.y = 1;
             Vector2 To2DSpace = new(StartLocationMouse.x, StartLocationMouse.z);
             bCanShootMarble = CanShootMarble(To2DSpace);
             if (bCanShootMarble)
@@ -125,8 +127,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateCursor() {
         Vector3 mousePos = ConvertMouseIntoWorldSpace();
-        Vector2 To2DSpace = new(mousePos.x, mousePos.z);
-        if (!IsNotInScoringZone(To2DSpace))
+        if (!IsNotInScoringZone(mousePos))
         {
             Cursor.SetCursor(restrictedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
@@ -134,7 +135,7 @@ public class PlayerController : MonoBehaviour
         {
             Cursor.SetCursor(launchingCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
-        else if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck)
+        else if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck || !IsNotInButtonsZone(mousePos))
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
@@ -147,19 +148,18 @@ public class PlayerController : MonoBehaviour
     Vector3 ConvertMouseIntoWorldSpace()
     {
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // To put the cursor point above the play plane.
-        worldPos.y = 1;
         return worldPos;
     }
 
-    private bool IsNotInScoringZone(Vector2 testPoint)
+    private bool IsNotInScoringZone(Vector3 testWorldPoint)
     {
+        Vector2 WorldPoint2D = new(testWorldPoint.x, testWorldPoint.z);
         GameObject scoreZone = GameManager.Instance.GetScoringCircle();
         CapsuleCollider capsuleCollider = scoreZone.GetComponent<CapsuleCollider>();
 
         Vector2 zoneCenter = new(scoreZone.transform.position.x, scoreZone.transform.position.z);
 
-        float sqrMag = Vector2.SqrMagnitude(testPoint - zoneCenter);
+        float sqrMag = Vector2.SqrMagnitude(WorldPoint2D - zoneCenter);
         float sqrRad = capsuleCollider.radius * capsuleCollider.radius;
         if (sqrMag <= sqrRad)
         {
@@ -168,35 +168,46 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    private bool CanShootMarble(Vector2 testPoint)
+    private bool IsNotInButtonsZone(Vector3 testWorldPoint) {
+        Vector3 testScreenPoint =  Camera.main.WorldToScreenPoint(testWorldPoint);
+        Vector2 ScreenPoint2D = new(testScreenPoint.x, testScreenPoint.y);
+        RectTransform buttonsRect = GameManager.Instance.GetMainUIButtons().GetComponent<RectTransform>();
+        return !RectTransformUtility.RectangleContainsScreenPoint(buttonsRect, ScreenPoint2D);
+    }
+
+    private bool IsNotInRestrictedZones(Vector3 testWorldPoint) {
+        return IsNotInScoringZone(testWorldPoint) && IsNotInButtonsZone(testWorldPoint);
+    }
+
+    private bool CanShootMarble(Vector3 testWorldPoint)
     {
         // Valid Scoring Zone
-        bool bScoringZoneTest = IsNotInScoringZone(testPoint);
-        if (!bScoringZoneTest)
+        bool bRestrictedZoneTest = IsNotInRestrictedZones(testWorldPoint);
+        if (!bRestrictedZoneTest)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You are in the scoring zone. You should try shooting outside of the scoring zone");
+            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
         }
         bool bValidDeckSize = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 || GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize() > 0;
         if (!bValidDeckSize)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Your deck is empty. You cannot shoot anymore");
+            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Your deck is empty. You cannot shoot anymore");
         }
         bool bHasSelectedAMarble = GameManager.Instance.PlayerHasSelectedMarble();
         if (!bHasSelectedAMarble)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): You have not yet selected a marble. Please pick one to shoot");
+            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You have not yet selected a marble. Please pick one to shoot");
         }
         bool bMarblesMoving = GameManager.Instance.GetAreMarblesMoving();
         if (bMarblesMoving)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
+            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
         }
 
         bool bIsCorrectState = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
         if (!bIsCorrectState)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector2 testPoint): It is not the player's turn. Please wait");
+            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): It is not the player's turn. Please wait");
         }
-        return bScoringZoneTest && bValidDeckSize && bHasSelectedAMarble && !bMarblesMoving && bIsCorrectState;
+        return bRestrictedZoneTest && bValidDeckSize && bHasSelectedAMarble && !bMarblesMoving && bIsCorrectState;
     }
 }

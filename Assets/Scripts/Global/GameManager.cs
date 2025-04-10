@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public int GetNumWins() { return numWins; }
     public int GetEnemyScore() { return enemyScore; }
     public TurnState GetTurnState() { return turnState; }
+    public GameObject GetMainUIButtons() { return MainUIButtons; }
 
     public bool PlayerHasSelectedMarble() { return PlayerManager.GetPlayerDeck().GetSelectedMarbleIndex() >= 0; }
 
@@ -154,6 +155,8 @@ public class GameManager : MonoBehaviour
     private EnemyManager EnemyManager;
     [SerializeField]
     private TurnState turnState = TurnState.EnemyTurn;
+    [SerializeField]
+    private GameObject MainUIButtons;
 
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
