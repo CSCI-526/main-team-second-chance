@@ -2652,7 +2652,7 @@ PrefabInstance:
     - target: {fileID: 5679644407755519908, guid: d75d977cd2098cb4881af65231c78232,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7395285053131520347, guid: d75d977cd2098cb4881af65231c78232,
         type: 3}
@@ -2680,7 +2680,9 @@ PrefabInstance:
       value: PauseUI, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6298279988868128449, guid: d75d977cd2098cb4881af65231c78232, type: 3}
+    - {fileID: 899415137890047141, guid: d75d977cd2098cb4881af65231c78232, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d75d977cd2098cb4881af65231c78232, type: 3}
@@ -2867,7 +2869,7 @@ PrefabInstance:
     - target: {fileID: 6959069508428259868, guid: 6b20d365e41cc9e4784bd3ad4cc5931c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7582921845452508937, guid: 6b20d365e41cc9e4784bd3ad4cc5931c,
         type: 3}
