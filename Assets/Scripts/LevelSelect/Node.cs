@@ -51,6 +51,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             Icon = GetComponent<Image>();
         }
         Icon.color = TraversedColor;
+        bIsTraversed = true;
         UILineRenderer TravelLine = GetUILineRenderer(NextNode);
         if (TravelLine)
         {
@@ -88,6 +89,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private Dictionary<Node, UILineRenderer> NodeToLine = new Dictionary<Node, UILineRenderer>();
     private int DataRep;
     private bool bHasChildren = false;
+    private bool bIsTraversed = false;
     private void Start()
     {
         if(ChildrenList == null)
@@ -110,6 +112,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Icon.color = OverrideColor;
         // Highlight each child route
         foreach (Node Child in ChildrenList)
         {
@@ -122,6 +125,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Icon.color = bIsTraversed ? TraversedColor : DefaultColor;
         // Unhighlight each child route
         foreach (Node Child in ChildrenList)
         {

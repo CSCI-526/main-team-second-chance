@@ -131,7 +131,7 @@ public class Deck : MonoBehaviour
     private int MAX_HAND_SIZE = 5;
     [SerializeField]
     private int INIT_HAND_SIZE = 3;
-    private void GenerateInitialHand(MarbleTeam Team)
+    public void GenerateInitialHand(MarbleTeam Team)
     {
         if (MarbleDeck.Count == 0)
         {
