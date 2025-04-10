@@ -31,7 +31,16 @@ public class PlayerManager : MonoBehaviour
     }
     public void InitializePlayerDeck()
     {
-        PlayerDeck.InitializeDeck(Team, DeckSize);
+        if (NodeManager.Instance.GetPlayerDeck().Count != 0)
+        {
+            PlayerDeck.MarbleDeck = NodeManager.Instance.GetPlayerDeck();
+            PlayerDeck.GenerateInitialHand(Team);
+        }
+        else
+        {
+            PlayerDeck.InitializeDeck(Team, DeckSize);
+            NodeManager.Instance.UpdatePlayerDeck(PlayerDeck.MarbleDeck);
+        }
     }
     private void AddMarbleToDeck(MarbleData gameObject)
     {
@@ -40,6 +49,7 @@ public class PlayerManager : MonoBehaviour
             return;
         }
         PlayerDeck.AddMarbleToDeck(Team, gameObject);
+        NodeManager.Instance.UpdatePlayerDeck(PlayerDeck.MarbleDeck);
 
         // We need to override the turn back to enemy turn since we just added a new marble 
         // Eventually we probably want to just turn this to like the levelselect state

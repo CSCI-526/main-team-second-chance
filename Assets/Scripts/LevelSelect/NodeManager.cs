@@ -1,17 +1,29 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class NodeManager : MonoBehaviour
 {
+    private void OnApplicationQuit()
+    {
+        NodeManagerData.ClearPlayerDeck();
+    }
     public static NodeManager Instance;
     public LevelDataSO GetLevelData() 
     {
         return NodeManagerData.GetActiveLevel();
+    }
+    public List<MarbleData> GetPlayerDeck()
+    {
+        return NodeManagerData.GetPlayerDeck();
+    }
+    public void ResetPlayerDeck()
+    {
+        NodeManagerData.ClearPlayerDeck();
+    }
+    public void UpdatePlayerDeck(List<MarbleData> playerDeck)
+    {
+        NodeManagerData.UpdatePlayerDeck(playerDeck);
     }
     [SerializeField]
     private NodeManagerSO NodeManagerData;
@@ -80,6 +92,7 @@ public class NodeManager : MonoBehaviour
         {
             // Assumes we are going back to title screen which means that we should reinitialize levels bc "roguelike"
             bHasInitialized = false;
+            NodeManagerData.ClearPlayerDeck();
         }
     }
     // Start is called before the first frame update

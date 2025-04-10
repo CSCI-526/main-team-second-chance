@@ -22,6 +22,13 @@ public class NodeManagerSO : ScriptableObject
     public void SetActiveLevel(int index) { ActiveLevel = index; }
     public LevelDataSO GetActiveLevel() { return Levels[ActiveLevel]; }
     public List<LevelDataSO> GetLevels() { return Levels; }
+    public List<MarbleData> GetPlayerDeck() { return PlayerDeck; }
+    public void UpdatePlayerDeck(List<MarbleData> playerDeck) { PlayerDeck = playerDeck; }
+    public void ClearPlayerDeck()
+    {
+        PlayerDeck.Clear();
+        PlayerDeck = null;
+    }
     [SerializeField]
     private int NumberLevels = 5;
     [SerializeField, Tooltip("Insert all LevelDataSO's into this list. We will pseudo randomly pick out levels to use")]
@@ -29,4 +36,5 @@ public class NodeManagerSO : ScriptableObject
     [SerializeField]
     private List<LevelDataSO> Levels = new List<LevelDataSO>();
     private int ActiveLevel = 0;
+    private List<MarbleData> PlayerDeck;
 }
