@@ -1830,7 +1830,7 @@ PrefabInstance:
     - target: {fileID: 3643047120279317595, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_text
-      value: Play Again
+      value: Continue
       objectReference: {fileID: 0}
     - target: {fileID: 3715595120532418243, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}

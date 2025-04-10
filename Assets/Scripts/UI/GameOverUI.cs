@@ -34,12 +34,20 @@ public class GameOverUI : MonoBehaviour
     }
     public void OnClickPlayAgain()
     {
-        SceneManagerScript.Instance.loadSceneByIndex(2);
+        bool bShouldRestart = NodeManager.Instance.ShouldRestartOrMenu();
+        if (bShouldRestart)
+        {
+            SceneManagerScript.Instance.loadSceneByIndex(0);
+        }
+        else
+        {
+            SceneManagerScript.Instance.loadSceneByIndex(2);
+        }
     }
 
     public void OnClickTitle()
     {
-        SceneManagerScript.Instance.loadSceneByIndex(1);
+        SceneManagerScript.Instance.loadSceneByIndex(0);
     }
 
     private void UpdateGameOverPanel()

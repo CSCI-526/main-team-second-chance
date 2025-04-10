@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            SceneManagerScript.Instance.loadSceneByIndex(1);
+            GameManager.Instance.ForceUpdateEvents(TurnState.GameOver);
 
         }
 

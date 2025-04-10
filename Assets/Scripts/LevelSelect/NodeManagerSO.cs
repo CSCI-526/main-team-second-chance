@@ -27,7 +27,6 @@ public class NodeManagerSO : ScriptableObject
     public void ClearPlayerDeck()
     {
         PlayerDeck.Clear();
-        PlayerDeck = null;
     }
     [SerializeField]
     private int NumberLevels = 5;
@@ -36,5 +35,5 @@ public class NodeManagerSO : ScriptableObject
     [SerializeField]
     private List<LevelDataSO> Levels = new List<LevelDataSO>();
     private int ActiveLevel = 0;
-    private List<MarbleData> PlayerDeck;
+    private List<MarbleData> PlayerDeck = new List<MarbleData>();
 }

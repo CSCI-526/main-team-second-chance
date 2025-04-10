@@ -9,6 +9,16 @@ public class NodeManager : MonoBehaviour
         NodeManagerData.ClearPlayerDeck();
     }
     public static NodeManager Instance;
+    public bool ShouldRestartOrMenu()
+    {
+        int LevelsLength = NodeManagerData.GetLevels().Count;
+        LevelDataSO LastLevel = NodeManagerData.GetLevels()[LevelsLength - 1];
+        if(LastLevel == NodeManagerData.GetActiveLevel())
+        {
+            return true;
+        }
+        return false;
+    }
     public LevelDataSO GetLevelData() 
     {
         return NodeManagerData.GetActiveLevel();
@@ -93,6 +103,7 @@ public class NodeManager : MonoBehaviour
             // Assumes we are going back to title screen which means that we should reinitialize levels bc "roguelike"
             bHasInitialized = false;
             NodeManagerData.ClearPlayerDeck();
+            TraversedNodes.Clear();
         }
     }
     // Start is called before the first frame update
