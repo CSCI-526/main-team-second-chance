@@ -8,7 +8,8 @@ public class MarbleLauncher : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> MarblePrefabs;
-    [SerializeField] private float LaunchForceScale = 0.2f;
+    [SerializeField, Range(0.0f, 2.0f)]
+    private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
     [SerializeField] private Material enemyMaterial;
     private void OnEnable()
@@ -74,6 +75,8 @@ public class MarbleLauncher : MonoBehaviour
         MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
 
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
+        // Normalize Direction then apply launch
+        Direction.Normalize();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
         if (!bOverrideWaiting)

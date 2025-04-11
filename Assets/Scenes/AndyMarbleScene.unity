@@ -793,8 +793,13 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
         type: 3}
+      propertyPath: LaunchForceScale
+      value: 1.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
       propertyPath: MarblePrefabs.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
         type: 3}
@@ -831,6 +836,12 @@ PrefabInstance:
       propertyPath: MarblePrefabs.Array.data[5]
       value: 
       objectReference: {fileID: 2147782361639434371, guid: 24267b2042fb89448b41c2d2d76a309e,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 6395808697406203147, guid: 94bdc20f8d05948e5a81f45a02a857b5,
         type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1034,6 +1045,26 @@ PrefabInstance:
       propertyPath: tutorialBar
       value: 
       objectReference: {fileID: 1178786234}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: FORCE_SCALAR
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: MAX_DRAG_DISTANCE
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: MAXIMUM_FORCE_USED
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
+        type: 3}
+      propertyPath: MINIMUM_FORCE_USED
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3171527999687031990, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
       propertyPath: allowedCursorTexture
@@ -1294,8 +1325,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
+      propertyPath: DeckSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
+      propertyPath: CenterForce
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7923564224615749207, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
+        type: 3}
       propertyPath: KnockoutForce
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8097856259149185956, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
@@ -2471,7 +2512,7 @@ PrefabInstance:
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
       propertyPath: MarblePrefabs.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
@@ -2508,6 +2549,12 @@ PrefabInstance:
       propertyPath: MarblePrefabs.Array.data[5]
       value: 
       objectReference: {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
+      propertyPath: MarblePrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d,
         type: 2}
     - target: {fileID: 6664558104299889255, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
