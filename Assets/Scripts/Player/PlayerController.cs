@@ -34,11 +34,12 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             GameManager.Instance.ForceUpdateEvents(TurnState.GameOver);
-
         }
 
-        bool readyToShoot = GameManager.Instance.PlayerHasSelectedMarble() && GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
-        if (readyToShoot)
+        bool isPlayerTurnAndHasSelectedMarble = 
+            GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && 
+            GameManager.Instance.PlayerHasSelectedMarble();
+        if (isPlayerTurnAndHasSelectedMarble)
         {
             if (!bShowedTutorial)
             {
@@ -87,7 +88,8 @@ public class PlayerController : MonoBehaviour
         {
             StartLocationMouse = ConvertMouseIntoWorldSpace();
             bCanShootMarble = CanShootMarble(StartLocationMouse);
-            // Must set this after CanShootMarble() to avoid problems in IsNotInButtonsZone()
+            // Must set this after CanShootMarble() to avoid problems in IsNotInButtonsZone().
+            // Must be higher than 0 so that the line renders above the PlayPlane.
             StartLocationMouse.y = 1;
             if (bCanShootMarble)
             {
