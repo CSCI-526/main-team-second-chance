@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HardDefaultAggressiveEnemy
   m_EditorClassIdentifier: 
   EnemyDifficulty: 1
-  EnemyAggressionLevel: 2
+  EnemyAggressionLevel: 1
   EnemyDeckType: 0
   LevelDifficulty: 5

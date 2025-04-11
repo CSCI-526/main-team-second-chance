@@ -326,7 +326,7 @@ public class NodeManager : MonoBehaviour
         Vector3 startPos = UINode.GetNextNode().position;
         UILineRenderer LineRenderer = Instantiate(UILinePrefab, MapParent.transform);
         LineRenderer.transform.SetAsFirstSibling();
-        LineRenderer.SetPoints(startPos, NextNode.GetNextNode().position);
+        LineRenderer.SetPoints(startPos, NextNode.GetPreviousNode().position);
         LineRenderer.AdjustDimensions();
 
         UINode.SetHasChildren(true);
