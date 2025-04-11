@@ -12,6 +12,7 @@ public class NodeManagerSO : ScriptableObject
         {
             return;
         }
+        Debug.Log(PossibleLevels.Count);
         Levels.Clear();
         // Testing Purposes just add in like 5 of first index
         int firstThird = (int)(NumberLevels * (1.0f / 3.0f));
@@ -21,15 +22,15 @@ public class NodeManagerSO : ScriptableObject
         {
             if (i < firstThird)
             {
-                Levels.Add(PossibleLevels[Random.Range(0, 2)]);
+                Levels.Add(PossibleLevels[Random.Range(0, firstThird)]);
             }
-            else if (i >= firstThird && i < secondThird)
+            else if (i < secondThird)
             {
-                Levels.Add(PossibleLevels[Random.Range(3, 5)]);
+                Levels.Add(PossibleLevels[Random.Range(firstThird, secondThird)]);
             }
             else
             {
-                Levels.Add(PossibleLevels[Random.Range(6, 8)]);
+                Levels.Add(PossibleLevels[Random.Range(secondThird, PossibleLevels.Count)]);
             }
         }
     }
