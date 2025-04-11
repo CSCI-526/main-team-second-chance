@@ -16,9 +16,9 @@ public enum TurnState
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
-    public EnemyManager GetEnemyManager() 
+    public EnemyManager GetEnemyManager()
     {
-        if(!EnemyManager)
+        if (!EnemyManager)
         {
             GameObject EnemyManagerGO = GameObject.Find("EnemyManager");
             if (EnemyManagerGO)
@@ -27,11 +27,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return EnemyManager; 
+        return EnemyManager;
     }
-    public PlayerManager GetPlayerManager() 
+    public PlayerManager GetPlayerManager()
     {
-        if(!PlayerManager)
+        if (!PlayerManager)
         {
             GameObject PlayerManagerGO = GameObject.Find("PlayerManager");
             if (PlayerManagerGO)
@@ -40,11 +40,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return PlayerManager; 
+        return PlayerManager;
     }
-    public DeckManager GetDeckManager() 
+    public DeckManager GetDeckManager()
     {
-        if(!DeckManager)
+        if (!DeckManager)
         {
             GameObject DeckManagerGO = GameObject.Find("DeckManager");
             if (DeckManagerGO)
@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return DeckManager; 
+        return DeckManager;
     }
     public int GetPlayerScore() { return playerScore; }
     public int GetNumWins() { return numWins; }
@@ -120,13 +120,13 @@ public class GameManager : MonoBehaviour
         }
         MarbleEvents.OnScoreChanged(Team);
     }
-    public GameObject GetScoringCircle() 
-    { 
-        if(!ScoringCircle)
+    public GameObject GetScoringCircle()
+    {
+        if (!ScoringCircle)
         {
             ScoringCircle = GameObject.Find("ScoringCircle");
         }
-        return ScoringCircle; 
+        return ScoringCircle;
     }
     public bool GetAreMarblesMoving() { return bAreMarblesMoving; }
     public List<Marble> GetMarblesList() { return MarblesList; }
@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour
     // Potentially deprecated
     public void SetCurrentLevelDataSO(LevelDataSO Value)
     {
-        if(Value == null)
+        if (Value == null)
         {
             Debug.LogError("New Value to set LevelDataSO to is Null. This is bad");
             return;
@@ -236,10 +236,10 @@ public class GameManager : MonoBehaviour
         if (EnemyManager)
         {
             GameObject MapManager = GameObject.Find("MapManager");
-            if(MapManager)
+            if (MapManager)
             {
                 NodeManager NodeManager = MapManager.GetComponent<NodeManager>();
-                if(NodeManager)
+                if (NodeManager)
                 {
                     LevelDataSO LevelData = NodeManager.GetLevelData();
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
@@ -316,6 +316,11 @@ public class GameManager : MonoBehaviour
             numLosses++;
         }
         totalGames = numWins + numLosses;
+
+        AnalyticsManager.SendMetric("round_result", new AnalyticsManager.IntMetric(
+            playerScore - enemyScore
+        ));
+
         MarbleEvents.OnRoundsWonChange(totalGames, numWins);
         if (numLosses >= 2 || numWins >= 2) // If the player has lost 2 or won 2 
         {
@@ -349,9 +354,8 @@ public class GameManager : MonoBehaviour
 
     private void OnGameOver()
     {
-        // me when ternary 🤩
-        AnalyticsManager.SendMetric("game_result", new AnalyticsManager.IntMetric(
-            GetPlayerScore() - GetEnemyScore()
+        AnalyticsManager.SendMetric("match_result", new AnalyticsManager.IntMetric(
+            numWins - numLosses
         ));
     }
 }
