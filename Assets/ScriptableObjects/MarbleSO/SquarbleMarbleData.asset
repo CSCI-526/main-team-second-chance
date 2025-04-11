@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
-  m_Name: ChonkyMarbleData
+  m_Name: SquarbleMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 6395808697406203147, guid: 5846c696bedd073409a483bdb425af51,
+  MarblePrefab: {fileID: 6395808697406203147, guid: 94bdc20f8d05948e5a81f45a02a857b5,
     type: 3}
-  marbleType: 5
+  marbleType: 7
   Sprite: {fileID: 0}
-  Mass: 5
-  UniformScale: 0.75
-  Drag: 0.7
-  MarbleName: Chonky Marble
-  MarbleDescription: Larger than other marbles
-  abilityTriggerDelay: 0.5
+  Mass: 1
+  UniformScale: 0.5
+  Drag: 1
+  MarbleName: Squarble
+  MarbleDescription: A heavy square shaped marble
+  abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 0}

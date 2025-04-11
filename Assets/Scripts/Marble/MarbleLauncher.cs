@@ -46,6 +46,9 @@ public class MarbleLauncher : MonoBehaviour
             case MarbleType.TINY:
                 MarblePrefabIndex = 5;
                 break;
+            case MarbleType.SQUARE:
+                MarblePrefabIndex = 6;
+                break;
             default:
                 MarblePrefabIndex = 0;
                 break;
