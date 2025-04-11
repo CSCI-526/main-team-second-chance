@@ -22,6 +22,11 @@ public class AnalyticsManager : MonoBehaviour
         public int value;
         public IntMetric(int val) { value = val; }
     }
+    public struct Vector2Metric
+    {
+        public Vector2 value;
+        public Vector2Metric(Vector2 val) { value = val; }
+    }
 
     private struct MetricItem
     {
@@ -39,7 +44,7 @@ public class AnalyticsManager : MonoBehaviour
     private const string API_KEY = "AIzaSyAoXTy6p6rtSSHtduwgQ86zpAdlCNtq08w";
     private static readonly string BASE_URL = $"https://{PROJECT_ID}-default-rtdb.firebaseio.com";
 
-    private const int GAME_VERSION = 2; // increment this as we release new versions of the game
+    private const int GAME_VERSION = 3; // increment this as we release new versions of the game
 
     private const string DEVICE_ID_KEY = "FirebaseMetrics_DeviceId";
 

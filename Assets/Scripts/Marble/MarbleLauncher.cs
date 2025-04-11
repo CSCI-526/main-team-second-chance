@@ -76,9 +76,15 @@ public class MarbleLauncher : MonoBehaviour
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
-        if(!bOverrideWaiting)
+        if (!bOverrideWaiting)
         {
             StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
+        }
+
+        if (Team == MarbleTeam.Player)
+        {
+            AnalyticsManager.SendMetric("launch_position", new AnalyticsManager.Vector2Metric(
+                new Vector2(Location.x, Location.z)));
         }
     }
 }
