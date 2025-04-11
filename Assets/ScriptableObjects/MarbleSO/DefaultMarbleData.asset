@@ -20,6 +20,6 @@ MonoBehaviour:
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Default Marble
-  MarbleDescription: This is the Default Marble
+  MarbleDescription: A standard marble with no other abilities
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}
