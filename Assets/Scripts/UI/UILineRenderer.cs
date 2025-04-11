@@ -15,10 +15,6 @@ public class UILineRenderer : MonoBehaviour
     public Vector2 midPoint = new Vector2();
     [SerializeField]
     private float Thickness = 2.0f;
-    [SerializeField]
-    private Color defaultColor = Color.white;
-    [SerializeField]
-    private Color travelledColor = Color.red;
     private RectTransform LineRect;
     private Image Image;
     public bool GetIsTraversed() { return bIsTraversed; }
@@ -51,11 +47,11 @@ public class UILineRenderer : MonoBehaviour
         }
         if (!bIsTraversed)
         {
-            Image.color = defaultColor;
+            Image.color = NodeManager.Instance.lockedLevelOutlineColor;
         }
         else
         {
-            Image.color = travelledColor;
+            Image.color = NodeManager.Instance.clearedLevelOutlineColor;
         }
     }
     public void SetColor(Color OverrideColor)

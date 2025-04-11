@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -46,42 +47,41 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     }
     public void MarkTraversed(Node NextNode)
     {
-        if (!Icon)
+        if (!image)
         {
-            Icon = GetComponent<Image>();
+            image = GetComponent<Image>();
         }
-        Icon.color = TraversedColor;
+        outline.effectColor = NodeManager.Instance.clearedLevelOutlineColor;
         bIsTraversed = true;
-        UILineRenderer TravelLine = GetUILineRenderer(NextNode);
-        if (TravelLine)
+        foreach (Node Child in ChildrenList)
         {
-            TravelLine.SetIsTraversed(true);
-            TravelLine.SetColor();
+            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
+            {
+                value.SetIsTraversed(true);
+                value.SetColor();
+            }
         }
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (Icon.color == TraversedColor)
+        if (image.color == NodeManager.Instance.clearedLevelOutlineColor)
         {
             return;
         }
         OnAttemptEnterLevel(DataRep);
-
     }
 
-
     [SerializeField]
-    private Image Icon;
+    private Image image;
+    [SerializeField]
+    private Outline outline;
     [SerializeField]
     private Transform PreviousNode;
     [SerializeField]
     private Transform NextNode;
     [SerializeField]
-    private Color TraversedColor;
-    [SerializeField]
     private Color DefaultColor;
     [SerializeField, Tooltip("Used for highlighting the children node paths")]
-    private Color OverrideColor;
     private int Layer = 0;
     private int numParents = 0;
     private List<Node> ChildrenList = new List<Node>();
@@ -104,34 +104,32 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             NodeToLine = new Dictionary<Node, UILineRenderer>();
         }
-        if(Icon == null)
+        if(image == null)
         {
-            Icon = GetComponent<Image>();
+            image = GetComponent<Image>();
         }
     }
-    public void CalculateColor(int difficulty)
+    public void CalculateDefaultColor(int difficulty)
     {
-        // for now max difficulty is 5...
-        Color modifiedColor = new Color(difficulty / 5.0f, 1 - difficulty / 5.0f, 1 - difficulty / 5.0f, 1.0f);
-        DefaultColor = modifiedColor;
-        Icon.color = DefaultColor;
+        DefaultColor = NodeManager.Instance.levelColorsByDifficulty[difficulty - 1];
+        image.color = DefaultColor;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Icon.color = OverrideColor;
+        outline.effectColor = NodeManager.Instance.hoverLevelOutlineColor;
         // Highlight each child route
         foreach (Node Child in ChildrenList)
         {
             if(NodeToLine.TryGetValue(Child, out UILineRenderer value))
             {
-                value.SetColor(OverrideColor);
+                value.SetColor(NodeManager.Instance.hoverLevelOutlineColor);
             }
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Icon.color = bIsTraversed ? TraversedColor : DefaultColor;
+        outline.effectColor = bIsTraversed ? NodeManager.Instance.clearedLevelOutlineColor : NodeManager.Instance.lockedLevelOutlineColor;
         // Unhighlight each child route
         foreach (Node Child in ChildrenList)
         {

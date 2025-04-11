@@ -9,7 +9,17 @@ public class NodeManager : MonoBehaviour
     {
         NodeManagerData.ClearPlayerDeck();
     }
+
     public static NodeManager Instance;
+    public Color[] levelColorsByDifficulty = new Color[5];
+    public Color hoverLevelOutlineColor;
+    public Color clearedLevelOutlineColor;
+    public Color lockedLevelOutlineColor;
+
+    public Color[] getLevelColorsByDifficulty() {
+        return levelColorsByDifficulty;
+    }
+
     public bool ShouldRestartOrMenu()
     {
         int LevelsLength = NodeManagerData.GetLevels().Count;
@@ -228,7 +238,7 @@ public class NodeManager : MonoBehaviour
             Node UINode = UIPrefabObj.GetComponent<Node>();
             UINode.SetLayer(Layers);
             UINode.SetCorrespondingLevelSO(i);
-            UINode.CalculateColor(Levels[i].GetLevelDifficulty());
+            UINode.CalculateDefaultColor(Levels[i].GetLevelDifficulty());
             // if this exists alr, we should delete 
             if(DataToUIRep.TryGetValue(i, out Node val2))
             {
@@ -256,7 +266,7 @@ public class NodeManager : MonoBehaviour
         Node LastNode = LastUIPrefab.GetComponent<Node>();
         LastNode.SetCorrespondingLevelSO(Levels.Count - 1);
         LastNode.SetLayer(Layers);
-        LastNode.CalculateColor(Levels[Levels.Count - 1].GetLevelDifficulty());
+        LastNode.CalculateDefaultColor(Levels[Levels.Count - 1].GetLevelDifficulty());
         if (DataToUIRep.TryGetValue(Levels.Count - 1, out Node val))
         {
             DataToUIRep.Remove(Levels.Count - 1);
@@ -359,7 +369,6 @@ public class NodeManager : MonoBehaviour
     }
     private void AdjustMapSize()
     {
-        RectTransform RectTransfm = ScrollZone.content;
         Vector2 sizeDelta = ScrollZone.content.sizeDelta;
         float HorizontalLength = Padding + (MaxXPos - MinXPos) / 2;
         float VerticalLength = Padding + (MaxYPos - MinYPos) / 2;
