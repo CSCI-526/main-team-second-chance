@@ -49,6 +49,12 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             MarbleType.color = Color.black;
             CardDescription.color = Color.black;
         }
+        else if (GameManager.Instance.GetTurnState() == TurnState.CardSelect)
+        {
+            PanelImage.color = Color.white;
+            MarbleType.color = Color.black;
+            CardDescription.color = Color.black;
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -56,10 +62,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
-            PanelImage.color = originalColor;
-            MarbleType.color = Color.white;
-            CardDescription.color = Color.white;
+            
         }
+        PanelImage.color = originalColor;
+        MarbleType.color = Color.white;
+        CardDescription.color = Color.white;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -71,14 +78,14 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         switch (GameManager.Instance.GetTurnState()) {
             case TurnState.CardSelect:
             {
-                Debug.Log("Clicked on a card with ID: " + HandIndex);
+                Debug.Log("Clicked on a card with ID CardSelect: " + HandIndex);
                 PanelImage.material = SelectedMaterial;
                 DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
                 break;
             }
             case TurnState.PlayerTurn:
             {
-                Debug.Log("Clicked on a card with ID: " + HandIndex);
+                Debug.Log("Clicked on a card with ID PlayerTurn: " + HandIndex);
 
                 Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
                 if (playerDeck.SelectedMarbleRef == PanelImage) {
