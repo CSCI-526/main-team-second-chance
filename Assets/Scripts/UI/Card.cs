@@ -9,6 +9,18 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private Color originalColor = new Color32(0x1C, 0x44, 0x6B, 0xFF);
+    //private Outline pulseOutline;
+
+    //private void pulseOutline()
+    //{
+    //    if (outlineEffect == null)
+    //        outlineEffect = PanelImage.GetComponent<Outline>();
+
+    //    if (pulseCoroutine == null && !isCardSelected)
+    //        pulseCoroutine = StartCoroutine(PulseOutline());
+    //}
+
     public void UpdateInformation(string MarblePrefab, string CardDetail)
     {
         MarbleType.SetText(MarblePrefab);
@@ -33,6 +45,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
+            PanelImage.color = Color.white;
+            MarbleType.color = Color.black;
+            CardDescription.color = Color.black;
         }
     }
 
@@ -41,6 +56,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
+            PanelImage.color = originalColor;
+            MarbleType.color = Color.white;
+            CardDescription.color = Color.white;
         }
     }
 
