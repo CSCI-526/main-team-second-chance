@@ -16,7 +16,15 @@ public class PlayerController : MonoBehaviour
     public Texture2D allowedCursorTexture;
     public Texture2D launchingCursorTexture;
     private bool bShowedTutorial = false;
-
+    private float TimeSinceMouseHeldDown = 0.0f;
+    [SerializeField]
+    private float MINIMUM_TIME_HELD_DOWN = 0.5f;
+    [SerializeField]
+    private float MINIMUM_FORCE_USED = 4.0f;
+    [SerializeField]
+    private float MAXIMUM_FORCE_USED = 10.0f;
+    [SerializeField]
+    private float MAX_DRAG_DISTANCE = 5.0f;
     void Start()
     {
         LineRenderer = GetComponent<LineRenderer>();
@@ -27,6 +35,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // DEBUG TOOLS
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             SceneManagerScript.Instance.loadSceneByIndex(2);
@@ -35,9 +44,9 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.ForceUpdateEvents(TurnState.GameOver);
         }
-
-        bool isPlayerTurnAndHasSelectedMarble = 
-            GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && 
+#endif
+        bool isPlayerTurnAndHasSelectedMarble =
+            GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             GameManager.Instance.PlayerHasSelectedMarble();
         if (isPlayerTurnAndHasSelectedMarble)
         {
@@ -73,8 +82,23 @@ public class PlayerController : MonoBehaviour
         {
             if (bCanShootMarble)
             {
-                EndLocationMouse = ConvertMouseIntoWorldSpace();
-                EndLocationMouse.y = 1;
+                Vector3 MouseSpace = ConvertMouseIntoWorldSpace();
+                MouseSpace.y = 1;
+                if (Vector3.Distance(StartLocationMouse, MouseSpace) < MAX_DRAG_DISTANCE)
+                {
+                    EndLocationMouse = MouseSpace;
+                    EndLocationMouse.y = 1;
+                }
+                else
+                {
+                    // direction vector
+                    Vector3 StartToMouse = MouseSpace - StartLocationMouse;
+                    StartToMouse.Normalize();
+
+                    // modify end location mouse to also match 
+                    EndLocationMouse = StartLocationMouse + StartToMouse * MAX_DRAG_DISTANCE;
+                    EndLocationMouse.y = 1;
+                }
                 LineRenderer.SetPosition(1, EndLocationMouse);
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
             }
@@ -82,6 +106,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
             }
+            TimeSinceMouseHeldDown += Time.deltaTime;
         }
         // Start mouse drag
         if (Input.GetMouseButtonDown(0))
@@ -112,12 +137,14 @@ public class PlayerController : MonoBehaviour
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
                 LineRenderer.enabled = false;
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
+                EndLocationMouse.y = 1;
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
                 float DirectionMagnitude = Vector3.Magnitude(Direction);
-
-                // Ignore launches that are too weak.
-                if (DirectionMagnitude < 0.5f)
+                Debug.Log("MagDir " + DirectionMagnitude);
+                // Ignore launches that are too weak. OR we have not held down the mouse for long enough
+                if (DirectionMagnitude < MINIMUM_FORCE_USED || TimeSinceMouseHeldDown < MINIMUM_TIME_HELD_DOWN)
                 {
+                    TimeSinceMouseHeldDown = 0.0f;
                     return;
                 }
                 MarbleData MarbleData = GameManager.Instance.GetPlayerManager().GetPlayerDeck().UseMarble(MarbleTeam.Player);
@@ -132,7 +159,14 @@ public class PlayerController : MonoBehaviour
                     bShowedTutorial = true;
                 }
 
+                TimeSinceMouseHeldDown = 0.0f;
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                // Apply nonlinear scaling
+                DirectionMagnitude = Mathf.Pow(DirectionMagnitude, 1.5f);
+                // Clamp the direction magnitude
+                DirectionMagnitude = Mathf.Clamp(DirectionMagnitude, MINIMUM_FORCE_USED, MAXIMUM_FORCE_USED);
+                Debug.Log("Modified Dir Mag: " + DirectionMagnitude);
+
                 MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData.MarbleType, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
             bCanShootMarble = true;
@@ -183,14 +217,16 @@ public class PlayerController : MonoBehaviour
         return true;
     }
 
-    private bool IsNotInButtonsZone(Vector3 testWorldPoint) {
-        Vector3 testScreenPoint =  Camera.main.WorldToScreenPoint(testWorldPoint);
+    private bool IsNotInButtonsZone(Vector3 testWorldPoint)
+    {
+        Vector3 testScreenPoint = Camera.main.WorldToScreenPoint(testWorldPoint);
         Vector2 ScreenPoint2D = new(testScreenPoint.x, testScreenPoint.y);
         RectTransform buttonsRect = GameManager.Instance.GetMainUIButtons().GetComponent<RectTransform>();
         return !RectTransformUtility.RectangleContainsScreenPoint(buttonsRect, ScreenPoint2D);
     }
 
-    private bool IsNotInRestrictedZones(Vector3 testWorldPoint) {
+    private bool IsNotInRestrictedZones(Vector3 testWorldPoint)
+    {
         return IsNotInScoringZone(testWorldPoint) && IsNotInButtonsZone(testWorldPoint);
     }
 

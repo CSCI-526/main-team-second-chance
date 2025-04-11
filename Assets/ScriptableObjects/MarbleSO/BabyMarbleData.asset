@@ -16,7 +16,7 @@ MonoBehaviour:
     type: 3}
   marbleType: 6
   Sprite: {fileID: 0}
-  Mass: 1
+  Mass: 0.5
   UniformScale: 0.25
   Drag: 0.7
   MarbleName: Baby Marble
