@@ -14,9 +14,23 @@ public class NodeManagerSO : ScriptableObject
         }
         Levels.Clear();
         // Testing Purposes just add in like 5 of first index
+        int firstThird = (int)(NumberLevels * (1.0f / 3.0f));
+        int secondThird = (int)(NumberLevels * (2.0f / 3.0f));
+        // this kinda assumes that levels are added in based on difficulty this is super hardcoded
         for (int i = 0; i < NumberLevels; i++)
         {
-            Levels.Add(PossibleLevels[Random.Range(0, PossibleLevels.Count - 1)]);
+            if (i < firstThird)
+            {
+                Levels.Add(PossibleLevels[Random.Range(0, 2)]);
+            }
+            else if (i >= firstThird && i < secondThird)
+            {
+                Levels.Add(PossibleLevels[Random.Range(3, 5)]);
+            }
+            else
+            {
+                Levels.Add(PossibleLevels[Random.Range(6, 8)]);
+            }
         }
     }
     public void SetActiveLevel(int index) { ActiveLevel = index; }

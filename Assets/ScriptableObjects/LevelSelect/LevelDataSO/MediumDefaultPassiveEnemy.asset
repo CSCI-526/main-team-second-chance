@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
   m_Name: MediumDefaultPassiveEnemy
   m_EditorClassIdentifier: 
-  EnemyDifficulty: 1
+  EnemyDifficulty: 5
   EnemyAggressionLevel: 0
   EnemyDeckType: 0
   LevelDifficulty: 3

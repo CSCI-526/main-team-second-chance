@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class NodeManager : MonoBehaviour
 {
@@ -133,12 +134,21 @@ public class NodeManager : MonoBehaviour
                 StartingPosition = StartingPosGO.transform;
             }
         }
+        if(!ScrollZone)
+        {
+            GameObject ScrollZoneGO = GameObject.Find("Scroll View");
+            if(ScrollZoneGO)
+            {
+                ScrollZone = ScrollZoneGO.GetComponent<ScrollRect>();
+            }
+        }
         // Zero Out StartingPosition Z just in case
         if (StartingPosition.position.z != 0)
         {
             StartingPosition.position.Set(StartingPosition.position.x, StartingPosition.position.y, 0);
         }
         LevelsUI = new List<List<GameObject>>();
+        Layers = 0;
         // Create the container 
         InitializeParentContainer();
 
@@ -218,7 +228,13 @@ public class NodeManager : MonoBehaviour
             Node UINode = UIPrefabObj.GetComponent<Node>();
             UINode.SetLayer(Layers);
             UINode.SetCorrespondingLevelSO(i);
-            DataToUIRep.Add(i, UINode);
+            UINode.CalculateColor(Levels[i].GetLevelDifficulty());
+            // if this exists alr, we should delete 
+            if(DataToUIRep.TryGetValue(i, out Node val2))
+            {
+                DataToUIRep.Remove(i);
+            }
+            DataToUIRep.TryAdd(i, UINode);
             // Store values for scroll rect
             if (ModifiedPosition.y > MaxYPos)
             {
@@ -240,7 +256,12 @@ public class NodeManager : MonoBehaviour
         Node LastNode = LastUIPrefab.GetComponent<Node>();
         LastNode.SetCorrespondingLevelSO(Levels.Count - 1);
         LastNode.SetLayer(Layers);
-        DataToUIRep.Add(Levels.Count - 1, LastNode);
+        LastNode.CalculateColor(Levels[Levels.Count - 1].GetLevelDifficulty());
+        if (DataToUIRep.TryGetValue(Levels.Count - 1, out Node val))
+        {
+            DataToUIRep.Remove(Levels.Count - 1);
+        }
+        DataToUIRep.TryAdd(Levels.Count - 1, LastNode);
         LevelsUI.Add(new List<GameObject>());
         LevelsUI[Layers].Add(LastUIPrefab);
         // Similarly, we know that this must be the maxXPos
@@ -321,13 +342,20 @@ public class NodeManager : MonoBehaviour
         }
         for (int i = 0; i < TraversedNodes.Count - 1; ++i)
         {
-            DataToUIRep.TryGetValue(TraversedNodes[i], out Node val);
-            DataToUIRep.TryGetValue(TraversedNodes[i + 1], out Node val2);
-            val.MarkTraversed(val2);
+            if (DataToUIRep.TryGetValue(TraversedNodes[i], out Node val))
+            {
+                if(DataToUIRep.TryGetValue(TraversedNodes[i + 1], out Node val2))
+                {
+                    val.MarkTraversed(val2);
+                }
+            }
+            
         }
-        DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value);
+        if(DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
+        {
+            value.MarkTraversed(null);
 
-        value.MarkTraversed(null);
+        }
     }
     private void AdjustMapSize()
     {

@@ -109,7 +109,13 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             Icon = GetComponent<Image>();
         }
     }
-
+    public void CalculateColor(int difficulty)
+    {
+        // for now max difficulty is 5...
+        Color modifiedColor = new Color(difficulty / 5.0f, 1 - difficulty / 5.0f, 1 - difficulty / 5.0f, 1.0f);
+        DefaultColor = modifiedColor;
+        Icon.color = DefaultColor;
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
         Icon.color = OverrideColor;
