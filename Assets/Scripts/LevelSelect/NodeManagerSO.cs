@@ -43,6 +43,10 @@ public class NodeManagerSO : ScriptableObject
     {
         PlayerDeck.Clear();
     }
+    public void RemoveCardFromPlayerDeck(int Index)
+    {
+        PlayerDeck.RemoveAt(Index);
+    }
     [SerializeField]
     private int NumberLevels = 5;
     [SerializeField, Tooltip("Insert all LevelDataSO's into this list. We will pseudo randomly pick out levels to use")]

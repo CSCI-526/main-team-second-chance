@@ -60,7 +60,7 @@ public class NewCardSelectPanel : MonoBehaviour
                 Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. This shouldn't happen");
                 return;
             }
-            card.UpdateInformation(MarblesReference[i].MarbleName, MarblesReference[i].MarbleDescription, MarblesReference[i]);
+            card.UpdateInformation(MarblesReference[i]);
             card.SetHandIndex(i);
             Cards[i].SetActive(true);
         }
