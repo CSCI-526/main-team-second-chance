@@ -156,6 +156,7 @@ public class Deck : MonoBehaviour
         }
         
         NextIndexToDrawToHand = INIT_HAND_SIZE;
+        NumMarblesUsed = 0;
 
         List<MarbleData> data = new List<MarbleData>();
         for (int i = 0; i < Hand.Count; ++i)

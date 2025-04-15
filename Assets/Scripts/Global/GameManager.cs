@@ -95,10 +95,27 @@ public class GameManager : MonoBehaviour
         // This may need to be refactored later.
         if (turnState == TurnState.EnemyTurn)
         {
-            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize())
+            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize() || bInSuddenDeath)
             {
-                OverrideTurnState(TurnState.CardSelect);
-                return;
+                if (enemyScore == playerScore)
+                {
+                    if (!bInSuddenDeath)
+                    {
+                        bInSuddenDeath = true;
+                        PlayerManager.InitializePlayerDeck();
+                        ScoringCircle.GetComponent<ScoringCircle>().ShrinkScoringCircle(2.0f);
+                        // we'll notify the next turn from the scoring cirlce because I hate code quality :))
+                        return;
+                    }
+                }
+                else
+                {
+                    bInSuddenDeath = false;
+                    ScoringCircle sc = ScoringCircle.GetComponent<ScoringCircle>();
+                    sc.ShrinkScoringCircle(sc.BaseRadius,false);
+                    OverrideTurnState(TurnState.CardSelect);
+                    return;
+                }
             }
         }
 
@@ -218,6 +235,7 @@ public class GameManager : MonoBehaviour
     private int numWins = 0;
     private int numLosses = 0;
     private int totalGames = 0;
+    private bool bInSuddenDeath = false;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -258,7 +276,7 @@ public class GameManager : MonoBehaviour
         TurnStateEvents.OnGameOver -= OnGameOver;
     }
 
-    private void CleanupMarbles()
+    public void CleanupMarbles()
     {
         if (MarblesList.Count != 0)
         {
