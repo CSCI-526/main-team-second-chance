@@ -30,10 +30,10 @@ public class PauseUI : MonoBehaviour
         pausePanel.SetActive(false);
     }
 
-    public void ToMainMenu()
+    public void ToLevelSelect()
     {
         Time.timeScale = 2.0f;
         pausePanel.SetActive(false);
-        SceneManagerScript.Instance.loadSceneByIndex(0);
+        SceneManagerScript.Instance.loadSceneByIndex(2);
     }
 }

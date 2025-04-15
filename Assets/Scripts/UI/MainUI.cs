@@ -183,11 +183,11 @@ public class MainUI : MonoBehaviour
     {
         if (Team == MarbleTeam.Player)
         {
-            PlayerScore.text = $"Player Score: {GameManager.Instance.GetPlayerScore()}";
+            PlayerScore.text = $"You\n<color=#49A9DB>🔴</color> {GameManager.Instance.GetPlayerScore()}";
         }
         else
         {
-            EnemyScore.text = $"Enemy Score: {GameManager.Instance.GetEnemyScore()}";
+            EnemyScore.text = $"Enemy\n<color=#FF0000>🔴</color> {GameManager.Instance.GetEnemyScore()}";
         }
     }
     private void UpdateDeckCount(MarbleTeam Team, int Count)

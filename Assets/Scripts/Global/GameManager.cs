@@ -332,6 +332,8 @@ public class GameManager : MonoBehaviour
         enemyScore = 0;
         DeckEvents.SelectNewMarbleToAdd(DeckManager.GenerateNewMarbles());
         EnemyManager.InitializeEnemyDeck();
+        MarbleEvents.OnScoreChanged(MarbleTeam.Player);
+        MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
     }
     public void RestartGame()
     {

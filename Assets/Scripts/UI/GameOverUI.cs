@@ -45,9 +45,9 @@ public class GameOverUI : MonoBehaviour
         }
     }
 
-    public void OnClickTitle()
+    public void OnClickLevelSelect()
     {
-        SceneManagerScript.Instance.loadSceneByIndex(0);
+        SceneManagerScript.Instance.loadSceneByIndex(2);
     }
 
     private void UpdateGameOverPanel()
