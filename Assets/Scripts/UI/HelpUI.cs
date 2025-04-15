@@ -10,12 +10,6 @@ public class HelpUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (helpPanelOpen) CloseHelpPanel();
-            else OpenHelpPanel();
-            helpPanelOpen = !helpPanelOpen;
-        }
     }
 
     public void OpenHelpPanel()
