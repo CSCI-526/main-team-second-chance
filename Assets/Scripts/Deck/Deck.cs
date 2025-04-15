@@ -140,10 +140,21 @@ public class Deck : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < INIT_HAND_SIZE; ++i)
+        if (INIT_HAND_SIZE > MarbleDeck.Count)
         {
-            Hand.Add(i);
+            for (int i = 0; i < MarbleDeck.Count; ++i)
+            {
+                Hand.Add(i);
+            }
         }
+        else
+        {
+            for (int i = 0; i < INIT_HAND_SIZE; ++i)
+            {
+                Hand.Add(i);
+            }
+        }
+        
         NextIndexToDrawToHand = INIT_HAND_SIZE;
 
         List<MarbleData> data = new List<MarbleData>();
@@ -151,6 +162,7 @@ public class Deck : MonoBehaviour
         {
             data.Add(MarbleDeck[Hand[i]]);
         }
+        
         DeckEvents.HandUpdated(Team, data);
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
     }

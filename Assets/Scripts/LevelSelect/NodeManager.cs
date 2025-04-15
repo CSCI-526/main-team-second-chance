@@ -38,6 +38,10 @@ public class NodeManager : MonoBehaviour
     {
         return NodeManagerData.GetPlayerDeck();
     }
+    public void RemoveFromPlayerDeck(int Index)
+    {
+        NodeManagerData.RemoveCardFromPlayerDeck(Index);
+    }
     public void ResetPlayerDeck()
     {
         NodeManagerData.ClearPlayerDeck();

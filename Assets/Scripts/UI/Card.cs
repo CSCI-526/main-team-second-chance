@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -27,11 +23,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         PanelImage.material = null;
         CardDescription.SetText(CardDetail);
     }
-    public void UpdateInformation(string MarblePrefab, string CardDetail, MarbleData MarbleObject)
+    public void UpdateInformation(MarbleData MarbleObject)
     {
-        MarbleType.SetText(MarblePrefab);
+        MarbleType.SetText(MarbleObject.MarbleName);
         PanelImage.material = null;
-        CardDescription.SetText(CardDetail);
+        CardDescription.SetText(MarbleObject.MarbleDescription);
         NewMarbleToAdd = MarbleObject;
     }
     /*public void OnPointerDown(PointerEventData eventData)
@@ -43,7 +39,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
-            !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
+        {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
             PanelImage.color = Color.white;
             MarbleType.color = Color.black;
@@ -60,9 +57,10 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     public void OnPointerExit(PointerEventData eventData)
     {
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
-            !GameManager.Instance.GetPlayerManager().isLaunchingMarble) {
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
+        {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
-            
+
         }
         PanelImage.color = originalColor;
         MarbleType.color = Color.white;
@@ -71,44 +69,59 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left) {
+        if (eventData.button != PointerEventData.InputButton.Left)
+        {
             return;
         }
-
-        switch (GameManager.Instance.GetTurnState()) {
-            case TurnState.CardSelect:
+        if (GameManager.Instance)
+        {
+            switch (GameManager.Instance.GetTurnState())
             {
-                Debug.Log("Clicked on a card with ID CardSelect: " + HandIndex);
-                PanelImage.material = SelectedMaterial;
-                DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
-                break;
-            }
-            case TurnState.PlayerTurn:
-            {
-                Debug.Log("Clicked on a card with ID PlayerTurn: " + HandIndex);
-
-                Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
-                if (playerDeck.SelectedMarbleRef == PanelImage) {
-                    playerDeck.SelectedMarbleRef.material = null;
-                    playerDeck.SelectedMarbleRef = null;
-                    playerDeck.ResetSelectedMarbleIndex();
-                }
-                else {
-                    if (playerDeck.SelectedMarbleRef != null) {
-                        playerDeck.SelectedMarbleRef.material = null;
+                case TurnState.CardSelect:
+                    {
+                        Debug.Log("Clicked on a card with ID CardSelect: " + HandIndex);
+                        PanelImage.material = SelectedMaterial;
+                        DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
+                        break;
                     }
-                    playerDeck.SelectedMarbleRef = PanelImage;
-                    playerDeck.SelectedMarbleRef.material = SelectedMaterial;
-                    DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
-                }
-                break;
+                case TurnState.PlayerTurn:
+                    {
+                        Debug.Log("Clicked on a card with ID PlayerTurn: " + HandIndex);
+
+                        Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
+                        if (playerDeck.SelectedMarbleRef == PanelImage)
+                        {
+                            playerDeck.SelectedMarbleRef.material = null;
+                            playerDeck.SelectedMarbleRef = null;
+                            playerDeck.ResetSelectedMarbleIndex();
+                        }
+                        else
+                        {
+                            if (playerDeck.SelectedMarbleRef != null)
+                            {
+                                playerDeck.SelectedMarbleRef.material = null;
+                            }
+                            playerDeck.SelectedMarbleRef = PanelImage;
+                            playerDeck.SelectedMarbleRef.material = SelectedMaterial;
+                            DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
+                        }
+                        break;
+                    }
             }
+        }
+        if (bIsInCardSelect && !ViewDeck.IsDiscardingCard)
+        {
+            ViewDeck.DoDiscardCard(HandIndex);
         }
     }
 
     public int GetHandIndex() { return HandIndex; }
     public void SetHandIndex(int index) { HandIndex = index; }
-
+    public bool IsInCardSelect
+    {
+        get { return bIsInCardSelect; }
+        set { bIsInCardSelect = value; }
+    }
     [SerializeField]
     private TextMeshProUGUI MarbleType;
     [SerializeField]
@@ -119,4 +132,5 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private Material SelectedMaterial;
     private int HandIndex;
     private MarbleData NewMarbleToAdd;
+    private bool bIsInCardSelect = false;
 }
