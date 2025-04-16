@@ -19,7 +19,7 @@ MonoBehaviour:
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
-  MarbleName: Explosive Marble
+  MarbleName: Bomble
   MarbleDescription: Sends nearby marbles flying after a small delay
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: 8fa2399df0d3e8847889fbe810f1fc93, type: 2}

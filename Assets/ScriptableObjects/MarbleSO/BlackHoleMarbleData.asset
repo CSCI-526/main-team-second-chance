@@ -19,8 +19,8 @@ MonoBehaviour:
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
-  MarbleName: Black Hole Marble
-  MarbleDescription: After a delay, sucks in nearby marbles towards this marble's
-    current position.
+  MarbleName: Black Hole
+  MarbleDescription: After a delay, this marble sucks in nearby marbles towards this
+    marble's current position.
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}

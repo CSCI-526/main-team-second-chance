@@ -19,7 +19,7 @@ MonoBehaviour:
   Mass: 0.5
   UniformScale: 0.25
   Drag: 0.7
-  MarbleName: Baby Marble
+  MarbleName: Baby
   MarbleDescription: Smaller than other marbles
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}

@@ -20,6 +20,6 @@ MonoBehaviour:
   UniformScale: 0.5
   Drag: 1
   MarbleName: Squarble
-  MarbleDescription: A heavy square shaped marble
+  MarbleDescription: A heavy square-shaped marble
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 0}
