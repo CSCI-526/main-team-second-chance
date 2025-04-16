@@ -10,7 +10,9 @@ public class GameOverUI : MonoBehaviour
     [SerializeField]
     private Button PlayAgainButton;
     [SerializeField]
-    private Button QuitButton;
+    private TextMeshProUGUI PlayAgainText;
+    [SerializeField]
+    private Button LevelSelectButton;
     [SerializeField]
     private Color playerColor;
     [SerializeField]
@@ -18,7 +20,7 @@ public class GameOverUI : MonoBehaviour
 
     public string titleScene;
     public string gameScene;
-
+    private bool bDidPlayerLose = false;
     private void OnEnable()
     {
         TurnStateEvents.OnGameOver += UpdateGameOverPanel;
@@ -35,7 +37,7 @@ public class GameOverUI : MonoBehaviour
     public void OnClickPlayAgain()
     {
         bool bShouldRestart = NodeManager.Instance.ShouldRestartOrMenu();
-        if (bShouldRestart)
+        if (bShouldRestart || bDidPlayerLose)
         {
             SceneManagerScript.Instance.loadSceneByIndex(0);
         }
@@ -75,23 +77,28 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
         GameOverText.gameObject.SetActive(false);
         PlayAgainButton.gameObject.SetActive(false);
-        QuitButton.gameObject.SetActive(false);
+        LevelSelectButton.gameObject.SetActive(false);
     }
 
     private void ShowPanel()
     {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         GameOverText.gameObject.SetActive(true);
+        PlayAgainButton.gameObject.SetActive(true);
+        LevelSelectButton.gameObject.SetActive(true);
 
+        if (!PlayAgainText)
+        {
+            Debug.LogError("PlayAgainText SerializedField is null. Please Set it to the text under PlayAgainButton");
+        }
         if (GameManager.Instance.GetPlayerScore() == GameManager.Instance.GetEnemyScore() || GameManager.Instance.GetPlayerScore() > GameManager.Instance.GetEnemyScore())
         {
-            PlayAgainButton.gameObject.SetActive(true);
+            PlayAgainText.text = "CONTINUE";
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
         {
-            PlayAgainButton.gameObject.SetActive(false);
+            PlayAgainText.text = "TRY AGAIN";
+            bDidPlayerLose = true;
         }
-        
-        QuitButton.gameObject.SetActive(true);
     }
 }

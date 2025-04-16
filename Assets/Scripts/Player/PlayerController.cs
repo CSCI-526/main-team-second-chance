@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,6 +26,10 @@ public class PlayerController : MonoBehaviour
     private float MAXIMUM_FORCE_USED = 10.0f;
     [SerializeField]
     private float MAX_DRAG_DISTANCE = 5.0f;
+    [SerializeField]
+    private GameObject MouseIndicator;
+    private RectTransform MouseRectTrsfm; 
+    private Vector3 MouseOffset = Vector3.zero;
     void Start()
     {
         LineRenderer = GetComponent<LineRenderer>();
@@ -76,10 +81,47 @@ public class PlayerController : MonoBehaviour
             }
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
+        // Mouse Indicator
+        if(MouseRectTrsfm == null)
+        {
+            MouseRectTrsfm = MouseIndicator.GetComponent<RectTransform>();
+            MouseOffset = new Vector3(MouseRectTrsfm.rect.width, MouseRectTrsfm.rect.height, 0);
+        }
+        Vector3 ModifiedMousePos = Input.mousePosition + MouseOffset;
+        MouseIndicator.transform.position = ModifiedMousePos;
 
+        // Start mouse drag
+        if (Input.GetMouseButtonDown(0))
+        {
+            MouseIndicator.SetActive(true);
+            StartLocationMouse = ConvertMouseIntoWorldSpace();
+            bCanShootMarble = CanShootMarble(StartLocationMouse);
+            // Must set this after CanShootMarble() to avoid problems in IsNotInButtonsZone().
+            // Must be higher than 0 so that the line renders above the PlayPlane.
+            StartLocationMouse.y = 1;
+            if (bCanShootMarble)
+            {
+                LineRenderer.enabled = true;
+                LineRenderer.SetPosition(0, StartLocationMouse);
+                LineRenderer.SetPosition(1, StartLocationMouse);
+
+                if (tutorialBar != null && tutorial != null)
+                {
+                    tutorialBar.SetActive(false);
+                    tutorial.SetActive(false);
+                }
+            }
+        }
         // Currently dragging mouse
         if (Input.GetMouseButton(0))
         {
+            if(Input.GetMouseButtonDown(1))
+            {
+                LineRenderer.enabled = false;
+                bCanShootMarble = false;
+                MouseIndicator.SetActive(false);
+                return;
+            }
             if (bCanShootMarble)
             {
                 Vector3 MouseSpace = ConvertMouseIntoWorldSpace();
@@ -101,37 +143,20 @@ public class PlayerController : MonoBehaviour
                 }
                 LineRenderer.SetPosition(1, EndLocationMouse);
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
+
             }
             else
             {
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
+                MouseIndicator.SetActive(false);
             }
             TimeSinceMouseHeldDown += Time.deltaTime;
         }
-        // Start mouse drag
-        if (Input.GetMouseButtonDown(0))
-        {
-            StartLocationMouse = ConvertMouseIntoWorldSpace();
-            bCanShootMarble = CanShootMarble(StartLocationMouse);
-            // Must set this after CanShootMarble() to avoid problems in IsNotInButtonsZone().
-            // Must be higher than 0 so that the line renders above the PlayPlane.
-            StartLocationMouse.y = 1;
-            if (bCanShootMarble)
-            {
-                LineRenderer.enabled = true;
-                LineRenderer.SetPosition(0, StartLocationMouse);
-                LineRenderer.SetPosition(1, StartLocationMouse);
 
-                if (tutorialBar != null && tutorial != null)
-                {
-                    tutorialBar.SetActive(false);
-                    tutorial.SetActive(false);
-                }
-            }
-        }
         // Release mouse drag
         if (Input.GetMouseButtonUp(0))
         {
+            MouseIndicator.SetActive(false);
             if (bCanShootMarble)
             {
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
