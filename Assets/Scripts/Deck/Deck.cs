@@ -106,8 +106,11 @@ public class Deck : MonoBehaviour
             DeckEvents.HandUpdated(Team, data);
             return;
         }
+        
         // Draw a new card from the Marble Deck
         Hand.Add(NextIndexToDrawToHand++);
+
+        
         // Reset the selected marble index
         IndexOfHand = -1;
         for (int i = 0; i < Hand.Count; ++i)
@@ -139,23 +142,25 @@ public class Deck : MonoBehaviour
             NextIndexToDrawToHand = -1;
             return;
         }
+        // Reset the hand if something already exists
+        if(Hand.Count != 0)
+        {
+            Hand.Clear();
+        }
 
+        int HandSizeModified = INIT_HAND_SIZE;
+        // If the deck's total size is actually smaller than the smallest hand size
         if (INIT_HAND_SIZE > MarbleDeck.Count)
         {
-            for (int i = 0; i < MarbleDeck.Count; ++i)
-            {
-                Hand.Add(i);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < INIT_HAND_SIZE; ++i)
-            {
-                Hand.Add(i);
-            }
+            HandSizeModified = MarbleDeck.Count;
         }
         
-        NextIndexToDrawToHand = INIT_HAND_SIZE;
+        for (int i = 0; i < HandSizeModified; ++i)
+        {
+            Hand.Add(i);
+        }
+        NextIndexToDrawToHand = HandSizeModified;
+        NumMarblesUsed = 0;
 
         List<MarbleData> data = new List<MarbleData>();
         for (int i = 0; i < Hand.Count; ++i)
