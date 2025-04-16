@@ -54,17 +54,17 @@ public class GameOverUI : MonoBehaviour
     {
         if (GameManager.Instance.GetPlayerScore() == GameManager.Instance.GetEnemyScore())
         {
-            GameOverText.text = "Draw!";
+            GameOverText.text = "Draw!".ToUpper();
             GameOverText.color = Color.white;
         }
         else if (GameManager.Instance.GetPlayerScore() > GameManager.Instance.GetEnemyScore())
         {
-            GameOverText.text = "You win!";
+            GameOverText.text = "You win!".ToUpper();
             GameOverText.color = playerColor;
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
         {
-            GameOverText.text = "You lose...";
+            GameOverText.text = "You lose...".ToUpper();
             GameOverText.color = enemyColor;
         }
         ShowPanel();
