@@ -95,7 +95,7 @@ public class Deck : MonoBehaviour
         List<MarbleData> data = new List<MarbleData>();
         if (NextIndexToDrawToHand >= MarbleDeck.Count)
         {
-            Debug.LogError("Deck.UpdateHand():" + Team + " We are out of marbles that we can add to hand.");
+            Debug.LogWarning("Deck.UpdateHand():" + Team + " We are out of marbles that we can add to hand.");
             // Set the selected marble index to -1 again
             IndexOfHand = -1;
             // HandUpdated signal
