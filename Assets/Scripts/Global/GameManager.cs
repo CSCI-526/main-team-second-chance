@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
                 {
                     bInSuddenDeath = false;
                     ScoringCircle sc = ScoringCircle.GetComponent<ScoringCircle>();
-                    sc.ShrinkScoringCircle(sc.BaseRadius,false);
+                    sc.ShrinkScoringCircle(sc.BaseRadius, false);
                     OverrideTurnState(TurnState.CardSelect);
                     return;
                 }
@@ -198,14 +198,14 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.0f);
-        
+
         CleanupMarbles();
 
         foreach (var marble in MarblesList)
         {
             yield return new WaitForSeconds(marble.CastSettleAbility());
         }
-        
+
         bAreMarblesMoving = false;
         IncremetTurnState();
     }

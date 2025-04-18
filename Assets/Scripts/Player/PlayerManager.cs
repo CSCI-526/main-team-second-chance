@@ -41,6 +41,7 @@ public class PlayerManager : MonoBehaviour
             PlayerDeck.InitializeDeck(Team, DeckSize);
             NodeManager.Instance.UpdatePlayerDeck(PlayerDeck.MarbleDeck);
         }
+        DeckEvents.OnPlayerDeckInitialized();
     }
     private void AddMarbleToDeck(MarbleData gameObject)
     {
@@ -58,5 +59,6 @@ public class PlayerManager : MonoBehaviour
         AnalyticsManager.SendMetric("new_marble_choice", new AnalyticsManager.StringMetric(
                 gameObject.MarbleName
         ));
+
     }
 }

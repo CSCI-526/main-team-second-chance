@@ -40,4 +40,9 @@ public static class DeckEvents
         OnAddNewMarbleToDeck?.Invoke(MarbleObject);
     }
 
+    public static event Action OnPlayerDeckInitialize;
+    public static void OnPlayerDeckInitialized()
+    {
+        OnPlayerDeckInitialize?.Invoke();
+    }
 }
