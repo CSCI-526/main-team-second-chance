@@ -2176,6 +2176,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
         type: 3}
+      propertyPath: MarbleSpace
+      value: 
+      objectReference: {fileID: 11400000, guid: 8baf8f3fc1d3148489195dd9b7baf741,
+        type: 2}
+    - target: {fileID: 6463328405189240443, guid: 8838dc180336b1846b72566446447f8d,
+        type: 3}
       propertyPath: MarblePrefabs.Array.size
       value: 7
       objectReference: {fileID: 0}

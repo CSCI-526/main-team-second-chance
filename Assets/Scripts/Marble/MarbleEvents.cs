@@ -12,8 +12,8 @@ public static class MarbleEvents
     {
         OnMarbleSpawned?.Invoke();
     }
-    public static event Action<MarbleTeam, MarbleType, Vector3, float, Vector3, bool> OnMarbleReadyToLaunch;
-    public static void MarbleReadyToLaunch(MarbleTeam Team, MarbleType Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
+    public static event Action<MarbleTeam, MarbleData, Vector3, float, Vector3, bool> OnMarbleReadyToLaunch;
+    public static void MarbleReadyToLaunch(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
     {
         OnMarbleReadyToLaunch?.Invoke(Team, Type, Direction, Force, Location, bOverrideWaiting);
     }

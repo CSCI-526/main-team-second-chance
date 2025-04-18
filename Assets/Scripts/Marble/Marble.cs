@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,19 @@ public class Marble : MonoBehaviour
     {
         CastAbility();
     }
+
+    public void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Marble"))
+        {
+            Marble otherMarble = other.gameObject.GetComponent<Marble>();
+            if (marbleData.AbilityObject != null && otherMarble != null)
+            {
+                marbleData.AbilityObject.CollisionCast(this,otherMarble);
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
@@ -60,6 +74,16 @@ public class Marble : MonoBehaviour
         yield return new WaitForSeconds(marbleData.abilityTriggerDelay);
         marbleData.AbilityObject.Cast(this);
         yield return null;
+    }
+    
+    // returns time to wait before next round
+    public float CastSettleAbility()
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            return marbleData.AbilityObject.SettledCast(this);
+        }
+        return 0.0f;
     }
 
     // Explosive Marble Ability

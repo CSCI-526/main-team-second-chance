@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class MarbleLauncher : MonoBehaviour
 {
-    [SerializeField]
-    private List<GameObject> MarblePrefabs;
     [SerializeField, Range(0.0f, 2.0f)]
     private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
@@ -20,7 +18,7 @@ public class MarbleLauncher : MonoBehaviour
     {
         MarbleEvents.OnMarbleReadyToLaunch -= LaunchMarble;
     }
-    public void LaunchMarble(MarbleTeam Team, MarbleType Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
+    public void LaunchMarble(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
     {
         if (GameManager.Instance.GetAreMarblesMoving() && !bOverrideWaiting)
         {
@@ -29,32 +27,8 @@ public class MarbleLauncher : MonoBehaviour
         }
         Location.y = 0.25f;
         Direction.y = 0.0f;
-        int MarblePrefabIndex = 0;
-        switch (Type)
-        {
-            case MarbleType.EXPLOSIVE:
-                MarblePrefabIndex = 1;
-                break;
-            case MarbleType.SPLITTER:
-                MarblePrefabIndex = 2;
-                break;
-            case MarbleType.BLACKHOLE:
-                MarblePrefabIndex = 3;
-                break;
-            case MarbleType.THICC:
-                MarblePrefabIndex = 4;
-                break;
-            case MarbleType.TINY:
-                MarblePrefabIndex = 5;
-                break;
-            case MarbleType.SQUARE:
-                MarblePrefabIndex = 6;
-                break;
-            default:
-                MarblePrefabIndex = 0;
-                break;
-        }
-        GameObject MarbleObject = Instantiate(MarblePrefabs[MarblePrefabIndex]);
+
+        GameObject MarbleObject = Instantiate(Type.MarblePrefab);
         MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
 
         Marble MarbleIns = MarbleObject.GetComponent<Marble>();
