@@ -14,6 +14,8 @@ public class Marble : MonoBehaviour
     [SerializeField]
     private MarbleData marbleData;
 
+    [SerializeField] private float maxSize = 5.0f;
+
     public MarbleData GetMarbleData() { return marbleData; }
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
@@ -98,6 +100,30 @@ public class Marble : MonoBehaviour
 
             if (rb != null && hit.CompareTag("Marble") && hit != this.GetComponent<SphereCollider>())
                 rb.AddExplosionForce(power, explosionPos, radius, 0.0f, ForceMode.Impulse);
+        }
+    }
+
+    public void Grow(float time, float scale)
+    {
+        StartCoroutine(GrowRoutine(time,scale));
+    }
+    
+    IEnumerator GrowRoutine(float time, float scale)
+    {
+        var currentScale = this.gameObject.transform.localScale;
+        var finalScale = currentScale * scale;
+        Vector3.ClampMagnitude(finalScale, maxSize);
+        float startMass = rb.mass;
+        float finalMass = startMass * scale * 2.0f;
+        float timer = 0.0f;
+        while (timer < time)
+        {
+            var newScale = Vector3.Lerp(currentScale,finalScale,timer/time);
+            this.gameObject.transform.localScale = newScale;
+            
+            rb.mass = Mathf.Lerp(startMass, finalMass, timer / time);
+            yield return null;
+            timer += Time.deltaTime;
         }
     }
 
