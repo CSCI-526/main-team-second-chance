@@ -198,9 +198,15 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.0f);
-
-        bAreMarblesMoving = false;
+        
         CleanupMarbles();
+
+        foreach (var marble in MarblesList)
+        {
+            yield return new WaitForSeconds(marble.CastSettleAbility());
+        }
+        
+        bAreMarblesMoving = false;
         IncremetTurnState();
     }
     // Potentially deprecated

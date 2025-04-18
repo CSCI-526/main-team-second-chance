@@ -18,7 +18,7 @@ MonoBehaviour:
   Sprite: {fileID: 0}
   Mass: 1
   UniformScale: 0.5
-  Drag: 1
+  Drag: 0.7
   MarbleName: Squarble
   MarbleDescription: A heavy square shaped marble
   abilityTriggerDelay: 1.5

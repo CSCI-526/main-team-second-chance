@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
                 DirectionMagnitude = Mathf.Clamp(DirectionMagnitude, MINIMUM_FORCE_USED, MAXIMUM_FORCE_USED);
                 Debug.Log("Modified Dir Mag: " + DirectionMagnitude);
 
-                MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData.MarbleType, Direction, DirectionMagnitude, StartLocationMouse, false);
+                MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
             bCanShootMarble = true;
         }

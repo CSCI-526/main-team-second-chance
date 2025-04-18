@@ -128,7 +128,7 @@ public class EnemyController : MonoBehaviour
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness * SkillLevel);
             Force = scale * CenterForce;
         }
-        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject.MarbleType, Direction, Force, Location, false);
+        MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location, false);
     }
 
     private Vector3 GenerateDirectionOffset()

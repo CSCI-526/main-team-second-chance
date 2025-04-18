@@ -10,8 +10,7 @@ public enum EnemyDeckType
 public class DeckManager : MonoBehaviour
 {
     // The different possible marble prefabs that we want to give
-    [SerializeField]
-    private List<MarbleData> MarblePrefabs;
+    [SerializeField] private MarbleList MarbleSpace;
     public List<MarbleData> GenerateDeck(MarbleTeam Team, int DeckSize)
     {
         List<MarbleData> marbles;
@@ -36,14 +35,14 @@ public class DeckManager : MonoBehaviour
         // first half is basic
         for (int i = 0; i < firstHalf; ++i)
         {
-            marbles.Add(MarblePrefabs[0]);
+            marbles.Add(MarbleSpace.MarblePrefabs[0]);
         }
 
         // second half is random
         for (int i = 0; i < secondHalf; ++i)
         {
-            int randomIndex = Random.Range(1, MarblePrefabs.Count);
-            marbles.Add(MarblePrefabs[randomIndex]);
+            int randomIndex = Random.Range(1, MarbleSpace.MarblePrefabs.Count);
+            marbles.Add(MarbleSpace.MarblePrefabs[randomIndex]);
         }
 
 
@@ -56,7 +55,7 @@ public class DeckManager : MonoBehaviour
         List<MarbleData> marbles = new List<MarbleData>();
         for (int i = 0; i < DeckSize; ++i)
         {
-            marbles.Add(MarblePrefabs[0]);
+            marbles.Add(MarbleSpace.MarblePrefabs[0]);
         }
 
         return marbles;
@@ -67,8 +66,8 @@ public class DeckManager : MonoBehaviour
         List<MarbleData> PossibleMarbleData = new List<MarbleData>();
         for (int i = 0; i < 3; ++i)
         {
-            int randomIndex = Random.Range(0, MarblePrefabs.Count);
-            PossibleMarbleData.Add(MarblePrefabs[randomIndex]);
+            int randomIndex = Random.Range(0, MarbleSpace.MarblePrefabs.Count);
+            PossibleMarbleData.Add(MarbleSpace.MarblePrefabs[randomIndex]);
         }
 
         return PossibleMarbleData;
@@ -76,6 +75,6 @@ public class DeckManager : MonoBehaviour
 
     public MarbleData GetDefaultMarble()
     {
-        return MarblePrefabs[0];
+        return MarbleSpace.MarblePrefabs[0];
     }
 }

@@ -94,7 +94,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Marble
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3917628534315736544, guid: 8bbc196ee2bdc3240be1770d11a9b100, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
