@@ -31,17 +31,19 @@ public class UILineRenderer : MonoBehaviour
         {
             LineRect = GetComponent<RectTransform>();
         }
-        midPoint = (Points[0] + Points[1]) / 2.0f;
-        LineRect.position = midPoint;
+        Vector2 localA = LineRect.parent.InverseTransformPoint(Points[0]);
+        Vector2 localB = LineRect.parent.InverseTransformPoint(Points[1]);
 
-        Vector2 Direction = Points[0] - Points[1];
+        Vector2 Direction = localB - localA;
+        midPoint = (localA + localB) / 2.0f;
+        LineRect.anchoredPosition = midPoint;
+
         LineRect.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(Direction.y, Direction.x) * Mathf.Rad2Deg);
-        //LineRect.localScale = new Vector3(Direction.magnitude, 1f, 1f);
-        LineRect.sizeDelta = new Vector2(Vector2.Distance(Points[0], Points[1]), Thickness);
+        LineRect.sizeDelta = new Vector2(Direction.magnitude, Thickness);
     }
     public void SetColor()
     {
-        if(Image == null)
+        if (Image == null)
         {
             Image = GetComponent<Image>();
         }
