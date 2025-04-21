@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour
                         bInSuddenDeath = true;
                         PlayerManager.InitializePlayerDeck();
                         ScoringCircle.GetComponent<ScoringCircle>().ShrinkScoringCircle(2.0f);
+                        TurnStateEvents.DoSuddenDeath();
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
                         return;
                     }

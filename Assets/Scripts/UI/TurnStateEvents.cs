@@ -13,4 +13,9 @@ public static class TurnStateEvents
     {
         OnGameOver?.Invoke();
     }
+    public static event Action OnSuddenDeath;
+    public static void DoSuddenDeath()
+    {
+        OnSuddenDeath?.Invoke();
+    }
 }
