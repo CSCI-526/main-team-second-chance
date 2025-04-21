@@ -16,7 +16,8 @@ public class NodeManager : MonoBehaviour
     public Color clearedLevelOutlineColor;
     public Color lockedLevelOutlineColor;
 
-    public Color[] getLevelColorsByDifficulty() {
+    public Color[] getLevelColorsByDifficulty()
+    {
         return levelColorsByDifficulty;
     }
 
@@ -24,13 +25,13 @@ public class NodeManager : MonoBehaviour
     {
         int LevelsLength = NodeManagerData.GetLevels().Count;
         LevelDataSO LastLevel = NodeManagerData.GetLevels()[LevelsLength - 1];
-        if(LastLevel == NodeManagerData.GetActiveLevel())
+        if (LastLevel == NodeManagerData.GetActiveLevel())
         {
             return true;
         }
         return false;
     }
-    public LevelDataSO GetLevelData() 
+    public LevelDataSO GetLevelData()
     {
         return NodeManagerData.GetActiveLevel();
     }
@@ -79,10 +80,8 @@ public class NodeManager : MonoBehaviour
     private bool bHasUIBeenInitialized = false;
     // Number of "Layers" that the map has
     private int Layers = 0;
-    private float MinYPos = float.MaxValue;
-    private float MaxYPos = float.MinValue;
-    private float MinXPos = float.MaxValue;
-    private float MaxXPos = float.MinValue;
+    private static Vector2 previousScrollPosition = new Vector2(0, 0.5f);
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -96,9 +95,9 @@ public class NodeManager : MonoBehaviour
     private void OnLevelWasLoaded(int level)
     {
         // if level is the map level, we reinitialize
-        if(level == 2)
+        if (level == 2)
         {
-            if(!bHasUIBeenInitialized)
+            if (!bHasUIBeenInitialized)
             {
                 if (!bHasInitialized)
                 {
@@ -109,7 +108,7 @@ public class NodeManager : MonoBehaviour
                 bHasUIBeenInitialized = true;
             }
         }
-        else if(level == 1)
+        else if (level == 1)
         {
             bHasUIBeenInitialized = false;
         }
@@ -124,7 +123,7 @@ public class NodeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(!bHasUIBeenInitialized)
+        if (!bHasUIBeenInitialized)
         {
             if (!bHasInitialized)
             {
@@ -142,16 +141,16 @@ public class NodeManager : MonoBehaviour
     {
         if (!StartingPosition)
         {
-            GameObject StartingPosGO= GameObject.Find("StartingPosition");
-            if(StartingPosGO)
+            GameObject StartingPosGO = GameObject.Find("StartingPosition");
+            if (StartingPosGO)
             {
                 StartingPosition = StartingPosGO.transform;
             }
         }
-        if(!ScrollZone)
+        if (!ScrollZone)
         {
             GameObject ScrollZoneGO = GameObject.Find("Scroll View");
-            if(ScrollZoneGO)
+            if (ScrollZoneGO)
             {
                 ScrollZone = ScrollZoneGO.GetComponent<ScrollRect>();
             }
@@ -201,12 +200,10 @@ public class NodeManager : MonoBehaviour
         MapParent.transform.localScale = Vector3.one;
         RectTransform MapParentTransform = MapParent.AddComponent<RectTransform>();
         Stretch(MapParentTransform);
+
     }
     private void PopulateMapData()
     {
-        // We know that this will be the minimum X Pos since we are moving to the right
-        MinXPos = StartingPosition.transform.position.x;
-
         int negation = 1;
         int LayerStartingIndex = 0;
         int LayerCap = 1;
@@ -244,21 +241,11 @@ public class NodeManager : MonoBehaviour
             UINode.SetCorrespondingLevelSO(i);
             UINode.CalculateDefaultColor(Levels[i].GetLevelDifficulty());
             // if this exists alr, we should delete 
-            if(DataToUIRep.TryGetValue(i, out Node val2))
+            if (DataToUIRep.TryGetValue(i, out Node val2))
             {
                 DataToUIRep.Remove(i);
             }
             DataToUIRep.TryAdd(i, UINode);
-            // Store values for scroll rect
-            if (ModifiedPosition.y > MaxYPos)
-            {
-                MaxYPos = ModifiedPosition.y;
-            }
-            if (ModifiedPosition.y < MinYPos)
-            {
-                MinYPos = ModifiedPosition.y;
-            }
-
             negation *= -1;
         }
 
@@ -279,7 +266,6 @@ public class NodeManager : MonoBehaviour
         LevelsUI.Add(new List<GameObject>());
         LevelsUI[Layers].Add(LastUIPrefab);
         // Similarly, we know that this must be the maxXPos
-        MaxXPos = FinalModifiedPosition.x;
 
         AdjustMapSize();
     }
@@ -358,14 +344,14 @@ public class NodeManager : MonoBehaviour
         {
             if (DataToUIRep.TryGetValue(TraversedNodes[i], out Node val))
             {
-                if(DataToUIRep.TryGetValue(TraversedNodes[i + 1], out Node val2))
+                if (DataToUIRep.TryGetValue(TraversedNodes[i + 1], out Node val2))
                 {
                     val.MarkTraversed(val2);
                 }
             }
-            
+
         }
-        if(DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
+        if (DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
         {
             value.MarkTraversed(null);
 
@@ -373,19 +359,21 @@ public class NodeManager : MonoBehaviour
     }
     private void AdjustMapSize()
     {
+        int NumLayers = Layers + 30;
         Vector2 sizeDelta = ScrollZone.content.sizeDelta;
-        float HorizontalLength = Padding + (MaxXPos - MinXPos) / 2;
-        float VerticalLength = Padding + (MaxYPos - MinYPos) / 2;
+        RectTransform rectTransform = UIPrefab.GetComponent<RectTransform>();
+        float HorizontalLength = Padding + rectTransform.rect.width * NumLayers;
+        float VerticalLength = Padding + rectTransform.rect.height * NumLayers;
         sizeDelta.x = HorizontalLength;
         sizeDelta.y = VerticalLength;
         ScrollZone.content.sizeDelta = sizeDelta;
-        ScrollZone.normalizedPosition = new Vector2(0, 0.5f);
+        ScrollZone.normalizedPosition = previousScrollPosition;
     }
 
     private void DoAttemptEnterLevel(int level)
     {
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        if(level >= Levels.Count)
+        if (level >= Levels.Count)
         {
             // not a valid index
             return;
@@ -427,6 +415,7 @@ public class NodeManager : MonoBehaviour
         // If we get here we have a correct level;
         // Set the gamemanager's reference to leveldataSO
         // Load into gameplay scene
+        previousScrollPosition = ScrollZone.normalizedPosition;
         TraversedNodes.Add(level);
         NodeManagerData.SetActiveLevel(level);
         SceneManagerScript.Instance.loadSceneByIndex(1);
