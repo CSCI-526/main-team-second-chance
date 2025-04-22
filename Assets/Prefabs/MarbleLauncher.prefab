@@ -44,6 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94a58d99d810418e8e205227380cbe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LaunchForceScale: 1.75
+  LaunchForceScale: 1.35
   playerMaterial: {fileID: 2100000, guid: 9433be0fed2d64d4eadd36892b2500f5, type: 2}
+  playerOutlineMaterial: {fileID: 2100000, guid: 530694b58b2005c4495df2445016c289,
+    type: 2}
   enemyMaterial: {fileID: 2100000, guid: 4dd8f99d4ac634fa5a99fefe53bc3e7b, type: 2}
+  enemyOutlineMaterial: {fileID: 2100000, guid: e5d24e4db90fa414f90ecf24d22daebb,
+    type: 2}

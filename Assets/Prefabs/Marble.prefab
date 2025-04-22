@@ -67,6 +67,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 9433be0fed2d64d4eadd36892b2500f5, type: 2}
+  - {fileID: 2100000, guid: 530694b58b2005c4495df2445016c289, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,6 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marbleData: {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  maxSize: 5
   bIsInsideGameplayCircle: 1
   bIsInsideScoringCircle: 0
   Team: 0
