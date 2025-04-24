@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class MainUI : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class MainUI : MonoBehaviour
     private Image[] BestOfIndicators;
     [SerializeField]
     private VerticalLayoutGroup bestOfIndicatorLayoutGroup;
+    [SerializeField]
+    private float ScoreBounceHeight = 30.0f;
+    [SerializeField]
+    private float ScoreBounceDuration = 0.3f;
     private List<GameObject> Cards = new List<GameObject>();
     private int previouslyWonRounds = 0;
 
@@ -147,11 +152,44 @@ public class MainUI : MonoBehaviour
         if (Team == MarbleTeam.Player)
         {
             PlayerScore.text = $"You\n<color=#49A9DB>🔴</color> {GameManager.Instance.GetPlayerScore()}";
+            StartCoroutine(BounceScoreGO(PlayerScore.rectTransform));
         }
         else
         {
             EnemyScore.text = $"Enemy\n<color=#FF0000>🔴</color> {GameManager.Instance.GetEnemyScore()}";
+            StartCoroutine(BounceScoreGO(EnemyScore.rectTransform));
         }
+    }
+    private IEnumerator BounceScoreGO(RectTransform scoreGO)
+    {
+        Vector3 startingPosition = scoreGO.anchoredPosition;
+        Vector3 upPos = startingPosition + Vector3.up * ScoreBounceHeight;
+
+        float time = 0f;
+
+        // Move up
+        while (time < ScoreBounceDuration)
+        {
+            float t = time / ScoreBounceDuration;
+            scoreGO.anchoredPosition = Vector3.Lerp(startingPosition, upPos, t);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        scoreGO.anchoredPosition = upPos;
+
+        time = 0f;
+
+        // Move back down
+        while (time < ScoreBounceDuration)
+        {
+            float t = time / ScoreBounceDuration;
+            scoreGO.anchoredPosition = Vector3.Lerp(upPos, startingPosition, t);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        scoreGO.anchoredPosition = startingPosition;
     }
     private void UpdateDeckCount(MarbleTeam Team, int Count)
     {

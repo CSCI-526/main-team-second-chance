@@ -11,12 +11,15 @@ public class LevelDataSO : ScriptableObject
     public bool GetIsLevelVisited() { return bIsLevelVisited; }
     public void SetIsLevelVisited(bool value) { bIsLevelVisited = value; }
     public int GetLevelDifficulty() { return LevelDifficulty; }
+    public string GetEnemyName() { return EnemyName; }
     [SerializeField, Range(0.0f, 10.0f), Tooltip("How accurate the enemy will shoot")]
     private float EnemyDifficulty = 1.0f;
     [SerializeField]
     private AggressionLevel EnemyAggressionLevel;
     [SerializeField]
-    private EnemyDeckType EnemyDeckType;
+    private EnemyDeckType EnemyDeckType = EnemyDeckType.DEFAULT;
+    [SerializeField]
+    private string EnemyName = "The Defaulter";
     // maybe we might want to modify how many like marbles also in here which could b cool 
 
     // Overall Rating of the level, 1 being easiest, 5 being hardest

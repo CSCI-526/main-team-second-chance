@@ -240,6 +240,7 @@ public class NodeManager : MonoBehaviour
             UINode.SetLayer(Layers);
             UINode.SetCorrespondingLevelSO(i);
             UINode.CalculateDefaultColor(Levels[i].GetLevelDifficulty());
+            UINode.UpdateNameOfNode(Levels[i].GetEnemyName());
             // if this exists alr, we should delete 
             if (DataToUIRep.TryGetValue(i, out Node val2))
             {
@@ -258,6 +259,7 @@ public class NodeManager : MonoBehaviour
         LastNode.SetCorrespondingLevelSO(Levels.Count - 1);
         LastNode.SetLayer(Layers);
         LastNode.CalculateDefaultColor(Levels[Levels.Count - 1].GetLevelDifficulty());
+        LastNode.UpdateNameOfNode(Levels[Levels.Count - 1].GetEnemyName());
         if (DataToUIRep.TryGetValue(Levels.Count - 1, out Node val))
         {
             DataToUIRep.Remove(Levels.Count - 1);
@@ -359,7 +361,7 @@ public class NodeManager : MonoBehaviour
     }
     private void AdjustMapSize()
     {
-        int NumLayers = Layers + 30;
+        int NumLayers = Layers + 10;
         Vector2 sizeDelta = ScrollZone.content.sizeDelta;
         RectTransform rectTransform = UIPrefab.GetComponent<RectTransform>();
         float HorizontalLength = Padding + rectTransform.rect.width * NumLayers;
