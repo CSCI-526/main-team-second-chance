@@ -90,6 +90,25 @@ public class GameManager : MonoBehaviour
             turnState++;
         }
 
+        if (turnState == TurnState.PlayerTurn)
+        {
+            if (TutorialManager.Instance.ShouldDisplayAnymore)
+            {
+                TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
+            }
+            numPlayerTurns++;
+        }
+        else if (turnState == TurnState.WaitingOnPlayerTurn)
+        {
+            if (TutorialManager.Instance.ShouldDisplayAnymore)
+            {
+                if (TutorialManager.Instance.CurrentTutorialPhase >= TutorialPhases.LAUNCH_MARBLE)
+                {
+                    TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
+                }
+            }
+        }
+
         // At the start of the enemy turn, we want to check whether or not if we use another player marble, if it will be greater. if so we should override and move to card select
         // We go to card select since we assume that we have not yet finished all matches yet
         // This may need to be refactored later.
@@ -243,6 +262,11 @@ public class GameManager : MonoBehaviour
     private int numLosses = 0;
     private int totalGames = 0;
     private bool bInSuddenDeath = false;
+    private int numPlayerTurns = 0;
+    public int NumPlayerTurns
+    {
+        get { return numPlayerTurns; }
+    }
     private void Awake()
     {
         if (Instance != null && Instance != this)

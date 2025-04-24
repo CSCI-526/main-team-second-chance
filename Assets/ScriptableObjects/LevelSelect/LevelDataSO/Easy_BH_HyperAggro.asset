@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
-  m_Name: HardDefaultHyperAggressiveEnemy
+  m_Name: Easy_BH_HyperAggro
   m_EditorClassIdentifier: 
-  EnemyDifficulty: 1
+  EnemyDifficulty: 10
   EnemyAggressionLevel: 2
-  EnemyDeckType: 0
-  LevelDifficulty: 5
+  EnemyDeckType: 3
+  EnemyName: The BlackHoler
+  LevelDifficulty: 1

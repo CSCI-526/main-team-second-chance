@@ -20,8 +20,8 @@ public class Deck : MonoBehaviour
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return IndexOfHand; }
     public void ResetSelectedMarbleIndex() { IndexOfHand = -1; }
-    public Image SelectedMarbleRef {get; set;}
-    public bool bIsHoveringDeck {get; set;}
+    public Image SelectedMarbleRef { get; set; }
+    public bool bIsHoveringDeck { get; set; }
     public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
     {
         MarbleDeck.Add(marble);
@@ -82,7 +82,8 @@ public class Deck : MonoBehaviour
         GenerateInitialHand(Team);
         DeckEvents.DeckGenerated(Team, GetTotalRemainingMarbles());
 
-        if (Team == MarbleTeam.Player) {
+        if (Team == MarbleTeam.Player)
+        {
             SelectedMarbleRef = null;
             bIsHoveringDeck = false;
         }
@@ -106,11 +107,11 @@ public class Deck : MonoBehaviour
             DeckEvents.HandUpdated(Team, data);
             return;
         }
-        
+
         // Draw a new card from the Marble Deck
         Hand.Add(NextIndexToDrawToHand++);
 
-        
+
         // Reset the selected marble index
         IndexOfHand = -1;
         for (int i = 0; i < Hand.Count; ++i)
@@ -143,7 +144,7 @@ public class Deck : MonoBehaviour
             return;
         }
         // Reset the hand if something already exists
-        if(Hand.Count != 0)
+        if (Hand.Count != 0)
         {
             Hand.Clear();
         }
@@ -154,7 +155,7 @@ public class Deck : MonoBehaviour
         {
             HandSizeModified = MarbleDeck.Count;
         }
-        
+
         for (int i = 0; i < HandSizeModified; ++i)
         {
             Hand.Add(i);
@@ -167,7 +168,7 @@ public class Deck : MonoBehaviour
         {
             data.Add(MarbleDeck[Hand[i]]);
         }
-        
+
         DeckEvents.HandUpdated(Team, data);
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
     }

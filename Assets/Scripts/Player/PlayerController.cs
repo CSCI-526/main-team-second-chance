@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject tutorialBar;
-    public GameObject tutorial;
     private Vector3 StartLocationMouse = Vector3.zero;
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
@@ -28,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private float MAX_DRAG_DISTANCE = 5.0f;
     [SerializeField]
     private GameObject MouseIndicator;
-    private RectTransform MouseRectTrsfm; 
+    private RectTransform MouseRectTrsfm;
     private Vector3 MouseOffset = Vector3.zero;
     void Start()
     {
@@ -55,34 +53,18 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.PlayerHasSelectedMarble();
         if (isPlayerTurnAndHasSelectedMarble)
         {
-            if (!bShowedTutorial)
+            if (TutorialManager.Instance.ShouldDisplayAnymore && !TutorialManager.Instance.IsLaunchCalled && TutorialManager.Instance.CurrentTutorialPhase == TutorialPhases.LAUNCH_MARBLE)
             {
-                if (tutorialBar != null && tutorial != null)
-                {
-                    tutorialBar.SetActive(true);
-                    tutorial.SetActive(true);
-                }
+                TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
             }
-
             UpdateCursor();
         }
         else
         {
-            if (tutorialBar != null && tutorial != null)
-            {
-                if (tutorialBar.activeSelf)
-                {
-                    tutorialBar.SetActive(false);
-                }
-                if (tutorial.activeSelf)
-                {
-                    tutorial.SetActive(false);
-                }
-            }
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
         // Mouse Indicator
-        if(MouseRectTrsfm == null)
+        if (MouseRectTrsfm == null)
         {
             MouseRectTrsfm = MouseIndicator.GetComponent<RectTransform>();
             MouseOffset = new Vector3(MouseRectTrsfm.rect.width, MouseRectTrsfm.rect.height, 0);
@@ -104,18 +86,12 @@ public class PlayerController : MonoBehaviour
                 LineRenderer.enabled = true;
                 LineRenderer.SetPosition(0, StartLocationMouse);
                 LineRenderer.SetPosition(1, StartLocationMouse);
-
-                if (tutorialBar != null && tutorial != null)
-                {
-                    tutorialBar.SetActive(false);
-                    tutorial.SetActive(false);
-                }
             }
         }
         // Currently dragging mouse
         if (Input.GetMouseButton(0))
         {
-            if(Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1))
             {
                 LineRenderer.enabled = false;
                 bCanShootMarble = false;

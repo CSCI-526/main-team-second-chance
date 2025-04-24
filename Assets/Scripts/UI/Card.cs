@@ -172,6 +172,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             ViewDeck.DoDiscardCard(HandIndex);
         }
+
+        if (TutorialManager.Instance.ShouldDisplayAnymore && TutorialManager.Instance.CurrentTutorialPhase == TutorialPhases.SELECT_MARBLE)
+        {
+            TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
+        }
     }
 
     public int GetHandIndex() { return HandIndex; }
