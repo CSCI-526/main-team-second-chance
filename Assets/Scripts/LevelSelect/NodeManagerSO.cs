@@ -16,10 +16,13 @@ public class NodeManagerSO : ScriptableObject
 
         Levels.Clear();
 
-        // Testing Purposes just add in like 5 of first index
+
+        // Forcibly make the first level default passive easy
+        Levels.Add(PossibleEasyLevels[PossibleEasyLevels.Count - 1]);
+
         int firstThird = (int)(NumberLevels * (1.0f / 3.0f));
         int secondThird = (int)(NumberLevels * (2.0f / 3.0f));
-        for (int i = 0; i < NumberLevels - 1; i++)
+        for (int i = 0; i < NumberLevels - 2; i++)
         {
             if (i < firstThird)
             {
@@ -34,6 +37,7 @@ public class NodeManagerSO : ScriptableObject
                 Levels.Add(PossibleHardLevels[Random.Range(0, PossibleHardLevels.Count - 1)]);
             }
         }
+        // this index is the splitterer
         Levels.Add(PossibleHardLevels[PossibleHardLevels.Count - 1]);
     }
     public void SetActiveLevel(int index) { ActiveLevel = index; }
