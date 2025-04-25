@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +14,6 @@ public class StealAbility : Ability
 
     private Material[] materialCopies;
 
-    private bool bHasStolen = false;
-
     private void Awake()
     {
         materialCopies = new Material[2];
@@ -22,12 +21,12 @@ public class StealAbility : Ability
 
     public override void CollisionCast(Marble marble, Marble other)
     {
-        if (bHasStolen)
+        if (marble.OneTimeCasted)
         {
             return;
         }
 
-        bHasStolen = true;
+        marble.OneTimeCasted = true;
 
         if (other.Team != marble.Team)
         {

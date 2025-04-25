@@ -26,6 +26,8 @@ public class Marble : MonoBehaviour
     public MarbleTeam Team;
     //public bool cool = false;
 
+    public bool OneTimeCasted = false;
+
     private Rigidbody rb;
     private void Awake()
     {
@@ -43,11 +45,15 @@ public class Marble : MonoBehaviour
 
     void FixedUpdate()
     {
-        particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+        if (particleSystem != null)
+        {
+            particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 
     private void OnEnable()
     {
+        OneTimeCasted = false;
         CastAbility();
     }
 
@@ -121,7 +127,7 @@ public class Marble : MonoBehaviour
         var finalScale = currentScale * scale;
         Vector3.ClampMagnitude(finalScale, maxSize);
         float startMass = rb.mass;
-        float finalMass = startMass * scale * 2.0f;
+        float finalMass = startMass * Mathf.Pow(scale, 2.0f);
         float timer = 0.0f;
         while (timer < time)
         {
