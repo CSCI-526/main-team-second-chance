@@ -32,7 +32,8 @@ public class BlackHoleAbility : Ability
                 Debug.Log("ADDED BLACK HOLE FORCE");
                 rb.AddForce(direction * power, ForceMode.Impulse);
             }
-                
         }
+
+        marble.GetComponentInChildren<ParticleSystem>().Play();
     }
 }
