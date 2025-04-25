@@ -7,10 +7,19 @@ using UnityEngine;
 public class StealAbility : Ability
 {
     [SerializeField] private Material playerMaterial;
+    [SerializeField] private Material playerOutlineMaterial;
     [SerializeField] private Material enemyMaterial;
+    [SerializeField] private Material enemyOutlineMaterial;
+
+    private Material[] materialCopies;
 
     private bool bHasStolen = false;
-    
+
+    private void Awake()
+    {
+        materialCopies = new Material[2];
+    }
+
     public override void CollisionCast(Marble marble, Marble other)
     {
         if (bHasStolen)
@@ -38,6 +47,11 @@ public class StealAbility : Ability
             Debug.LogError("MarbleLauncher.LaunchMarble(): Prefab does not contain a mesh renderer is not attached to marble prefab");
             return;
         }
-        MarbleRenderer.material = marble.Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        //MarbleRenderer.material = marble.Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        materialCopies[0] = marble.Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        materialCopies[1] = marble.Team == MarbleTeam.Player ? playerOutlineMaterial : enemyOutlineMaterial;
+
+        MarbleRenderer.materials = materialCopies;
+
     }
 }
