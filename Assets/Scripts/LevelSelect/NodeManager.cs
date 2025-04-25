@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -277,19 +278,19 @@ public class NodeManager : MonoBehaviour
 
         // For the first index, we want two children so we just hardcode this in.
         // Lowkey... if it's a map of size 2 then like it'll break but whatever lol
-        if (LevelsUI[0].Count != 1)
-        {
-            Debug.LogError("DrawMap(): LevelUI First Layer is not singular. This means something wrong has happened");
-        }
-        if (LevelsUI[1].Count != 2)
-        {
-            Debug.LogError("DrawMap(): Second Layer is not of size 2. This means somethign wrong happened");
-        }
+        Assert.IsTrue(LevelsUI[0].Count == 1);
+        Assert.IsTrue(LevelsUI[1].Count == 2);
+
+        // Draw first layer
         Node BaseNode = LevelsUI[0][0].GetComponent<Node>();
         Node LeftChildNode = LevelsUI[1][0].GetComponent<Node>();
         Node RightChildNode = LevelsUI[1][1].GetComponent<Node>();
         DrawLines(BaseNode, LeftChildNode, true);
         DrawLines(BaseNode, RightChildNode, true);
+
+        // Set icon for level 1
+        BaseNode.ShowLevel1Icon();
+
         // From second layer, Only traverse up to third to last layer
         for (int i = 1; i < LevelsUI.Count - 2; ++i)
         {

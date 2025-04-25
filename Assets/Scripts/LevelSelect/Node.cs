@@ -77,6 +77,14 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     }
     [SerializeField]
     private Image image;
+
+    public void ShowLevel1Icon() {
+        Color newColor = level1Icon.color;
+        newColor.a = 1;
+        level1Icon.color = newColor;
+    }
+    [SerializeField]
+    private Image level1Icon;
     [SerializeField]
     private Outline outline;
     [SerializeField]
