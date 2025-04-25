@@ -10,7 +10,7 @@ public enum EnemyDeckType
     GROWER,
     BABYER,
     CHONKER,
-    GHOSTER,
+    //GHOSTER,
     SHRINKER,
     SQUARBLEER,
     VAMPIREER,
@@ -94,9 +94,6 @@ public class DeckManager : MonoBehaviour
                 break;
             case EnemyDeckType.CHONKER:
                 GenerateMonoTypeDeck(DeckSize, marbles, 3);
-                break;
-            case EnemyDeckType.GHOSTER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 10);
                 break;
             case EnemyDeckType.SHRINKER:
                 GenerateMonoTypeDeck(DeckSize, marbles, 9);
