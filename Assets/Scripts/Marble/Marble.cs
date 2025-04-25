@@ -16,6 +16,8 @@ public class Marble : MonoBehaviour
 
     [SerializeField] private float maxSize = 5.0f;
 
+    public ParticleSystem particleSystem;
+
     public MarbleData GetMarbleData() { return marbleData; }
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
@@ -39,6 +41,11 @@ public class Marble : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
     private void OnEnable()
     {
         CastAbility();
@@ -51,7 +58,7 @@ public class Marble : MonoBehaviour
             Marble otherMarble = other.gameObject.GetComponent<Marble>();
             if (marbleData.AbilityObject != null && otherMarble != null)
             {
-                marbleData.AbilityObject.CollisionCast(this,otherMarble);
+                marbleData.AbilityObject.CollisionCast(this, otherMarble);
             }
         }
     }
@@ -77,7 +84,7 @@ public class Marble : MonoBehaviour
         marbleData.AbilityObject.Cast(this);
         yield return null;
     }
-    
+
     // returns time to wait before next round
     public float CastSettleAbility()
     {
@@ -105,9 +112,9 @@ public class Marble : MonoBehaviour
 
     public void Grow(float time, float scale)
     {
-        StartCoroutine(GrowRoutine(time,scale));
+        StartCoroutine(GrowRoutine(time, scale));
     }
-    
+
     IEnumerator GrowRoutine(float time, float scale)
     {
         var currentScale = this.gameObject.transform.localScale;
@@ -118,9 +125,9 @@ public class Marble : MonoBehaviour
         float timer = 0.0f;
         while (timer < time)
         {
-            var newScale = Vector3.Lerp(currentScale,finalScale,timer/time);
+            var newScale = Vector3.Lerp(currentScale, finalScale, timer / time);
             this.gameObject.transform.localScale = newScale;
-            
+
             rb.mass = Mathf.Lerp(startMass, finalMass, timer / time);
             yield return null;
             timer += Time.deltaTime;

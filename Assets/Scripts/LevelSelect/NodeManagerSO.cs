@@ -19,21 +19,22 @@ public class NodeManagerSO : ScriptableObject
         // Testing Purposes just add in like 5 of first index
         int firstThird = (int)(NumberLevels * (1.0f / 3.0f));
         int secondThird = (int)(NumberLevels * (2.0f / 3.0f));
-        for (int i = 0; i < NumberLevels; i++)
+        for (int i = 0; i < NumberLevels - 1; i++)
         {
             if (i < firstThird)
             {
-                Levels.Add(PossibleEasyLevels[Random.Range(0, PossibleEasyLevels.Count)]);
+                Levels.Add(PossibleEasyLevels[Random.Range(0, PossibleEasyLevels.Count - 1)]);
             }
             else if (i < secondThird)
             {
-                Levels.Add(PossibleMediumLevels[Random.Range(0, PossibleMediumLevels.Count)]);
+                Levels.Add(PossibleMediumLevels[Random.Range(0, PossibleMediumLevels.Count - 1)]);
             }
             else
             {
-                Levels.Add(PossibleHardLevels[Random.Range(0, PossibleHardLevels.Count)]);
+                Levels.Add(PossibleHardLevels[Random.Range(0, PossibleHardLevels.Count - 1)]);
             }
         }
+        Levels.Add(PossibleHardLevels[PossibleHardLevels.Count - 1]);
     }
     public void SetActiveLevel(int index) { ActiveLevel = index; }
     public LevelDataSO GetActiveLevel() { return Levels[ActiveLevel]; }

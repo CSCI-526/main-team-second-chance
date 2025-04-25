@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -70,7 +71,11 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
         OnAttemptEnterLevel(DataRep);
     }
-
+    public void UpdateNameOfNode(string Name)
+    {
+        NodeName.text = Name;
+        NodeName.color = NodeManager.Instance.clearedLevelOutlineColor;
+    }
     [SerializeField]
     private Image image;
     [SerializeField]
@@ -81,6 +86,8 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private Transform NextNode;
     [SerializeField]
     private Color DefaultColor;
+    [SerializeField]
+    private TextMeshProUGUI NodeName;
     [SerializeField, Tooltip("Used for highlighting the children node paths")]
     private int Layer = 0;
     private int numParents = 0;
@@ -92,7 +99,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private bool bIsTraversed = false;
     private void Start()
     {
-        if(ChildrenList == null)
+        if (ChildrenList == null)
         {
             ChildrenList = new List<Node>();
         }
@@ -100,11 +107,11 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             ParentList = new List<Node>();
         }
-        if(NodeToLine == null)
+        if (NodeToLine == null)
         {
             NodeToLine = new Dictionary<Node, UILineRenderer>();
         }
-        if(image == null)
+        if (image == null)
         {
             image = GetComponent<Image>();
         }
@@ -120,7 +127,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         // Highlight each child route
         foreach (Node Child in ChildrenList)
         {
-            if(NodeToLine.TryGetValue(Child, out UILineRenderer value))
+            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
             {
                 value.SetColor(NodeManager.Instance.hoverLevelOutlineColor);
             }
