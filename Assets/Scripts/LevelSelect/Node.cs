@@ -74,7 +74,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     public void UpdateNameOfNode(string Name)
     {
         NodeName.text = Name;
-        NodeName.color = DefaultColor;
+        NodeName.color = NodeManager.Instance.clearedLevelOutlineColor;
     }
     [SerializeField]
     private Image image;
