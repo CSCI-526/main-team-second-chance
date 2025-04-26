@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class NodeManager : MonoBehaviour
 {
@@ -61,7 +60,7 @@ public class NodeManager : MonoBehaviour
     private static bool bHasInitialized = false;
     public static List<int> TraversedNodes = new List<int>();
     private List<List<GameObject>> LevelsUI;
-    private Dictionary<int, Node> DataToUIRep = new Dictionary<int, Node>();
+    private Dictionary<int, Node> LevelNumToNodeComp = new Dictionary<int, Node>();
     [SerializeField]
     private Transform StartingPosition;
     [SerializeField]
@@ -170,7 +169,7 @@ public class NodeManager : MonoBehaviour
         PopulateMapData();
 
         // Draw Lines Between Node Positions
-        DrawMap();
+        ConnectMap();
 
         // Use Data to draw current state of affairs
         UpdateMapToLatest();
@@ -203,76 +202,93 @@ public class NodeManager : MonoBehaviour
         Stretch(MapParentTransform);
 
     }
+
     private void PopulateMapData()
     {
-        int negation = 1;
-        int LayerStartingIndex = 0;
-        int LayerCap = 1;
-        int LayerOffsetValue = 0;
-        LevelsUI.Add(new List<GameObject>());
-        // Populate Levels into UI Form and Adjust Nodes to fit into tree structure
+        // Hardcoding :P
+        int[] CapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
+        int numLayers = CapacitiesByLayer.Length;
+        
+        // Populate layers with nodes
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        for (int i = 0; i < Levels.Count - 1; ++i)
+        int currLevel = 0;
+        for (int layer = 0; layer < numLayers; ++layer)
         {
-            if (i - LayerStartingIndex == LayerCap)
-            {
-                Layers++;
-                LayerCap = Mathf.NextPowerOfTwo(LayerCap + 1);
-                LayerStartingIndex = i;
-                negation = 1;
-                LayerOffsetValue = 0;
-                LevelsUI.Add(new List<GameObject>());
-            }
-            GameObject UIPrefabObj = Instantiate(UIPrefab, MapParent.transform, false);
-            LevelsUI[Layers].Add(UIPrefabObj);
-            int LayerOffset = i - LayerStartingIndex;
+            LevelsUI.Add(new List<GameObject>());
 
-            Vector3 ModifiedPosition = StartingPosition.position;
-            if (Layers > 0)
+            for (int levelInLayer = 0; levelInLayer < CapacitiesByLayer[layer]; ++levelInLayer) 
             {
-                if (LayerOffset % 2 == 0)
+                // Update Node data
+                GameObject NodePrefab = Instantiate(UIPrefab, MapParent.transform, false);
+                Node nodeComp = NodePrefab.GetComponent<Node>();
+                nodeComp.SetLayer(layer);
+                nodeComp.SetCorrespondingLevelSO(currLevel);
+                nodeComp.CalculateDefaultColor(Levels[currLevel].GetLevelDifficulty());
+                nodeComp.UpdateNameOfNode(Levels[currLevel].GetEnemyName());
+
+                if (LevelNumToNodeComp.TryGetValue(currLevel, out _))
                 {
-                    LayerOffsetValue += 1;
+                    LevelNumToNodeComp.Remove(currLevel);
                 }
-                ModifiedPosition += new Vector3(Layers * HorizontalOffset, LayerOffsetValue * negation * VerticalOffset);
+                LevelNumToNodeComp.TryAdd(currLevel, nodeComp);
+
+                // Add to layer
+                LevelsUI[layer].Add(NodePrefab);
+                currLevel++;
             }
-            UIPrefabObj.transform.position = ModifiedPosition;
-            Node UINode = UIPrefabObj.GetComponent<Node>();
-            UINode.SetLayer(Layers);
-            UINode.SetCorrespondingLevelSO(i);
-            UINode.CalculateDefaultColor(Levels[i].GetLevelDifficulty());
-            UINode.UpdateNameOfNode(Levels[i].GetEnemyName());
-            // if this exists alr, we should delete 
-            if (DataToUIRep.TryGetValue(i, out Node val2))
-            {
-                DataToUIRep.Remove(i);
-            }
-            DataToUIRep.TryAdd(i, UINode);
-            negation *= -1;
         }
 
-        // Increase Layers by 1 because Need one Last Layer
-        GameObject LastUIPrefab = Instantiate(UIPrefab, MapParent.transform, false);
-        Layers += 1;
-        Vector3 FinalModifiedPosition = StartingPosition.position + new Vector3(Layers * HorizontalOffset, 0);
-        LastUIPrefab.transform.position = FinalModifiedPosition;
-        Node LastNode = LastUIPrefab.GetComponent<Node>();
-        LastNode.SetCorrespondingLevelSO(Levels.Count - 1);
-        LastNode.SetLayer(Layers);
-        LastNode.CalculateDefaultColor(Levels[Levels.Count - 1].GetLevelDifficulty());
-        LastNode.UpdateNameOfNode(Levels[Levels.Count - 1].GetEnemyName());
-        if (DataToUIRep.TryGetValue(Levels.Count - 1, out Node val))
+        // Update node position based on offsets to form a tree structure
+        for (int layer = 0; layer < numLayers; ++layer)
         {
-            DataToUIRep.Remove(Levels.Count - 1);
-        }
-        DataToUIRep.TryAdd(Levels.Count - 1, LastNode);
-        LevelsUI.Add(new List<GameObject>());
-        LevelsUI[Layers].Add(LastUIPrefab);
-        // Similarly, we know that this must be the maxXPos
+            bool layerHasEvenLevelCount = CapacitiesByLayer[layer] % 2 == 0;
+            int levelAtMidpoint = CapacitiesByLayer[layer] / 2;
 
-        AdjustMapSize();
+            for (int levelInLayer = 0; levelInLayer < CapacitiesByLayer[layer]; ++levelInLayer) 
+            {
+                bool isMiddleOfLayer =
+                    (
+                        layerHasEvenLevelCount
+                        && (levelAtMidpoint == levelInLayer || levelAtMidpoint - 1 == levelInLayer)
+                    ) || (layerHasEvenLevelCount && levelAtMidpoint == levelInLayer);
+
+                float verticalOffset;
+                if (isMiddleOfLayer) 
+                {
+                    verticalOffset = layerHasEvenLevelCount ? VerticalOffset / 2 : 0f;
+                }
+                else {
+                    int distanceFromMidpoint = Mathf.Abs(levelInLayer - levelAtMidpoint);
+
+                    if (layerHasEvenLevelCount)
+                    {
+                        // For even counts, adjust distance since midpoint is between two levels
+                        distanceFromMidpoint = (levelInLayer < levelAtMidpoint) 
+                            ? distanceFromMidpoint - 1 
+                            : distanceFromMidpoint;
+                    }
+                    verticalOffset = VerticalOffset * distanceFromMidpoint;
+
+                    // Account for the adjustment of having 2 middle levels
+                    if (layerHasEvenLevelCount) {
+                        verticalOffset += VerticalOffset / 2;
+                    }
+                }
+
+                // Flip sign if above the midpoint
+                if (levelInLayer < levelAtMidpoint)
+                {
+                    verticalOffset *= -1;
+                }
+                
+                Vector3 newOffset = new Vector3(layer * HorizontalOffset, verticalOffset);
+                LevelsUI[layer][levelInLayer].GetComponent<Node>().transform.position = StartingPosition.position + newOffset;
+            }
+        }
+
+        AdjustScrollViewSize();
     }
-    private void DrawMap()
+    private void ConnectMap()
     {
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
 
@@ -345,22 +361,23 @@ public class NodeManager : MonoBehaviour
         }
         for (int i = 0; i < TraversedNodes.Count - 1; ++i)
         {
-            if (DataToUIRep.TryGetValue(TraversedNodes[i], out Node val))
+            if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i], out Node val))
             {
-                if (DataToUIRep.TryGetValue(TraversedNodes[i + 1], out Node val2))
+                if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i + 1], out Node val2))
                 {
                     val.MarkTraversed(val2);
                 }
             }
 
         }
-        if (DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
+        if (LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
         {
             value.MarkTraversed(null);
 
         }
     }
-    private void AdjustMapSize()
+
+    private void AdjustScrollViewSize()
     {
         int NumLayers = Layers + 10;
         Vector2 sizeDelta = ScrollZone.content.sizeDelta;
@@ -396,9 +413,9 @@ public class NodeManager : MonoBehaviour
         else
         {
             // check to see if the latest node can connect to this input level
-            DataToUIRep.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node LatestNode);
+            LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node LatestNode);
             Node ProspectiveNode = null;
-            if (DataToUIRep.TryGetValue(level, out Node val))
+            if (LevelNumToNodeComp.TryGetValue(level, out Node val))
             {
                 ProspectiveNode = val;
             }

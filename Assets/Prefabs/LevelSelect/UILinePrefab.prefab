@@ -92,4 +92,4 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   midPoint: {x: 0, y: 0}
-  Thickness: 4
+  Thickness: 5

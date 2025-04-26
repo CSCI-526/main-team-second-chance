@@ -2773,7 +2773,7 @@ MonoBehaviour:
   ScrollZone: {fileID: 514915907}
   VerticalOffset: 100
   HorizontalOffset: 200
-  Padding: 100
+  Padding: 0
   UILinePrefab: {fileID: 29471333137482469, guid: 79d7bdb624e7f8f4c90c4fe1d9b38a79,
     type: 3}
 --- !u!4 &1190558745
