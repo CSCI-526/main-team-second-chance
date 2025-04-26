@@ -156,7 +156,7 @@ public class MainUI : MonoBehaviour
         }
         else
         {
-            EnemyScore.text = $"{NodeManager.Instance.GetLevelData().name}\n<color=#FF0000>🔴</color> {GameManager.Instance.GetEnemyScore()}";
+            EnemyScore.text = $"{NodeManager.Instance.GetLevelData().GetEnemyName()}\n<color=#FF0000>🔴</color> {GameManager.Instance.GetEnemyScore()}";
             StartCoroutine(BounceScoreGO(EnemyScore.rectTransform));
         }
     }
