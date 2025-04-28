@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: ShrinkerMarble
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 8896970215918674003, guid: ad3335e5b0ccd4563a17d40570f2982b,
+  MarblePrefab: {fileID: 8896970215918674003, guid: d52485867b70d47eab58ff2167ec20e1,
     type: 3}
   marbleType: 0
   Sprite: {fileID: 0}

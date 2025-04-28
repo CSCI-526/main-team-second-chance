@@ -9,7 +9,16 @@ public class MarbleLauncher : MonoBehaviour
     [SerializeField, Range(0.0f, 2.0f)]
     private float LaunchForceScale = 0.2f;
     [SerializeField] private Material playerMaterial;
+    [SerializeField] private Material playerOutlineMaterial;
     [SerializeField] private Material enemyMaterial;
+    [SerializeField] private Material enemyOutlineMaterial;
+    private Material[] materialCopies;
+
+    private void Awake()
+    {
+        materialCopies = new Material[2];
+    }
+
     private void OnEnable()
     {
         MarbleEvents.OnMarbleReadyToLaunch += LaunchMarble;
@@ -46,7 +55,13 @@ public class MarbleLauncher : MonoBehaviour
             Debug.LogError("MarbleLauncher.LaunchMarble(): Prefab does not contain a mesh renderer is not attached to marble prefab");
             return;
         }
-        MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        //MarbleRenderer.material = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        //MarbleRenderer.materials[1] = Team == MarbleTeam.Player ? playerOutlineMaterial : enemyOutlineMaterial;
+
+        materialCopies[0] = Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
+        materialCopies[1] = Team == MarbleTeam.Player ? playerOutlineMaterial : enemyOutlineMaterial;
+
+        MarbleRenderer.materials = materialCopies;
 
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         // Normalize Direction then apply launch

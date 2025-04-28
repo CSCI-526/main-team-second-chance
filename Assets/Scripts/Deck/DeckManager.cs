@@ -7,7 +7,14 @@ public enum EnemyDeckType
     RANDOM,
     EXPLODER,
     BLACKHOLER,
-    GROWER
+    GROWER,
+    BABYER,
+    CHONKER,
+    //GHOSTER,
+    SHRINKER,
+    SQUARBLEER,
+    VAMPIREER,
+    SPLITTERER
 }
 
 public class DeckManager : MonoBehaviour
@@ -82,6 +89,24 @@ public class DeckManager : MonoBehaviour
             case EnemyDeckType.GROWER:
                 GenerateMonoTypeDeck(DeckSize, marbles, 8);
                 break;
+            case EnemyDeckType.BABYER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 1);
+                break;
+            case EnemyDeckType.CHONKER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 3);
+                break;
+            case EnemyDeckType.SHRINKER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 9);
+                break;
+            case EnemyDeckType.SQUARBLEER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 6);
+                break;
+            case EnemyDeckType.VAMPIREER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 7);
+                break;
+            case EnemyDeckType.SPLITTERER:
+                GenerateMonoTypeDeck(DeckSize, marbles, 5);
+                break;
             default:
                 GenerateMonoTypeDeck(DeckSize, marbles, 0);
                 break;
@@ -98,9 +123,10 @@ public class DeckManager : MonoBehaviour
     }
     private void GenerateMonoTypeDeck(int DeckSize, List<MarbleData> marbles, int TypeIndex)
     {
-        /*int halfDeckSize = DeckSize / 2;
-        // we want at least half the deck to be whatever
-        int numExploders = Random.Range(halfDeckSize, DeckSize);*/
+        int halfDeckSize = DeckSize / 2;
+        int quarterDeckSize = DeckSize / 4;
+        // we want at most half the deck to be whatever with a quarter of the deck as the minimum
+        int numSpecials = Random.Range(quarterDeckSize, halfDeckSize);
 
         for (int i = 0; i < DeckSize; ++i)
         {
@@ -108,7 +134,7 @@ public class DeckManager : MonoBehaviour
             marbles.Add(MarbleSpace.MarblePrefabs[TypeIndex]);
         }
 
-        /*int remainder = DeckSize - numExploders;
+        int remainder = DeckSize - numSpecials;
         if (remainder == 0)
         {
             return;
@@ -117,7 +143,7 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < remainder; ++i)
         {
             marbles.Add(MarbleSpace.MarblePrefabs[0]);
-        }*/
+        }
     }
     public List<MarbleData> GenerateNewMarbles()
     {
