@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Explosion
   m_EditorClassIdentifier: 
   radius: 1.5
-  power: 5
+  power: 10

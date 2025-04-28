@@ -11,8 +11,8 @@ public class GameOverUI : MonoBehaviour
     private Button PlayAgainButton;
     [SerializeField]
     private TextMeshProUGUI PlayAgainText;
-    [SerializeField]
-    private Button LevelSelectButton;
+    //[SerializeField]
+    //private Button LevelSelectButton;
     [SerializeField]
     private Color playerColor;
     [SerializeField]
@@ -47,10 +47,10 @@ public class GameOverUI : MonoBehaviour
         }
     }
 
-    public void OnClickLevelSelect()
-    {
-        SceneManagerScript.Instance.loadSceneByIndex(2);
-    }
+    //public void OnClickLevelSelect()
+    //{
+    //    SceneManagerScript.Instance.loadSceneByIndex(2);
+    //}
 
     private void UpdateGameOverPanel()
     {
@@ -77,7 +77,7 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
         GameOverText.gameObject.SetActive(false);
         PlayAgainButton.gameObject.SetActive(false);
-        LevelSelectButton.gameObject.SetActive(false);
+        //LevelSelectButton.gameObject.SetActive(false);
     }
 
     private void ShowPanel()
@@ -85,7 +85,7 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         GameOverText.gameObject.SetActive(true);
         PlayAgainButton.gameObject.SetActive(true);
-        LevelSelectButton.gameObject.SetActive(true);
+        //LevelSelectButton.gameObject.SetActive(true);
 
         if (!PlayAgainText)
         {

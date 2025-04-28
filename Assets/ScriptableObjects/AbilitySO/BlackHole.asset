@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BlackHole
   m_EditorClassIdentifier: 
   radius: 1.5
-  power: 2
+  power: 4
