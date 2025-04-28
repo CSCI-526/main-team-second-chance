@@ -150,8 +150,16 @@ public class DeckManager : MonoBehaviour
         List<MarbleData> PossibleMarbleData = new List<MarbleData>();
         for (int i = 0; i < 3; ++i)
         {
-            int randomIndex = Random.Range(0, MarbleSpace.MarblePrefabs.Count);
-            PossibleMarbleData.Add(MarbleSpace.MarblePrefabs[randomIndex]);
+            bool bHasGeneratedUniqueMarble = false;
+            while(!bHasGeneratedUniqueMarble)
+            {
+                int randomIndex = Random.Range(0, MarbleSpace.MarblePrefabs.Count);
+                if(!PossibleMarbleData.Contains(MarbleSpace.MarblePrefabs[randomIndex]))
+                {
+                    bHasGeneratedUniqueMarble = true;
+                    PossibleMarbleData.Add(MarbleSpace.MarblePrefabs[randomIndex]);
+                }
+            }
         }
 
         return PossibleMarbleData;

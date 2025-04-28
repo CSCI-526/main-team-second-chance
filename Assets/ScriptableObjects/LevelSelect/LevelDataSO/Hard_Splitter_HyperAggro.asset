@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyDifficulty: 0.8
   EnemyAggressionLevel: 2
-  EnemyDeckType: 11
+  EnemyDeckType: 10
   EnemyName: The Splitterer
   LevelDifficulty: 5
