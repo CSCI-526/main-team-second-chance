@@ -206,6 +206,7 @@ public class NodeManager : MonoBehaviour
         int[] CapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
         Layers = CapacitiesByLayer.Length;
 
+        // Adapt offsets based on screen size
         VerticalOffset = VerticalOffset * (Screen.height / 1080f);
         HorizontalOffset = HorizontalOffset * (Screen.width / 1920f);
         
