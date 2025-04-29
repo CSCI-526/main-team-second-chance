@@ -207,12 +207,16 @@ public class NodeManager : MonoBehaviour
     {
         // Hardcoding :P
         int[] CapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
-        int numLayers = CapacitiesByLayer.Length;
+        Layers = CapacitiesByLayer.Length;
+
+        // Adapt offsets based on screen size
+        VerticalOffset = VerticalOffset * (Screen.height / 1080);
+        HorizontalOffset = HorizontalOffset * (Screen.width / 1920);
         
         // Populate layers with nodes
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
         int currLevel = 0;
-        for (int layer = 0; layer < numLayers; ++layer)
+        for (int layer = 0; layer < Layers; ++layer)
         {
             LevelsUI.Add(new List<GameObject>());
 
@@ -239,7 +243,7 @@ public class NodeManager : MonoBehaviour
         }
 
         // Update node position based on offsets to form a tree structure
-        for (int layer = 0; layer < numLayers; ++layer)
+        for (int layer = 0; layer < Layers; ++layer)
         {
             bool layerHasEvenLevelCount = CapacitiesByLayer[layer] % 2 == 0;
             int levelAtMidpoint = CapacitiesByLayer[layer] / 2;
@@ -286,7 +290,7 @@ public class NodeManager : MonoBehaviour
             }
         }
 
-        AdjustScrollViewSize();
+        ResizeScrollView();
     }
 
     /// <summary>
@@ -398,13 +402,14 @@ public class NodeManager : MonoBehaviour
         }
     }
 
-    private void AdjustScrollViewSize()
+    private void ResizeScrollView()
     {
-        int NumLayers = Layers + 10;
+        int dynamicPaddingWidth = Layers * 3;
+        int dynamicPaddingHeight = Layers * 2;
         Vector2 sizeDelta = ScrollZone.content.sizeDelta;
         RectTransform rectTransform = UIPrefab.GetComponent<RectTransform>();
-        float HorizontalLength = Padding + rectTransform.rect.width * NumLayers;
-        float VerticalLength = Padding + rectTransform.rect.height * NumLayers;
+        float HorizontalLength = Padding + rectTransform.rect.width * dynamicPaddingWidth;
+        float VerticalLength = Padding + rectTransform.rect.height * dynamicPaddingHeight;
         sizeDelta.x = HorizontalLength;
         sizeDelta.y = VerticalLength;
         ScrollZone.content.sizeDelta = sizeDelta;
