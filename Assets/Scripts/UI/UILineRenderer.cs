@@ -19,7 +19,9 @@ public class UILineRenderer : MonoBehaviour
     private Image Image;
     public bool GetIsTraversed() { return bIsTraversed; }
     public void SetIsTraversed(bool Value) { bIsTraversed = Value; }
+    public void SetIsInaccessible(bool val) { bIsInaccessible = val; }
     private bool bIsTraversed = false;
+    private bool bIsInaccessible = false;
     private void Start()
     {
         LineRect = GetComponent<RectTransform>();
@@ -47,7 +49,13 @@ public class UILineRenderer : MonoBehaviour
         {
             Image = GetComponent<Image>();
         }
-        if (!bIsTraversed)
+        
+        if (bIsInaccessible)
+        {
+            float grayscaleOutline = NodeManager.Instance.clearedLevelOutlineColor.grayscale;
+            Image.color = new Color(grayscaleOutline, grayscaleOutline, grayscaleOutline);
+        }
+        else if (!bIsTraversed)
         {
             Image.color = NodeManager.Instance.lockedLevelOutlineColor;
         }

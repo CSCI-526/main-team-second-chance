@@ -165,10 +165,7 @@ public class NodeManager : MonoBehaviour
         // Create the container 
         InitializeParentContainer();
 
-        // Populate Levels into UI Form and put into correct positions
         PopulateMapData();
-
-        // Draw Lines Between Node Positions
         ConnectMap();
 
         // Use Data to draw current state of affairs
@@ -203,6 +200,9 @@ public class NodeManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Create a <c>Node</c> for each level and position them in the scene.
+    /// </summary>
     private void PopulateMapData()
     {
         // Hardcoding :P
@@ -288,12 +288,18 @@ public class NodeManager : MonoBehaviour
 
         AdjustScrollViewSize();
     }
+
+    /// <summary>
+    /// Generate edge relationships between Nodes on adjacent layers and create 
+    /// <c>UILinePrefab</c>s for each edge.
+    /// </summary>
     private void ConnectMap()
     {
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
 
-        // For the first index, we want two children so we just hardcode this in.
-        // Lowkey... if it's a map of size 2 then like it'll break but whatever lol
+        // For the first index, we want two children so we just hardcode this 
+        // in. Lowkey... if it's a map of size 2 then like it'll break but 
+        // whatever lol
         Assert.IsTrue(LevelsUI[0].Count == 1);
         Assert.IsTrue(LevelsUI[1].Count == 2);
 
@@ -317,7 +323,9 @@ public class NodeManager : MonoBehaviour
                 for (int k = 0; k < LevelsUI[i + 1].Count; ++k)
                 {
                     Node ChildNode = LevelsUI[i + 1][k].GetComponent<Node>();
-                    if (Random.Range(0f, 1f) <= ProbToDrawLine || !UINode.GetHasChildren() || ChildNode.GetNumParents() < 1)
+                    if (Random.Range(0f, 1f) <= ProbToDrawLine || 
+                        !UINode.GetHasChildren() || 
+                        ChildNode.GetNumParents() < 1)
                     {
                         DrawLines(UINode, ChildNode, true);
                         ChildNode.IncrementNumParents();
@@ -352,28 +360,41 @@ public class NodeManager : MonoBehaviour
         UINode.AddChild(NextNode, LineRenderer);
         NextNode.AddParent(UINode, LineRenderer);
     }
+
+    /// <summary>
+    /// Traverse the <c>TraversedNodes</c> and update node and edge colors based on whether a level has been visited.
+    /// </summary>
     private void UpdateMapToLatest()
     {
-        // We need to traverse the LevelUI to determine whether or not which level has been visited
         if (TraversedNodes.Count == 0)
         {
             return;
         }
+
+        int currLayer = 0;
+        if (LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node currNode))
+        {
+            currNode.MarkTraversed();
+            currLayer = currNode.GetLayer();
+        }
+
+        // Mark cleared nodes on other layers.
         for (int i = 0; i < TraversedNodes.Count - 1; ++i)
         {
             if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i], out Node val))
             {
-                if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i + 1], out Node val2))
+                if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i + 1], out _))
                 {
-                    val.MarkTraversed(val2);
+                    val.MarkTraversed();
                 }
             }
-
         }
-        if (LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node value))
-        {
-            value.MarkTraversed(null);
 
+        // Mark all untraversed nodes on current or lower layers as inaccessible
+        foreach (Node node in LevelNumToNodeComp.Values) {
+            if (node.GetLayer() <= currLayer) {
+                node.MarkInaccessible();
+            }
         }
     }
 
@@ -440,6 +461,7 @@ public class NodeManager : MonoBehaviour
         NodeManagerData.SetActiveLevel(level);
         SceneManagerScript.Instance.loadSceneByIndex(1);
     }
+    
     /// UTILITY FUNCS
     private static void Stretch(RectTransform Transform)
     {

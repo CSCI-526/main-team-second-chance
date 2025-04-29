@@ -2638,7 +2638,7 @@ MonoBehaviour:
   levelColorsByDifficulty:
   - {r: 1, g: 0.5497076, b: 0, a: 1}
   - {r: 0.90943396, g: 0.09751902, b: 0, a: 1}
-  - {r: 0.9254902, g: 0, b: 0.60969496, a: 1}
+  - {r: 0.96981126, g: 0.19579206, b: 0.70188123, a: 1}
   - {r: 0.68554115, g: 0.1254902, b: 0.89411765, a: 1}
   - {r: 0.4935628, g: 0.33773577, b: 1, a: 1}
   hoverLevelOutlineColor: {r: 1, g: 0.8214651, b: 0.27735847, a: 1}
@@ -2650,8 +2650,8 @@ MonoBehaviour:
   ConnectingLine: {fileID: 0}
   StartingPosition: {fileID: 1672026648}
   ScrollZone: {fileID: 514915907}
-  VerticalOffset: 100
-  HorizontalOffset: 200
+  VerticalOffset: 200
+  HorizontalOffset: 400
   Padding: 0
   UILinePrefab: {fileID: 29471333137482469, guid: 79d7bdb624e7f8f4c90c4fe1d9b38a79,
     type: 3}

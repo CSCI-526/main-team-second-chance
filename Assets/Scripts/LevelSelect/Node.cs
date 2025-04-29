@@ -15,6 +15,8 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     }
     public Transform GetPreviousNode() { return PreviousNode; }
     public Transform GetNextNode() { return NextNode; }
+
+    public bool GetIsTraversed() { return bIsTraversed; }
     public bool GetHasChildren() { return bHasChildren; }
     public void SetHasChildren(bool Value) { bHasChildren = Value; }
     public void SetLayer(int Value) { Layer = Value; }
@@ -46,7 +48,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
         return null;
     }
-    public void MarkTraversed(Node NextNode)
+    public void MarkTraversed()
     {
         if (!image)
         {
@@ -59,6 +61,33 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
             {
                 value.SetIsTraversed(true);
+                value.SetColor();
+            }
+        }
+    }
+
+    public void MarkInaccessible()
+    {
+        if (!image)
+        {
+            image = GetComponent<Image>();
+        }
+
+        if (bIsTraversed) {
+            return;
+        }
+
+        bIsInaccessible = true;
+
+        SetOutlineColor(false);
+        float grayscaleImage = image.color.grayscale;
+        image.color = new Color(grayscaleImage, grayscaleImage, grayscaleImage);
+        
+        foreach (Node Child in ChildrenList)
+        {
+            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
+            {
+                value.SetIsInaccessible(true);
                 value.SetColor();
             }
         }
@@ -104,6 +133,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private int DataRep;
     private bool bHasChildren = false;
     private bool bIsTraversed = false;
+    private bool bIsInaccessible = false;
     private void Start()
     {
         if (ChildrenList == null)
@@ -128,9 +158,35 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         DefaultColor = NodeManager.Instance.levelColorsByDifficulty[difficulty - 1];
         image.color = DefaultColor;
     }
+
+    public void SetOutlineColor(bool isHovered) 
+    {
+        if (bIsInaccessible) 
+        {
+            float grayscale = NodeManager.Instance.clearedLevelOutlineColor.grayscale;
+            outline.effectColor = new Color(grayscale, grayscale, grayscale);
+        }
+        else if (isHovered)
+        {
+            outline.effectColor = NodeManager.Instance.hoverLevelOutlineColor;
+        }
+        else if (bIsTraversed)
+        {
+            outline.effectColor = NodeManager.Instance.clearedLevelOutlineColor;
+        }
+        else
+        {
+            outline.effectColor = NodeManager.Instance.lockedLevelOutlineColor;
+        }
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        outline.effectColor = NodeManager.Instance.hoverLevelOutlineColor;
+        if (bIsInaccessible || bIsTraversed) {
+            return;
+        }
+
+        SetOutlineColor(true);
+
         // Highlight each child route
         foreach (Node Child in ChildrenList)
         {
@@ -143,7 +199,8 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        outline.effectColor = bIsTraversed ? NodeManager.Instance.clearedLevelOutlineColor : NodeManager.Instance.lockedLevelOutlineColor;
+        SetOutlineColor(false);
+
         // Unhighlight each child route
         foreach (Node Child in ChildrenList)
         {
