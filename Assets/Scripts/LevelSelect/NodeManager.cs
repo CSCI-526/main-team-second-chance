@@ -200,7 +200,6 @@ public class NodeManager : MonoBehaviour
         MapParent.transform.localScale = Vector3.one;
         RectTransform MapParentTransform = MapParent.AddComponent<RectTransform>();
         Stretch(MapParentTransform);
-
     }
 
     /// <summary>
@@ -244,46 +243,9 @@ public class NodeManager : MonoBehaviour
         // Update node position based on offsets to form a tree structure
         for (int layer = 0; layer < Layers; ++layer)
         {
-            bool layerHasEvenLevelCount = CapacitiesByLayer[layer] % 2 == 0;
-            int levelAtMidpoint = CapacitiesByLayer[layer] / 2;
-
             for (int levelInLayer = 0; levelInLayer < CapacitiesByLayer[layer]; ++levelInLayer) 
             {
-                bool isMiddleOfLayer =
-                    (
-                        layerHasEvenLevelCount
-                        && (levelAtMidpoint == levelInLayer || levelAtMidpoint - 1 == levelInLayer)
-                    ) || (layerHasEvenLevelCount && levelAtMidpoint == levelInLayer);
-
-                float verticalOffset;
-                if (isMiddleOfLayer) 
-                {
-                    verticalOffset = layerHasEvenLevelCount ? AdaptedVerticalOffset / 2 : 0f;
-                }
-                else {
-                    int distanceFromMidpoint = Mathf.Abs(levelInLayer - levelAtMidpoint);
-
-                    if (layerHasEvenLevelCount)
-                    {
-                        // For even counts, adjust distance since midpoint is between two levels
-                        distanceFromMidpoint = (levelInLayer < levelAtMidpoint) 
-                            ? distanceFromMidpoint - 1 
-                            : distanceFromMidpoint;
-                    }
-                    verticalOffset = AdaptedVerticalOffset * distanceFromMidpoint;
-
-                    // Account for the adjustment of having 2 middle levels
-                    if (layerHasEvenLevelCount) {
-                        verticalOffset += AdaptedVerticalOffset / 2;
-                    }
-                }
-
-                // Flip sign if above the midpoint
-                if (levelInLayer < levelAtMidpoint)
-                {
-                    verticalOffset *= -1;
-                }
-                
+                float verticalOffset =  AdaptedVerticalOffset * (levelInLayer - (CapacitiesByLayer[layer] - 1) / 2.0f);
                 Vector3 newOffset = new Vector3(layer * AdaptedHorizontalOffset, verticalOffset);
                 LevelsUI[layer][levelInLayer].GetComponent<Node>().transform.position = StartingPosition.position + newOffset;
             }

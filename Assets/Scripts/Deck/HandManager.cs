@@ -130,7 +130,6 @@ public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             numActiveCards += active ? 1 : 0;
         }
 
-        // float gap = Screen.width / 10f * 1.15f;
         float gap = 30;
         int cardWidth = 200;
         for (int i = 0; i < Cards.Count; i++)
@@ -198,7 +197,7 @@ public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (Cards.Count > 0 && Cards[0].queuedMotions.Count > 0) {
             return;
         }
-        
+
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             GameManager.Instance.PlayerHasSelectedMarble() && 
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble &&
