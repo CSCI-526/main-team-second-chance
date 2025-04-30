@@ -23,17 +23,20 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     [SerializeField]
     private AnimationCurve MotionCurve;
 
-    private Color originalColor = new Color32(0x1C, 0x44, 0x6B, 0xFF);
     //private Outline pulseOutline;
 
     //private void pulseOutline()
     //{
     //    if (outlineEffect == null)
-    //        outlineEffect = PanelImage.GetComponent<Outline>();
+    //        outlineEffect = cardPanel.GetComponent<Outline>();
 
     //    if (pulseCoroutine == null && !isCardSelected)
     //        pulseCoroutine = StartCoroutine(PulseOutline());
     //}
+
+    private Color defaultCardColor;
+    private Color defaultTitleTextColor;
+    private Color defaultDescriptionTextColor;
 
     private void Update()
     {
@@ -78,22 +81,43 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void UpdateInformation(string MarblePrefab, string CardDetail)
     {
-        MarbleType.SetText(MarblePrefab);
-        PanelImage.material = null;
-        CardDescription.SetText(CardDetail);
+        titleText.SetText(MarblePrefab);
+        cardPanel.material = null;
+        descriptionText.SetText(CardDetail);
+        defaultCardColor = cardPanel.color;
+        defaultTitleTextColor = titleText.color;
+        defaultDescriptionTextColor = descriptionText.color;
     }
-    public void UpdateInformation(MarbleData MarbleObject)
+    public void UpdateInformation(MarbleData MarbleObject, bool addNewMarble = true)
     {
-        MarbleType.SetText(MarbleObject.MarbleName);
-        PanelImage.material = null;
-        CardDescription.SetText(MarbleObject.MarbleDescription);
-        NewMarbleToAdd = MarbleObject;
+        titleText.SetText(MarbleObject.MarbleName);
+        cardPanel.material = null;
+        descriptionText.SetText(MarbleObject.MarbleDescription);
+
+        if (addNewMarble)
+        {
+            NewMarbleToAdd = MarbleObject;
+        }
+
+        defaultCardColor = cardPanel.color;
+        defaultTitleTextColor = titleText.color;
+        defaultDescriptionTextColor = descriptionText.color;
     }
-    /*public void OnPointerDown(PointerEventData eventData)
-    {
-        throw new System.NotImplementedException();
+
+    public void UpdateCardColors(bool isHovered) {
+        if (isHovered) 
+        {
+            cardPanel.color = Color.white;
+            titleText.color = Color.black;
+            descriptionText.color = Color.black;
+        }
+        else
+        {
+            cardPanel.color = defaultCardColor;
+            titleText.color = defaultTitleTextColor;
+            descriptionText.color = defaultDescriptionTextColor;
+        }
     }
-    */
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -101,15 +125,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
         {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
-            PanelImage.color = Color.white;
-            MarbleType.color = Color.black;
-            CardDescription.color = Color.black;
+            UpdateCardColors(true);
         }
         else if (GameManager.Instance.GetTurnState() == TurnState.CardSelect)
         {
-            PanelImage.color = Color.white;
-            MarbleType.color = Color.black;
-            CardDescription.color = Color.black;
+            UpdateCardColors(true);
         }
     }
 
@@ -119,11 +139,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
         {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = false;
-
         }
-        PanelImage.color = originalColor;
-        MarbleType.color = Color.white;
-        CardDescription.color = Color.white;
+        UpdateCardColors(false);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -139,7 +156,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                 case TurnState.CardSelect:
                     {
                         Debug.Log("Clicked on a card with ID CardSelect: " + HandIndex);
-                        PanelImage.material = SelectedMaterial;
+                        cardPanel.material = SelectedMaterial;
                         DeckEvents.AddNewMarbleToDeck(NewMarbleToAdd);
                         break;
                     }
@@ -148,7 +165,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                         Debug.Log("Clicked on a card with ID PlayerTurn: " + HandIndex);
 
                         Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
-                        if (playerDeck.SelectedMarbleRef == PanelImage)
+                        if (playerDeck.SelectedMarbleRef == cardPanel)
                         {
                             playerDeck.SelectedMarbleRef.material = null;
                             playerDeck.SelectedMarbleRef = null;
@@ -160,7 +177,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                             {
                                 playerDeck.SelectedMarbleRef.material = null;
                             }
-                            playerDeck.SelectedMarbleRef = PanelImage;
+                            playerDeck.SelectedMarbleRef = cardPanel;
                             playerDeck.SelectedMarbleRef.material = SelectedMaterial;
                             DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
                         }
@@ -187,11 +204,11 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         set { bIsInCardSelect = value; }
     }
     [SerializeField]
-    private TextMeshProUGUI MarbleType;
+    private TextMeshProUGUI titleText;
     [SerializeField]
-    private TextMeshProUGUI CardDescription;
+    private TextMeshProUGUI descriptionText;
     [SerializeField]
-    private Image PanelImage;
+    private Image cardPanel;
     [SerializeField]
     private Material SelectedMaterial;
     private int HandIndex;

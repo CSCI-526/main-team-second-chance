@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class HandManager : MonoBehaviour
+public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public static HandManager Instance;
 
@@ -24,10 +25,13 @@ public class HandManager : MonoBehaviour
 
     [SerializeField]
     private Transform CardStartingPoint;
+    [SerializeField]
+    private Transform HandManagerPosition;
     private List<Card> Cards = new();
     private List<bool> ActiveCards = new();
     bool bShouldReanimate = false;
-    bool bCanPlayerSelectMarble = false;
+    bool bShouldRaiseHand = false;
+    private bool bIsHovered = false;
     public bool bAnimateFromDeck = true;
     public bool bAllHidden = false;
     private Vector3 handOffset;
@@ -62,9 +66,9 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    private void ToggleHand(bool canPlayerSelectMarble)
+    private void ToggleHand(bool shouldRaiseHand)
     {
-        bCanPlayerSelectMarble = canPlayerSelectMarble;
+        bShouldRaiseHand = shouldRaiseHand;
         bShouldReanimate = true;
     }
 
@@ -94,7 +98,7 @@ public class HandManager : MonoBehaviour
 
         if (changed || bShouldReanimate)
         {
-            if (bCanPlayerSelectMarble)
+            if (bShouldRaiseHand)
             {
                 handOffset = new Vector3(0, Screen.height / 6f, 0);
             }
@@ -109,17 +113,37 @@ public class HandManager : MonoBehaviour
         }
 
         bAllHidden = allHidden;
+        
+        if (Cards.Count > 0 && Cards[0].queuedMotions.Count > 0) {
+            Vector3 newPosition = HandManagerPosition.transform.position;
+            newPosition.y = Cards[0].transform.position.y;
+            HandManagerPosition.transform.position = newPosition;
+        }
     }
 
     private void RecalculateCardPositions(bool animateFromDeck)
     {
         Debug.Log("RecalculateCardPositions " + animateFromDeck);
-        float gap = Screen.width / 10f * 1.15f;
+        
+        int numActiveCards = 0;
+        foreach (bool active in ActiveCards) {
+            numActiveCards += active ? 1 : 0;
+        }
+
+        // float gap = Screen.width / 10f * 1.15f;
+        float gap = 30;
+        int cardWidth = 200;
         for (int i = 0; i < Cards.Count; i++)
         {
-            float offset = gap * (i - (Cards.Count / 4.0f));
-            Card card = Cards[i];
+            if (!ActiveCards[i]) 
+            {
+                continue;
+            }
+
+            float offset = (gap + cardWidth) * (i - (numActiveCards - 1) / 2.0f);
             Vector3 endPosition = new Vector3(Screen.width / 2.0f + offset, -Screen.height / 15f, 0f) + handOffset;
+
+            Card card = Cards[i];
             if (animateFromDeck)
             {
                 card.queuedMotions.Clear();
@@ -149,5 +173,39 @@ public class HandManager : MonoBehaviour
             }
         }
 
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Ignore if animation is currently playing.
+        if (Cards.Count > 0 && Cards[0].queuedMotions.Count > 0) {
+            return;
+        }
+
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn && 
+            GameManager.Instance.PlayerHasSelectedMarble() && 
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble &&
+            !bIsHovered)
+        {
+            bIsHovered = true;
+            ToggleHand(true);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Ignore if animation is currently playing.
+        if (Cards.Count > 0 && Cards[0].queuedMotions.Count > 0) {
+            return;
+        }
+        
+        if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
+            GameManager.Instance.PlayerHasSelectedMarble() && 
+            !GameManager.Instance.GetPlayerManager().isLaunchingMarble &&
+            bIsHovered)
+        {
+            bIsHovered = false;
+            ToggleHand(false);
+        }
     }
 }

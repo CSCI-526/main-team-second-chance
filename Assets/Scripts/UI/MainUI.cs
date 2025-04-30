@@ -248,7 +248,7 @@ public class MainUI : MonoBehaviour
                 Debug.LogWarning("MainUI.UpdateHand(): Card.cs is not attached to the card prefab. Or input data has is incorrect This shouldn't happen");
                 return;
             }
-            card.UpdateInformation(marbleData.MarbleName, marbleData.MarbleDescription);
+            card.UpdateInformation(marbleData, false);
             card.SetHandIndex(i);
             Cards[i].SetActive(true);
         }
