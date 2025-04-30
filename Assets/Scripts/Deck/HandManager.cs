@@ -130,7 +130,7 @@ public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             numActiveCards += active ? 1 : 0;
         }
 
-        float gap = 30;
+        float gap = 30 * (Screen.width / 1920);
         int cardWidth = 200;
         for (int i = 0; i < Cards.Count; i++)
         {
