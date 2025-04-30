@@ -59,7 +59,6 @@ public class NodeManager : MonoBehaviour
     private GameObject ConnectingLine;
     private static bool bHasInitialized = false;
     public static List<int> TraversedNodes = new List<int>();
-    private List<List<GameObject>> LevelsUI;
     private Dictionary<int, Node> LevelNumToNodeComp = new Dictionary<int, Node>();
     [SerializeField]
     private Transform StartingPosition;
@@ -86,245 +85,81 @@ public class NodeManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-            Destroy(this.gameObject);
+        // Debug.Log("NodeManager.Awake() " + gameObject.GetInstanceID());
+        if (Instance)
+        {
+            Destroy(gameObject);
+        }
         else
         {
-            DontDestroyOnLoad(gameObject);
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
-    private void OnLevelWasLoaded(int level)
+    private void OnLevelWasLoaded(int sceneNum)
     {
-        // if level is the map level, we reinitialize
-        if (level == 2)
+        if (Instance != this) 
         {
-            if (!bHasUIBeenInitialized)
+            return;
+        }
+        
+        switch (sceneNum) {
+            // Marbles scene
+            case 1:
             {
-                if (!bHasInitialized)
+                // Force level select UI redraw on next visit.
+                bHasUIBeenInitialized = false;
+                break; 
+            }
+            
+            // LevelSelect scene
+            case 2:
+            {
+                if (!bHasUIBeenInitialized)
                 {
-                    NodeManagerData.InitializeLevelData();
-                    bHasInitialized = true;
+                    if (!bHasInitialized)
+                    {
+                        NodeManagerData.InitializeLevelData();
+                        CreateLevelGraph();
+                        bHasInitialized = true;
+                    }
+                    DrawLevelGraph();
+                    UpdateMapToLatest();
+                    bHasUIBeenInitialized = true;
                 }
-                Initialization();
-                bHasUIBeenInitialized = true;
+                break;
+            }
+
+            // Title scene
+            default:
+            {
+                bHasInitialized = false;
+                NodeManagerData.ClearPlayerDeck();
+                TraversedNodes.Clear();
+                break;
             }
         }
-        else if (level == 1)
-        {
-            bHasUIBeenInitialized = false;
-        }
-        else
-        {
-            // Assumes we are going back to title screen which means that we should reinitialize levels bc "roguelike"
-            bHasInitialized = false;
-            NodeManagerData.ClearPlayerDeck();
-            TraversedNodes.Clear();
-        }
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        if (!bHasUIBeenInitialized)
+        if (Instance != this) 
         {
-            if (!bHasInitialized)
-            {
-                NodeManagerData.InitializeLevelData();
-                bHasInitialized = true;
-            }
-            Initialization();
-            bHasUIBeenInitialized = true;
+            return;
         }
     }
-    private void OnDestroy()
-    {
-    }
-    private void Initialization()
-    {
-        if (!StartingPosition)
-        {
-            GameObject StartingPosGO = GameObject.Find("StartingPosition");
-            if (StartingPosGO)
-            {
-                StartingPosition = StartingPosGO.transform;
-            }
-        }
-        if (!ScrollZone)
-        {
-            GameObject ScrollZoneGO = GameObject.Find("Scroll View");
-            if (ScrollZoneGO)
-            {
-                ScrollZone = ScrollZoneGO.GetComponent<ScrollRect>();
-            }
-        }
-        // Zero Out StartingPosition Z just in case
-        if (StartingPosition.position.z != 0)
-        {
-            StartingPosition.position.Set(StartingPosition.position.x, StartingPosition.position.y, 0);
-        }
-        LevelsUI = new List<List<GameObject>>();
-        Layers = 0;
 
-        // Adapt offsets based on screen size
-        AdaptedVerticalOffset = VerticalOffset * (Screen.height / 1080f);
-        AdaptedHorizontalOffset = HorizontalOffset * (Screen.width / 1920f);
-        
-        InitializeParentContainer();
-        PopulateMapData();
-        ConnectMap();
-        UpdateMapToLatest();
-    }
     private void OnEnable()
     {
         Node.OnAttemptEnterLevel += DoAttemptEnterLevel;
     }
+
     private void OnDisable()
     {
         Node.OnAttemptEnterLevel -= DoAttemptEnterLevel;
-
-    }
-    private void InitializeParentContainer()
-    {
-        RectTransform ScrollZoneTransform = ScrollZone.content;
-
-        // Setup Map Container
-        MapContainer = new GameObject("MapContainer");
-        MapContainer.transform.SetParent(ScrollZoneTransform);
-        MapContainer.transform.localScale = Vector3.one;
-        RectTransform MapContainerTransform = MapContainer.AddComponent<RectTransform>();
-        Stretch(MapContainerTransform);
-
-        // Init Map Parent
-        MapParent = new GameObject("MapParent");
-        MapParent.transform.SetParent(MapContainer.transform);
-        MapParent.transform.localScale = Vector3.one;
-        RectTransform MapParentTransform = MapParent.AddComponent<RectTransform>();
-        Stretch(MapParentTransform);
     }
 
-    /// <summary>
-    /// Create a <c>Node</c> for each level and position them in the scene.
-    /// </summary>
-    private void PopulateMapData()
-    {
-        // Hardcoding :P
-        int[] CapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
-        Layers = CapacitiesByLayer.Length;
-        
-        // Populate layers with nodes
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        int currLevel = 0;
-        for (int layer = 0; layer < Layers; ++layer)
-        {
-            LevelsUI.Add(new List<GameObject>());
-
-            for (int levelInLayer = 0; levelInLayer < CapacitiesByLayer[layer]; ++levelInLayer) 
-            {
-                // Update Node data
-                GameObject NodePrefab = Instantiate(UIPrefab, MapParent.transform, false);
-                Node nodeComp = NodePrefab.GetComponent<Node>();
-                nodeComp.SetLayer(layer);
-                nodeComp.SetCorrespondingLevelSO(currLevel);
-                nodeComp.CalculateDefaultColor(Levels[currLevel].GetLevelDifficulty());
-                nodeComp.UpdateNameOfNode(Levels[currLevel].GetEnemyName());
-
-                if (LevelNumToNodeComp.TryGetValue(currLevel, out _))
-                {
-                    LevelNumToNodeComp.Remove(currLevel);
-                }
-                LevelNumToNodeComp.TryAdd(currLevel, nodeComp);
-
-                // Add to layer
-                LevelsUI[layer].Add(NodePrefab);
-                currLevel++;
-            }
-        }
-
-        // Update node position based on offsets to form a tree structure
-        for (int layer = 0; layer < Layers; ++layer)
-        {
-            for (int levelInLayer = 0; levelInLayer < CapacitiesByLayer[layer]; ++levelInLayer) 
-            {
-                float verticalOffset =  AdaptedVerticalOffset * (levelInLayer - (CapacitiesByLayer[layer] - 1) / 2.0f);
-                Vector3 newOffset = new Vector3(layer * AdaptedHorizontalOffset, verticalOffset);
-                LevelsUI[layer][levelInLayer].GetComponent<Node>().transform.position = StartingPosition.position + newOffset;
-            }
-        }
-
-        ResizeScrollView();
-    }
-
-    /// <summary>
-    /// Generate edge relationships between Nodes on adjacent layers and create 
-    /// <c>UILinePrefab</c>s for each edge.
-    /// </summary>
-    private void ConnectMap()
-    {
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-
-        // For the first index, we want two children so we just hardcode this 
-        // in. Lowkey... if it's a map of size 2 then like it'll break but 
-        // whatever lol
-        Assert.IsTrue(LevelsUI[0].Count == 1);
-        Assert.IsTrue(LevelsUI[1].Count == 2);
-
-        // Draw first layer
-        Node BaseNode = LevelsUI[0][0].GetComponent<Node>();
-        Node LeftChildNode = LevelsUI[1][0].GetComponent<Node>();
-        Node RightChildNode = LevelsUI[1][1].GetComponent<Node>();
-        DrawLines(BaseNode, LeftChildNode, true);
-        DrawLines(BaseNode, RightChildNode, true);
-
-        // Set icon for level 1
-        BaseNode.ShowLevel1Icon();
-
-        // From second layer, Only traverse up to third to last layer
-        for (int i = 1; i < LevelsUI.Count - 2; ++i)
-        {
-            float ProbToDrawLine = 0.6f;
-            for (int j = 0; j < LevelsUI[i].Count; ++j)
-            {
-                Node UINode = LevelsUI[i][j].GetComponent<Node>();
-                for (int k = 0; k < LevelsUI[i + 1].Count; ++k)
-                {
-                    Node ChildNode = LevelsUI[i + 1][k].GetComponent<Node>();
-                    if (Random.Range(0f, 1f) <= ProbToDrawLine || 
-                        !UINode.GetHasChildren() || 
-                        ChildNode.GetNumParents() < 1)
-                    {
-                        DrawLines(UINode, ChildNode, true);
-                        ChildNode.IncrementNumParents();
-                        UINode.SetHasChildren(true);
-                    }
-                }
-                ProbToDrawLine -= Random.Range(0.05f, 0.4f);
-                ProbToDrawLine = Mathf.Clamp(ProbToDrawLine, 0.3f, 1.0f);
-            }
-        }
-        // From second to last layer to last layer just attach each 
-        int secondToLast = LevelsUI.Count - 2;
-        int lastLayer = LevelsUI.Count - 1;
-        for (int i = 0; i < LevelsUI[secondToLast].Count; ++i)
-        {
-            Node UINode = LevelsUI[secondToLast][i].GetComponent<Node>();
-            Node ChildNode = LevelsUI[lastLayer][0].GetComponent<Node>();
-            DrawLines(UINode, ChildNode, true);
-            ChildNode.IncrementNumParents();
-            UINode.SetHasChildren(true);
-        }
-    }
-    public void DrawLines(Node UINode, Node NextNode, bool bIsLeft)
-    {
-        Vector3 startPos = UINode.GetNextNode().position;
-        UILineRenderer LineRenderer = Instantiate(UILinePrefab, MapParent.transform);
-        LineRenderer.transform.SetAsFirstSibling();
-        LineRenderer.SetPoints(startPos, NextNode.GetPreviousNode().position);
-        LineRenderer.AdjustDimensions();
-
-        UINode.SetHasChildren(true);
-        UINode.AddChild(NextNode, LineRenderer);
-        NextNode.AddParent(UINode, LineRenderer);
-    }
 
     /// <summary>
     /// Traverse the <c>TraversedNodes</c> and update node and edge colors based on whether a level has been visited.
@@ -363,6 +198,217 @@ public class NodeManager : MonoBehaviour
         }
     }
 
+    private void DoAttemptEnterLevel(int level)
+    {
+        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
+        if (level >= Levels.Count || level < 0 || (TraversedNodes.Count == 0 && level != 0))
+        {
+            return;
+        }
+
+        bool validLevel = false;
+        if (TraversedNodes.Count == 0)
+        {
+            Levels[level].SetIsLevelVisited(true);
+            validLevel = true;
+        }
+        else
+        {
+            // Check to see if the latest node can connect to this input level
+            int lastVisitedLevel = TraversedNodes[TraversedNodes.Count - 1];
+            LevelNumToNodeComp.TryGetValue(lastVisitedLevel, out Node lastTraversedNode);
+            
+            if (LevelNumToNodeComp.TryGetValue(level, out Node node))
+            {
+                if (lastTraversedNode.GetChildren().Contains(node))
+                {
+                    Levels[level].SetIsLevelVisited(true);
+                    validLevel = true;
+                }
+            }
+        }
+
+        if (!validLevel)
+        {
+            return;
+        }
+
+        previousScrollPosition = ScrollZone.normalizedPosition;
+        TraversedNodes.Add(level);
+        NodeManagerData.SetActiveLevel(level);
+        SceneManagerScript.Instance.loadSceneByIndex(1);
+    }
+
+    int[] LevelGraphCapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
+    private List<List<NodeInfo>> levelGraph = new List<List<NodeInfo>>();
+
+    private class NodeInfo 
+    {
+        public GameObject gameObject;
+        public Node node;
+        public int level;
+        public int layer;
+        public List<NodeInfo> parents = new List<NodeInfo>();
+        public List<NodeInfo> children = new List<NodeInfo>();
+    }
+
+    /// <summary>
+    /// Initialize and store level data. Randomly generate edges between levels.
+    /// </summary>
+    private void CreateLevelGraph() 
+    {
+        levelGraph.Clear();
+        Layers = LevelGraphCapacitiesByLayer.Length;
+        
+        // Populate graph with nodes.
+        int currLevel = 0;
+        for (int layer = 0; layer < Layers; ++layer)
+        {
+            levelGraph.Add(new List<NodeInfo>());
+            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
+            {
+                NodeInfo nodeInfo = new NodeInfo();
+                nodeInfo.layer = layer;
+                nodeInfo.level = currLevel;
+                levelGraph[layer].Add(nodeInfo);
+                currLevel++;
+            }
+        }
+
+        // Generate edges between levels.
+        /*
+            Start level edges
+            [0,0]
+              |____[1,0]
+              |____[1,1] 
+        */
+        MakeEdges(
+            levelGraph[0][0], 
+            new NodeInfo[]{levelGraph[1][0], levelGraph[1][1]}
+        );
+
+        /*
+            Last level edges
+            [3,0]____
+            [3,1]____|
+                     |
+                   [4,0]
+        */
+        MakeEdges(levelGraph[Layers-2][0], new NodeInfo[]{levelGraph[Layers-1][0]});
+        MakeEdges(levelGraph[Layers-2][1], new NodeInfo[]{levelGraph[Layers-1][0]});
+
+        // In-between layer edges.
+        for (int layer = 1; layer < Layers-2; ++layer)
+        {
+            float ProbToDrawLine = 0.6f;
+            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer)
+            {
+                NodeInfo parent = levelGraph[layer][levelInLayer];
+                for (int k = 0; k < levelGraph[layer + 1].Count; ++k)
+                {
+                    NodeInfo child = levelGraph[layer + 1][k];
+                    if (Random.Range(0f, 1f) <= ProbToDrawLine || 
+                        parent.children.Count == 0 || 
+                        child.parents.Count < 1)
+                    {
+                        MakeEdges(parent, new NodeInfo[]{child});
+                    }
+                }
+                ProbToDrawLine -= Random.Range(0.05f, 0.4f);
+                ProbToDrawLine = Mathf.Clamp(ProbToDrawLine, 0.3f, 1.0f);
+            }
+        }
+    }
+
+    private void MakeEdges(NodeInfo parent, NodeInfo[] children) {
+        parent.children.AddRange(children);
+        foreach (NodeInfo child in children) {
+            child.parents.Add(parent);
+        }
+    }
+
+    /// <summary>
+    /// Use <c>levelGraph</c> to draw the graph displayed in LevelSelect.
+    /// </summary>
+    private void DrawLevelGraph()
+    {
+        // Adapt offsets based on screen size
+        AdaptedVerticalOffset = VerticalOffset * (Screen.height / 1080f);
+        AdaptedHorizontalOffset = HorizontalOffset * (Screen.width / 1920f);
+
+        // Destroyed if leaving LevelSelect scene, need to find again.
+        if (!StartingPosition)
+        {
+            StartingPosition = GameObject.Find("StartingPosition").transform;
+        }
+        if (!ScrollZone)
+        {
+            ScrollZone = GameObject.Find("Scroll View").GetComponent<ScrollRect>();
+        }
+
+        InitializeParentContainer();
+        DrawNodes();
+        ResizeScrollView();
+        DrawEdges();
+    }
+
+    private void InitializeParentContainer()
+    {
+        RectTransform ScrollZoneTransform = ScrollZone.content;
+
+        // Setup Map Container
+        MapContainer = new GameObject("MapContainer");
+        MapContainer.transform.SetParent(ScrollZoneTransform);
+        MapContainer.transform.localScale = Vector3.one;
+        RectTransform MapContainerTransform = MapContainer.AddComponent<RectTransform>();
+        Stretch(MapContainerTransform);
+
+        // Init Map Parent
+        MapParent = new GameObject("MapParent");
+        MapParent.transform.SetParent(MapContainer.transform);
+        MapParent.transform.localScale = Vector3.one;
+        RectTransform MapParentTransform = MapParent.AddComponent<RectTransform>();
+        Stretch(MapParentTransform);
+    }
+
+    private static void Stretch(RectTransform Transform)
+    {
+        Transform.localPosition = Vector3.zero;
+        Transform.anchorMin = Vector2.zero;
+        Transform.anchorMax = Vector2.one;
+        Transform.sizeDelta = Vector2.zero;
+        Transform.anchoredPosition = Vector2.zero;
+    }
+
+    private void DrawNodes() {
+        LevelNumToNodeComp.Clear();
+        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
+        for (int layer = 0; layer < Layers; ++layer)
+        {
+            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
+            {
+                NodeInfo nodeInfo = levelGraph[layer][levelInLayer];
+                nodeInfo.gameObject = Instantiate(UIPrefab, MapParent.transform, false);
+                nodeInfo.node = nodeInfo.gameObject.GetComponent<Node>();
+
+                Node nodeComp = nodeInfo.gameObject.GetComponent<Node>();
+                nodeComp.SetLayer(nodeInfo.layer);
+                nodeComp.SetCorrespondingLevelSO(nodeInfo.level);
+                nodeComp.CalculateDefaultColor(Levels[nodeInfo.level].GetLevelDifficulty());
+                nodeComp.UpdateNameOfNode(Levels[nodeInfo.level].GetEnemyName());
+
+                LevelNumToNodeComp.TryAdd(nodeInfo.level, nodeComp);
+
+                // Set position based on layer capacity.
+                float verticalOffset =  AdaptedVerticalOffset * (levelInLayer - (LevelGraphCapacitiesByLayer[layer] - 1) / 2.0f);
+                Vector3 newOffset = new Vector3(layer * AdaptedHorizontalOffset, verticalOffset);
+                nodeComp.transform.position = StartingPosition.position + newOffset;
+            }
+        }
+
+        levelGraph[0][0].node.ShowLevel1Icon();
+    }
+
     private void ResizeScrollView()
     {
         int dynamicPaddingWidth = Layers * 3;
@@ -377,64 +423,33 @@ public class NodeManager : MonoBehaviour
         ScrollZone.normalizedPosition = previousScrollPosition;
     }
 
-    private void DoAttemptEnterLevel(int level)
-    {
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        if (level >= Levels.Count)
+    private void DrawEdges() {
+        for (int layer = 0; layer < Layers; ++layer)
         {
-            // not a valid index
-            return;
-        }
-        if (TraversedNodes.Count == 0)
-        {
-            if (level != 0)
+            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
             {
-                // We don't want to get anything except the first level if we haven't done anything yet
-                return;
-            }
-            else
-            {
-                Levels[level].SetIsLevelVisited(true);
+                NodeInfo parent = levelGraph[layer][levelInLayer];
+                foreach(NodeInfo child in parent.children) 
+                {
+                    DrawLines(parent.node, child.node);
+                }
             }
         }
-        else
-        {
-            // check to see if the latest node can connect to this input level
-            LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node LatestNode);
-            Node ProspectiveNode = null;
-            if (LevelNumToNodeComp.TryGetValue(level, out Node val))
-            {
-                ProspectiveNode = val;
-            }
-            else
-            {
-                return;
-            }
-            if (LatestNode.GetChildren().Contains(ProspectiveNode))
-            {
-                Levels[level].SetIsLevelVisited(true);
-            }
-            else
-            {
-                return;
-            }
-        }
-        // If we get here we have a correct level;
-        // Set the gamemanager's reference to leveldataSO
-        // Load into gameplay scene
-        previousScrollPosition = ScrollZone.normalizedPosition;
-        TraversedNodes.Add(level);
-        NodeManagerData.SetActiveLevel(level);
-        SceneManagerScript.Instance.loadSceneByIndex(1);
     }
-    
-    /// UTILITY FUNCS
-    private static void Stretch(RectTransform Transform)
+
+    /// <summary>
+    /// Update Node parent-child relationship and draws a line between them.
+    /// </summary>
+    public void DrawLines(Node parent, Node child)
     {
-        Transform.localPosition = Vector3.zero;
-        Transform.anchorMin = Vector2.zero;
-        Transform.anchorMax = Vector2.one;
-        Transform.sizeDelta = Vector2.zero;
-        Transform.anchoredPosition = Vector2.zero;
+        Vector3 startPos = parent.GetNextNode().position;
+        UILineRenderer LineRenderer = Instantiate(UILinePrefab, MapParent.transform);
+        LineRenderer.transform.SetAsFirstSibling();
+        LineRenderer.SetPoints(startPos, child.GetPreviousNode().position);
+        LineRenderer.AdjustDimensions();
+
+        parent.SetHasChildren(true);
+        parent.AddChild(child, LineRenderer);
+        child.AddParent(parent, LineRenderer);
     }
 }
