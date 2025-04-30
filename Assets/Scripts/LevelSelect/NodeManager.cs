@@ -69,6 +69,8 @@ public class NodeManager : MonoBehaviour
     private float VerticalOffset = 2.0f;
     [SerializeField]
     private float HorizontalOffset = 2.0f;
+    private float AdaptedVerticalOffset;
+    private float AdaptedHorizontalOffset;
     [SerializeField]
     private float Padding = 20.0f;
     [SerializeField]
@@ -162,6 +164,10 @@ public class NodeManager : MonoBehaviour
         }
         LevelsUI = new List<List<GameObject>>();
         Layers = 0;
+
+        // Adapt offsets based on screen size
+        AdaptedVerticalOffset = VerticalOffset * (Screen.height / 1080f);
+        AdaptedHorizontalOffset = HorizontalOffset * (Screen.width / 1920f);
         
         InitializeParentContainer();
         PopulateMapData();
@@ -205,10 +211,6 @@ public class NodeManager : MonoBehaviour
         // Hardcoding :P
         int[] CapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
         Layers = CapacitiesByLayer.Length;
-
-        // Adapt offsets based on screen size
-        VerticalOffset = VerticalOffset * (Screen.height / 1080f);
-        HorizontalOffset = HorizontalOffset * (Screen.width / 1920f);
         
         // Populate layers with nodes
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
@@ -256,7 +258,7 @@ public class NodeManager : MonoBehaviour
                 float verticalOffset;
                 if (isMiddleOfLayer) 
                 {
-                    verticalOffset = layerHasEvenLevelCount ? VerticalOffset / 2 : 0f;
+                    verticalOffset = layerHasEvenLevelCount ? AdaptedVerticalOffset / 2 : 0f;
                 }
                 else {
                     int distanceFromMidpoint = Mathf.Abs(levelInLayer - levelAtMidpoint);
@@ -268,11 +270,11 @@ public class NodeManager : MonoBehaviour
                             ? distanceFromMidpoint - 1 
                             : distanceFromMidpoint;
                     }
-                    verticalOffset = VerticalOffset * distanceFromMidpoint;
+                    verticalOffset = AdaptedVerticalOffset * distanceFromMidpoint;
 
                     // Account for the adjustment of having 2 middle levels
                     if (layerHasEvenLevelCount) {
-                        verticalOffset += VerticalOffset / 2;
+                        verticalOffset += AdaptedVerticalOffset / 2;
                     }
                 }
 
@@ -282,7 +284,7 @@ public class NodeManager : MonoBehaviour
                     verticalOffset *= -1;
                 }
                 
-                Vector3 newOffset = new Vector3(layer * HorizontalOffset, verticalOffset);
+                Vector3 newOffset = new Vector3(layer * AdaptedHorizontalOffset, verticalOffset);
                 LevelsUI[layer][levelInLayer].GetComponent<Node>().transform.position = StartingPosition.position + newOffset;
             }
         }
