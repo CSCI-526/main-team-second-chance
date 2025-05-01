@@ -11,6 +11,15 @@ public class TutorialCanvasUI : MonoBehaviour
     private GameObject TutorialDragBar;
     [SerializeField]
     private GameObject TutorialDragHandle;
+    private int TutorialTextIndex = (int)TutorialPhases.END_GAME + 1;
+    private float AnimTimer;
+    private const float ANIM_DURATION = 2f;
+    private const float POS_Y_OFFSET = -10f;
+    private float GlowPowerStart = 0f;
+    private float GlowPowerEnd = 0.2f;
+    private float PosYStart;
+    private float PosYEnd;
+
     private void Start()
     {
         if (!TutorialDragBar)
@@ -31,6 +40,41 @@ public class TutorialCanvasUI : MonoBehaviour
     {
         TutorialEvents.OnTutorialItemDisplayed -= DisplayedTutorialItem;
         TutorialEvents.OnTryDisplayTutorialItem -= TryDisplayTutorialItem;
+    }
+
+    void Update()
+    {
+        if (!TutorialManager.Instance.ShouldDisplayAnymore || 
+            TutorialTextIndex > (int)TutorialPhases.END_GAME)
+        {
+            return;
+        }
+
+        
+        TextMeshProUGUI TutorialItem = TutorialTexts[TutorialTextIndex];
+        float newPosY = Mathf.Lerp(PosYStart, PosYEnd, AnimTimer / ANIM_DURATION);
+        Vector3 newPosition = TutorialItem.transform.position;
+        newPosition.y = newPosY;
+
+        TutorialItem.transform.position = newPosition;
+        TutorialItem.fontSharedMaterial.SetFloat(
+            ShaderUtilities.ID_GlowPower, 
+            Mathf.Lerp(GlowPowerStart, GlowPowerEnd, AnimTimer / ANIM_DURATION)
+            );
+        
+        AnimTimer += Time.deltaTime;
+        if (AnimTimer >= ANIM_DURATION) 
+        {
+            AnimTimer -= ANIM_DURATION;
+            
+            float temp = GlowPowerStart;
+            GlowPowerStart = GlowPowerEnd;
+            GlowPowerEnd = temp;
+            
+            temp = PosYStart;
+            PosYStart = PosYEnd;
+            PosYEnd = temp;
+        }
     }
 
     private void DisplayedTutorialItem(TutorialPhases Phase)
@@ -54,8 +98,7 @@ public class TutorialCanvasUI : MonoBehaviour
                 TutorialDragHandle.SetActive(false);
             }
         }
-        int PhaseAsInt = (int)Phase;
-        TutorialTexts[PhaseAsInt].alpha = 0.0f;
+        TutorialTexts[TutorialTextIndex].alpha = 0.0f;
 
         // Now we update the phase of the tutorial manager to go to next
         if (TutorialManager.Instance)
@@ -85,7 +128,14 @@ public class TutorialCanvasUI : MonoBehaviour
                 TutorialDragHandle.SetActive(true);
             }
         }
-        int PhaseAsInt = (int)Phase;
-        TutorialTexts[PhaseAsInt].alpha = 1.0f;
+        TutorialTextIndex = (int)Phase;
+        TextMeshProUGUI TutorialItem = TutorialTexts[TutorialTextIndex];
+        TutorialItem.alpha = 1.0f;
+        PosYStart = TutorialItem.transform.position.y;
+        PosYEnd = PosYStart + POS_Y_OFFSET;
+        TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);
+        TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOffset, 1f);
+        TutorialItem.fontSharedMaterial.SetColor(ShaderUtilities.ID_GlowColor, TutorialItem.color);
+        AnimTimer = 0.0f;
     }
 }

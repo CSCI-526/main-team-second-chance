@@ -38,6 +38,13 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private Color defaultTitleTextColor;
     private Color defaultDescriptionTextColor;
 
+    void Start()
+    {
+        defaultCardColor = cardPanel.color;
+        defaultTitleTextColor = titleText.color;
+        defaultDescriptionTextColor = descriptionText.color;
+    }
+
     private void Update()
     {
         while (queuedMotions.Count > 0)
@@ -79,15 +86,6 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
     }
 
-    public void UpdateInformation(string MarblePrefab, string CardDetail)
-    {
-        titleText.SetText(MarblePrefab);
-        cardPanel.material = null;
-        descriptionText.SetText(CardDetail);
-        defaultCardColor = cardPanel.color;
-        defaultTitleTextColor = titleText.color;
-        defaultDescriptionTextColor = descriptionText.color;
-    }
     public void UpdateInformation(MarbleData MarbleObject, bool addNewMarble = true)
     {
         titleText.SetText(MarbleObject.MarbleName);
@@ -98,10 +96,6 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             NewMarbleToAdd = MarbleObject;
         }
-
-        defaultCardColor = cardPanel.color;
-        defaultTitleTextColor = titleText.color;
-        defaultDescriptionTextColor = descriptionText.color;
     }
 
     public void UpdateCardColors(bool isHovered) {
