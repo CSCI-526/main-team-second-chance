@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: Smaller than other marbles
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}
+  CollisionSounds: {fileID: 11400000, guid: 24997c15e3d284fd684063d7b6ae65ba, type: 2}

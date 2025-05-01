@@ -6,6 +6,8 @@ using UnityEngine;
 // Use "ExplosionAbility.cs" and "Explosion" scriptable object as an example
 public class Ability : ScriptableObject
 {
+    public AudioInfo AbilitySound;
+    
     public virtual void Cast(Marble marble)
     {
         Debug.Log("Ability Casted: DEFAULT");

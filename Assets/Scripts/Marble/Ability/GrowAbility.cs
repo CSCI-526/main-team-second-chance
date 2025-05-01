@@ -12,6 +12,7 @@ public class GrowAbility : Ability
     public override float SettledCast(Marble marble)
     {
         marble.Grow(GrowTime,GrowScale);
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         return GrowTime;
     }
 }

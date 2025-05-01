@@ -36,6 +36,7 @@ public class GameOverUI : MonoBehaviour
     }
     public void OnClickPlayAgain()
     {
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
         bool bShouldRestart = NodeManager.Instance.ShouldRestartOrMenu();
         if (bShouldRestart || bDidPlayerLose)
         {

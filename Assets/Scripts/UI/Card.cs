@@ -194,6 +194,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
         }
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }
 
     public int GetHandIndex() { return HandIndex; }

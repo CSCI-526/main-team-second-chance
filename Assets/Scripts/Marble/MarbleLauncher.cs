@@ -13,6 +13,7 @@ public class MarbleLauncher : MonoBehaviour
     [SerializeField] private Material enemyMaterial;
     [SerializeField] private Material enemyOutlineMaterial;
     private Material[] materialCopies;
+    [SerializeField] private AudioInfo launchSound;
 
     private void Awake()
     {
@@ -68,8 +69,10 @@ public class MarbleLauncher : MonoBehaviour
         Direction.Normalize();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
+        
         if (!bOverrideWaiting)
         {
+            AudioManager.TriggerSound(launchSound,Location);
             StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
         }
 

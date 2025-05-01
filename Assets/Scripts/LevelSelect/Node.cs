@@ -98,6 +98,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             return;
         }
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
         OnAttemptEnterLevel(DataRep);
     }
     public void UpdateNameOfNode(string Name)

@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: Decreases in size and weight at the end of each round.
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: f0cd993d75f4f42ed8c4b8e4e2a8b94e, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: 24997c15e3d284fd684063d7b6ae65ba, type: 2}

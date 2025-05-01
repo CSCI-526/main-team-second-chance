@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0db2897cb3e4c448e71c5dbc3e7f06, type: 3}
+  m_Name: CollisionLow
+  m_EditorClassIdentifier: 
+  Clips:
+  - {fileID: 8300000, guid: b858737a5388d43f48a44e6a414c53dd, type: 3}
+  - {fileID: 8300000, guid: 74255c76d5b744a52bf2be1699842fac, type: 3}
+  - {fileID: 8300000, guid: 65a4d6ef927fc4e48b6684d5624605d3, type: 3}
+  - {fileID: 8300000, guid: 2d5f946bd9e7b4ae29ba95f994b192a2, type: 3}
+  - {fileID: 8300000, guid: 1166613454cbc4e64a795347305067c5, type: 3}
+  - {fileID: 8300000, guid: 023f630ed2e8f4e44bc04859be7861f9, type: 3}
+  - {fileID: 8300000, guid: 24648db4638b949b5a2e829898590170, type: 3}
+  - {fileID: 8300000, guid: 3945cbd259bd64cf9bb0794b90e50379, type: 3}
+  - {fileID: 8300000, guid: aa58cf8e06990456f9bdf1d5bd0fb2e4, type: 3}
+  - {fileID: 8300000, guid: aa1ef645231604378a3a4f3adfc273a8, type: 3}
+  - {fileID: 8300000, guid: 11d4bb226441948c58a744e36ef79cb3, type: 3}
+  - {fileID: 8300000, guid: db7b7a25a01a3406db9da2ff8d8b6ef3, type: 3}
+  PitchRandomness: 0.2
+  Pitch: 0.5
+  VolumeRandomness: 0.1
+  Spatialization: 1
+  bIgnoreReverb: 0
+  MixerGroup: {fileID: 7550368498410611202, guid: 7c6ec3bfbb62e40f593747b85e618c0c,
+    type: 2}

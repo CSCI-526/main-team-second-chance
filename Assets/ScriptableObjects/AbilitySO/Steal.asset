@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9f2ab57ad78440b9a9d9f1783efb4a, type: 3}
   m_Name: Steal
   m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: 766c5dbcccd1e4496914a625c7765520, type: 2}
   playerMaterial: {fileID: 2100000, guid: 9433be0fed2d64d4eadd36892b2500f5, type: 2}
   playerOutlineMaterial: {fileID: 2100000, guid: 530694b58b2005c4495df2445016c289,
     type: 2}

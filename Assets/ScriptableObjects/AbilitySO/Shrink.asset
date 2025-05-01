@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5affdf5a77d044b698555f159ecdcba, type: 3}
   m_Name: Shrink
   m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: ec4e73af1a50a48c4bb54b4c2d3fa25c, type: 2}
   GrowScale: 0.7
   GrowTime: 1.5

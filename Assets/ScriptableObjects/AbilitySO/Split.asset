@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef8182f179934022877bd9ef5c94271, type: 3}
   m_Name: Split
   m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: fcaa9e910bea347e5817b0be288becb6, type: 2}

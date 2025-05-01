@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: Splits into two marbles after a small delay
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: d444547485067417b99c294e48a87522, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}

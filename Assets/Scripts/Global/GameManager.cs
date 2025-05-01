@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour
                         PlayerManager.InitializePlayerDeck();
                         ScoringCircle.GetComponent<ScoringCircle>().ShrinkScoringCircle(2.0f);
                         TurnStateEvents.DoSuddenDeath();
+                        AudioManager.TriggerSound(SuddenDeath,transform.position);
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
                         return;
                     }
@@ -155,6 +156,16 @@ public class GameManager : MonoBehaviour
             enemyScore += bIsInScoreZone ? 1 : -1;
             Mathf.Clamp(enemyScore, 0, playerScore);
         }
+
+        if (bIsInScoreZone)
+        {
+            AudioManager.TriggerSound(GainPoints,transform.position);
+        }
+        else
+        {
+            AudioManager.TriggerSound(LosePoints,transform.position);
+        }
+        
         MarbleEvents.OnScoreChanged(Team);
     }
     public GameObject GetScoringCircle()
@@ -263,6 +274,10 @@ public class GameManager : MonoBehaviour
     private int totalGames = 0;
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
+
+    [SerializeField] private AudioInfo GainPoints;
+    [SerializeField] private AudioInfo LosePoints;
+    [SerializeField] private AudioInfo SuddenDeath;
     public int NumPlayerTurns
     {
         get { return numPlayerTurns; }

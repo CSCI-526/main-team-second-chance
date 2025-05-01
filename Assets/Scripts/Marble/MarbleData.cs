@@ -48,4 +48,6 @@ public class MarbleData : ScriptableObject
     [Range(0f, 10f)] public float abilityTriggerDelay = 1.5f;
     public Ability AbilityObject;
 
+    public AudioInfo CollisionSounds;
+
 }
