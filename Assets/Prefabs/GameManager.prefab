@@ -45,3 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScoringCircle: {fileID: 0}
+  DeckManager: {fileID: 0}
+  PlayerManager: {fileID: 0}
+  EnemyManager: {fileID: 0}
+  turnState: 0
+  MainUIButtons: {fileID: 0}
+  GainPoints: {fileID: 11400000, guid: dbeea3f5cdb8741b388d78735ae5e369, type: 2}
+  LosePoints: {fileID: 11400000, guid: 391a8e79d9f6445f6b65293a50ec28d6, type: 2}
+  SuddenDeath: {fileID: 11400000, guid: 884bcd3040d7f4fa8904def8107a54ef, type: 2}

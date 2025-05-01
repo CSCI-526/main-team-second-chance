@@ -27,6 +27,7 @@ public class StealAbility : Ability
         }
 
         marble.OneTimeCasted = true;
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
 
         if (other.Team != marble.Team)
         {

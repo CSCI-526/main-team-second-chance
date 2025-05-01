@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5affdf5a77d044b698555f159ecdcba, type: 3}
   m_Name: Grow
   m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: a2f83be2b70664753a1c1c1239d669f1, type: 2}
   GrowScale: 1.3
   GrowTime: 1.5

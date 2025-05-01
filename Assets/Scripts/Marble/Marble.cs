@@ -14,7 +14,7 @@ public class Marble : MonoBehaviour
     [SerializeField]
     private MarbleData marbleData;
 
-    [SerializeField] private float maxSize = 5.0f;
+    private float maxSize = 2.0f;
 
     public ParticleSystem particleSystem;
 
@@ -66,6 +66,7 @@ public class Marble : MonoBehaviour
             {
                 marbleData.AbilityObject.CollisionCast(this, otherMarble);
             }
+            AudioManager.TriggerSound(marbleData.CollisionSounds,transform.position);
         }
     }
 
@@ -124,6 +125,8 @@ public class Marble : MonoBehaviour
     IEnumerator GrowRoutine(float time, float scale)
     {
         var currentScale = this.gameObject.transform.localScale;
+        if (this.gameObject.transform.localScale.x > maxSize)
+            yield break;
         var finalScale = currentScale * scale;
         Vector3.ClampMagnitude(finalScale, maxSize);
         float startMass = rb.mass;

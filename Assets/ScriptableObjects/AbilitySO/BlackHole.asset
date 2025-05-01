@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a429cad199aebc040bb88b8a3db7d7aa, type: 3}
   m_Name: BlackHole
   m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: bcca7b2bdafd74de998f02c54cce7037, type: 2}
   radius: 1.5
   power: 4

@@ -76,6 +76,7 @@ public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         Cards.Add(card);
         ActiveCards.Add(card.gameObject.activeSelf);
+        AudioManager.TriggerSound(AudioManager.Instance.DrawSound,Vector3.zero);
         bShouldReanimate = true;
     }
 

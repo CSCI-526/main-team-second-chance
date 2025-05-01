@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: A standard marble with no other abilities
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}

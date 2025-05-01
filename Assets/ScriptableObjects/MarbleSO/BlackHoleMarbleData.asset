@@ -24,3 +24,4 @@ MonoBehaviour:
     marble's current position.
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}

@@ -22,11 +22,13 @@ public class PauseUI : MonoBehaviour
     {
         Time.timeScale = 0.0f;
         pausePanel.SetActive(true);
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }
 
     public void Unpause()
     {
         Time.timeScale = 2.0f;
         pausePanel.SetActive(false);
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }
 }

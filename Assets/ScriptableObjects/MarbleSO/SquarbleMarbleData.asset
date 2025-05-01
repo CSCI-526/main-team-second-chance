@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: A heavy square-shaped marble
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 0}
+  CollisionSounds: {fileID: 11400000, guid: 52e120976e02443488dc00cbbf537628, type: 2}

@@ -23,3 +23,4 @@ MonoBehaviour:
   MarbleDescription: Changes the first marble hit to your team.
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: 67770a1409ea44665a4b0bb69b2c0f57, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}

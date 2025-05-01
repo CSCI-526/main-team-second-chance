@@ -51,3 +51,4 @@ MonoBehaviour:
   enemyMaterial: {fileID: 2100000, guid: 4dd8f99d4ac634fa5a99fefe53bc3e7b, type: 2}
   enemyOutlineMaterial: {fileID: 2100000, guid: e5d24e4db90fa414f90ecf24d22daebb,
     type: 2}
+  launchSound: {fileID: 11400000, guid: 2c595480681034a1586909061ff4ba4f, type: 2}
