@@ -29,11 +29,4 @@ public class PauseUI : MonoBehaviour
         Time.timeScale = 2.0f;
         pausePanel.SetActive(false);
     }
-
-    public void ToLevelSelect()
-    {
-        Time.timeScale = 2.0f;
-        pausePanel.SetActive(false);
-        SceneManagerScript.Instance.loadSceneByIndex(2);
-    }
 }
