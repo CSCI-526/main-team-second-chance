@@ -66,7 +66,7 @@ public class GameOverUI : MonoBehaviour
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
         {
-            GameOverText.text = "You lose...".ToUpper();
+            GameOverText.text = "Game over. You lose...".ToUpper();
             GameOverText.color = enemyColor;
         }
         ShowPanel();
