@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
+  m_Name: CloneMarbleData
+  m_EditorClassIdentifier: 
+  MarblePrefab: {fileID: 8896970215918674003, guid: 288a8225c4a8f3940822e26aac764ed7,
+    type: 3}
+  marbleType: 8
+  Sprite: {fileID: 0}
+  Mass: 1
+  UniformScale: 0.5
+  Drag: 0.7
+  MarbleName: Cloner
+  MarbleDescription: Spawns a copy of the first marble hit
+  abilityTriggerDelay: 1.5
+  AbilityObject: {fileID: 11400000, guid: 60b7dd17f97dcf7469496a79717f96fb, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: 4489f1e5e45e05d4184ddb6362601de2, type: 2}
