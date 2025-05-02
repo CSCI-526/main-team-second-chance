@@ -20,6 +20,15 @@ public class Deck : MonoBehaviour
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return IndexOfHand; }
     public void ResetSelectedMarbleIndex() { IndexOfHand = -1; }
+    public void Reset(MarbleTeam Team, int index)
+    {
+        if (SelectedMarbleRef != null)
+        {
+            SelectedMarbleRef.material = null;
+        }
+        SelectedMarbleRef = null;
+        ResetSelectedMarbleIndex();
+    }
     public Image SelectedMarbleRef { get; set; }
     public bool bIsHoveringDeck { get; set; }
     public void AddMarbleToDeck(MarbleTeam Team, MarbleData marble)
@@ -175,10 +184,12 @@ public class Deck : MonoBehaviour
     private void OnEnable()
     {
         DeckEvents.OnMarbleSelectedFromHand += GrabSelectedID;
+        DeckEvents.OnMarbleUsed += Reset;
     }
     private void OnDisable()
     {
         DeckEvents.OnMarbleSelectedFromHand -= GrabSelectedID;
+        DeckEvents.OnMarbleUsed -= Reset;
     }
     private void GrabSelectedID(MarbleTeam Team, int ID)
     {

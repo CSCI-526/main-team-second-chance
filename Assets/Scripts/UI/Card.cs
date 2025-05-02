@@ -98,8 +98,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
     }
 
-    public void UpdateCardColors(bool isHovered) {
-        if (isHovered) 
+    public void UpdateCardColors(bool isHovered)
+    {
+        if (isHovered)
         {
             cardPanel.color = Color.white;
             titleText.color = Color.black;
@@ -159,6 +160,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                         Debug.Log("Clicked on a card with ID PlayerTurn: " + HandIndex);
 
                         Deck playerDeck = GameManager.Instance.GetPlayerManager().GetPlayerDeck();
+                        Debug.Log(playerDeck.SelectedMarbleRef);
                         if (playerDeck.SelectedMarbleRef == cardPanel)
                         {
                             playerDeck.SelectedMarbleRef.material = null;
@@ -188,7 +190,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         {
             TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
         }
-        AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
+        AudioManager.TriggerSound(AudioManager.Instance.ClickSound, Vector3.zero);
     }
 
     public int GetHandIndex() { return HandIndex; }
