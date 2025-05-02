@@ -68,8 +68,8 @@ MonoBehaviour:
   m_text: Description text this is a description of the card blah blah blah blah
     blah
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b0d892504d8ebdb41951cac10bde9958, type: 2}
-  m_sharedMaterial: {fileID: -5531307292471700801, guid: b0d892504d8ebdb41951cac10bde9958,
+  m_fontAsset: {fileID: 11400000, guid: ab711e4a089888e439f3749c8dd8b76b, type: 2}
+  m_sharedMaterial: {fileID: 1376666352112082013, guid: ab711e4a089888e439f3749c8dd8b76b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -94,10 +94,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 16
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0

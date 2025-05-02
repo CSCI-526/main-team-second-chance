@@ -18,6 +18,8 @@ public class ViewDeck : MonoBehaviour
     TextMeshProUGUI DiscardRemainingText = null;
     [SerializeField]
     private GameObject CardPrefab;
+    [SerializeField]
+    private TextMeshProUGUI NoMarblesText;
     private List<GameObject> DisplayedCards = new List<GameObject>();
     private static bool bIsDiscardingCard = false;
     private int PotentialIndexToDiscard = -1;
@@ -55,14 +57,24 @@ public class ViewDeck : MonoBehaviour
         }
         if (DisplayedCards.Count != 0)
         {
-            foreach(GameObject go in DisplayedCards)
+            foreach (GameObject go in DisplayedCards)
             {
-                if(go)
+                if (go)
                 {
                     Destroy(go);
                 }
             }
             DisplayedCards.Clear();
+        }
+        if (PlayerMarbles.Count == 0)
+        {
+            DeckPanel.SetActive(false);
+            NoMarblesText.gameObject.SetActive(true);
+        }
+        else
+        {
+            DeckPanel.SetActive(true);
+            NoMarblesText.gameObject.SetActive(false);
         }
         // Populate the panel with cards 
         for (int i = 0; i < PlayerMarbles.Count; i++)
@@ -87,7 +99,7 @@ public class ViewDeck : MonoBehaviour
             bIsDiscardingCard = true;
             PotentialIndexToDiscard = Index;
             DiscardRemainingPanel.SetActive(true);
-            if(!DiscardRemainingText)
+            if (!DiscardRemainingText)
             {
                 DiscardRemainingText = DiscardRemainingPanel.GetComponentInChildren<TextMeshProUGUI>();
                 DiscardRemainingText.SetText($"Discards Remaining: {MAX_NUM_TO_DISCARD - numDiscardedCards}");
@@ -108,13 +120,13 @@ public class ViewDeck : MonoBehaviour
     public void DiscardCard()
     {
         int DeckCount = NodeManager.Instance.GetPlayerDeck().Count;
-        if(DeckCount - 1 <= 1 || PotentialIndexToDiscard < 0 || numDiscardedCards >= MAX_NUM_TO_DISCARD)
+        if (DeckCount - 1 <= 1 || PotentialIndexToDiscard < 0 || numDiscardedCards >= MAX_NUM_TO_DISCARD)
         {
             return;
         }
         numDiscardedCards++;
         NodeManager.Instance.RemoveFromPlayerDeck(PotentialIndexToDiscard);
-        if(!DiscardRemainingText)
+        if (!DiscardRemainingText)
         {
             DiscardRemainingText = DiscardRemainingPanel.GetComponentInChildren<TextMeshProUGUI>();
         }
