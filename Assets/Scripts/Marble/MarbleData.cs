@@ -13,7 +13,8 @@ public enum MarbleType
     THICC,
     TINY,
     SQUARE,
-    CLONE
+    CLONE,
+    FRIEND
 }
 
 // Think of the "MarbleData" ScriptableObject as a wrapper for the Marble prefab/prefab variant data
