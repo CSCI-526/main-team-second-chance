@@ -45,6 +45,6 @@ public class OneShot : MonoBehaviour
         _audioSource.outputAudioMixerGroup = _audioInfo.MixerGroup;
         
         _audioSource.PlayScheduled(time);
-        Destroy(gameObject,_audioSource.clip.length);
+        Destroy(gameObject,(_audioSource.clip.length + (float)(time - AudioSettings.dspTime) + 1)*2);
     }
 }
