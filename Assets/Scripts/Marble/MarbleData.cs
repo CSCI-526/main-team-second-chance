@@ -12,7 +12,9 @@ public enum MarbleType
     BLACKHOLE,
     THICC,
     TINY,
-    SQUARE
+    SQUARE,
+    CLONE,
+    FRIEND
 }
 
 // Think of the "MarbleData" ScriptableObject as a wrapper for the Marble prefab/prefab variant data
