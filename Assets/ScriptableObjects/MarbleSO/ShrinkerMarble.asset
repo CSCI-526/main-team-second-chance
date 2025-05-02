@@ -19,7 +19,7 @@ MonoBehaviour:
   Mass: 1
   UniformScale: 0.4
   Drag: 0.7
-  MarbleName: Shrinnker
+  MarbleName: Shrinker
   MarbleDescription: Decreases in size and weight at the end of each round.
   abilityTriggerDelay: 1.5
   AbilityObject: {fileID: 11400000, guid: f0cd993d75f4f42ed8c4b8e4e2a8b94e, type: 2}

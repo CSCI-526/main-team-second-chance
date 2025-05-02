@@ -20,7 +20,7 @@ MonoBehaviour:
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Basic
-  MarbleDescription: A standard marble with no other abilities
+  MarbleDescription: A standard marble
   abilityTriggerDelay: 0.5
   AbilityObject: {fileID: 0}
   CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
