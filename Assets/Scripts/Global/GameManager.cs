@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -10,12 +11,14 @@ public enum TurnState
     PlayerTurn,
     WaitingOnEnemyTurn,
     GameOver,
-    CardSelect
+    CardSelect,
+    MatchEnd
 }
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance = null;
+
     public EnemyManager GetEnemyManager()
     {
         if (!EnemyManager)
@@ -29,6 +32,7 @@ public class GameManager : MonoBehaviour
 
         return EnemyManager;
     }
+
     public PlayerManager GetPlayerManager()
     {
         if (!PlayerManager)
@@ -42,6 +46,7 @@ public class GameManager : MonoBehaviour
 
         return PlayerManager;
     }
+
     public DeckManager GetDeckManager()
     {
         if (!DeckManager)
@@ -55,15 +60,38 @@ public class GameManager : MonoBehaviour
 
         return DeckManager;
     }
-    public int GetPlayerScore() { return playerScore; }
-    public int GetNumWins() { return numWins; }
-    public int GetEnemyScore() { return enemyScore; }
-    public TurnState GetTurnState() { return turnState; }
-    public GameObject GetMainUIButtons() { return MainUIButtons; }
 
-    public bool PlayerHasSelectedMarble() { return PlayerManager.GetPlayerDeck().GetSelectedMarbleIndex() >= 0; }
+    public int GetPlayerScore()
+    {
+        return playerScore;
+    }
 
-    public void OverrideTurnState(TurnState newTurnState)
+    public int GetNumWins()
+    {
+        return numWins;
+    }
+
+    public int GetEnemyScore()
+    {
+        return enemyScore;
+    }
+
+    public TurnState GetTurnState()
+    {
+        return turnState;
+    }
+
+    public GameObject GetMainUIButtons()
+    {
+        return MainUIButtons;
+    }
+
+    public bool PlayerHasSelectedMarble()
+    {
+        return PlayerManager.GetPlayerDeck().GetSelectedMarbleIndex() >= 0;
+    }
+
+    private void OverrideTurnState(TurnState newTurnState)
     {
         turnState = newTurnState;
         Debug.Log(turnState);
@@ -71,14 +99,18 @@ public class GameManager : MonoBehaviour
 
         if (turnState == TurnState.CardSelect)
         {
-            GoToNextRound();
+            GoToCardSelect();
         }
         else if (turnState == TurnState.GameOver)
         {
-            // don't think we're ever hitting this naturally but
             TurnStateEvents.OnGameOvered();
         }
+        else if (turnState == TurnState.MatchEnd)
+        {
+            StartCoroutine(MatchEnded());
+        }
     }
+
     public void IncremetTurnState()
     {
         if (turnState == TurnState.WaitingOnEnemyTurn)
@@ -96,6 +128,7 @@ public class GameManager : MonoBehaviour
             {
                 TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
             }
+
             numPlayerTurns++;
         }
         else if (turnState == TurnState.WaitingOnPlayerTurn)
@@ -114,7 +147,8 @@ public class GameManager : MonoBehaviour
         // This may need to be refactored later.
         if (turnState == TurnState.EnemyTurn)
         {
-            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize() || bInSuddenDeath)
+            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize() ||
+                bInSuddenDeath)
             {
                 if (enemyScore == playerScore)
                 {
@@ -124,17 +158,24 @@ public class GameManager : MonoBehaviour
                         PlayerManager.InitializePlayerDeck();
                         ScoringCircle.GetComponent<ScoringCircle>().ShrinkScoringCircle(2.0f);
                         TurnStateEvents.DoSuddenDeath();
-                        AudioManager.TriggerSound(SuddenDeath,transform.position);
+                        AudioManager.TriggerSound(SuddenDeath, transform.position);
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
                         return;
+                    }
+                    // protect from double deck out
+                    if ((PlayerManager.GetPlayerDeck().GetNumMarblesUsed()) %
+                        PlayerManager.GetPlayerDeck().GetDeckSize() == 0)
+                    {
+                        PlayerManager.InitializePlayerDeck();
                     }
                 }
                 else
                 {
+                    // Match IS OVER HERE
                     bInSuddenDeath = false;
                     ScoringCircle sc = ScoringCircle.GetComponent<ScoringCircle>();
                     sc.ShrinkScoringCircle(sc.BaseRadius, false);
-                    OverrideTurnState(TurnState.CardSelect);
+                    OverrideTurnState(TurnState.MatchEnd);
                     return;
                 }
             }
@@ -159,25 +200,36 @@ public class GameManager : MonoBehaviour
 
         if (bIsInScoreZone)
         {
-            AudioManager.TriggerSound(GainPoints,transform.position);
+            AudioManager.TriggerSound(GainPoints, transform.position);
         }
         else
         {
-            AudioManager.TriggerSound(LosePoints,transform.position);
+            AudioManager.TriggerSound(LosePoints, transform.position);
         }
-        
+
         MarbleEvents.OnScoreChanged(Team);
     }
+
     public GameObject GetScoringCircle()
     {
         if (!ScoringCircle)
         {
             ScoringCircle = GameObject.Find("ScoringCircle");
         }
+
         return ScoringCircle;
     }
-    public bool GetAreMarblesMoving() { return bAreMarblesMoving; }
-    public List<Marble> GetMarblesList() { return MarblesList; }
+
+    public bool GetAreMarblesMoving()
+    {
+        return bAreMarblesMoving;
+    }
+
+    public List<Marble> GetMarblesList()
+    {
+        return MarblesList;
+    }
+
     public void RegisterMarble(Marble MarbleObject)
     {
         MarblesList.Add(MarbleObject);
@@ -189,7 +241,12 @@ public class GameManager : MonoBehaviour
         Destroy(MarbleObject.gameObject);
     }
 
-    public IEnumerator WaitForMarblesToSettle()
+    private void BeginWaitForMarblesToSettle()
+    {
+        StartCoroutine(Instance.WaitForMarblesToSettle());
+    }
+
+    private IEnumerator WaitForMarblesToSettle()
     {
         IncremetTurnState();
         bAreMarblesMoving = true;
@@ -278,6 +335,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
+    
+    [SerializeField]
+    public Color playerColor;
+    [SerializeField]
+    public Color enemyColor;
     public int NumPlayerTurns
     {
         get { return numPlayerTurns; }
@@ -312,13 +374,22 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        TurnStateEvents.OnGameOver += OnGameOver;
+        
 
         Time.timeScale = 2.0f;
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
+        DeckEvents.OnAddNewMarbleToDeck += OnMarbleAddedToDeck;
+        MarbleEvents.OnMarbleLaunched += BeginWaitForMarblesToSettle;
+        TurnStateEvents.OnGameOver += OnGameOver;
+    }
+
+    private void OnDisable()
+    {
+        DeckEvents.OnAddNewMarbleToDeck -= OnMarbleAddedToDeck;
+        MarbleEvents.OnMarbleLaunched -= BeginWaitForMarblesToSettle;
         TurnStateEvents.OnGameOver -= OnGameOver;
     }
 
@@ -368,9 +439,8 @@ public class GameManager : MonoBehaviour
         MarblesToDelete.Clear();
     }
 
-    public void GoToNextRound()
+    private IEnumerator MatchEnded()
     {
-        ClearMarbles();
         if (playerScore > enemyScore)
         {
             numWins++;
@@ -386,19 +456,37 @@ public class GameManager : MonoBehaviour
         ));
 
         MarbleEvents.OnRoundsWonChange(totalGames, numWins);
-        if (numLosses >= 2 || numWins >= 2) // If the player has lost 2 or won 2 
+        
+        yield return new WaitForSeconds(8.0f);
+        ClearMarbles();
+        
+        if (numLosses >= 2) // If the player has lost 2 or won 2 
         {
-            ForceUpdateEvents(TurnState.GameOver);
-            TurnStateEvents.OnGameOvered();
-            return;
+            OverrideTurnState(TurnState.GameOver);
+            yield break;
         }
+        if (numWins >= 2)
+        {
+            OverrideTurnState(TurnState.CardSelect);
+            yield break;
+        }
+        
+        // still more rounds to play reset the game
         playerScore = 0;
         enemyScore = 0;
-        DeckEvents.SelectNewMarbleToAdd(DeckManager.GenerateNewMarbles());
+        
         EnemyManager.InitializeEnemyDeck();
+        PlayerManager.InitializePlayerDeck();
         MarbleEvents.OnScoreChanged(MarbleTeam.Player);
         MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
+        OverrideTurnState(TurnState.EnemyTurn);
     }
+
+    private void GoToCardSelect()
+    {
+        DeckEvents.SelectNewMarbleToAdd(DeckManager.GenerateNewMarbles());
+    }
+    
     public void RestartGame()
     {
         ClearMarbles();
@@ -423,5 +511,11 @@ public class GameManager : MonoBehaviour
         AnalyticsManager.SendMetric("match_result", new AnalyticsManager.IntMetric(
             numWins - numLosses
         ));
+    }
+
+    private void OnMarbleAddedToDeck(MarbleData data)
+    {
+        //OverrideTurnState(TurnState.GameOver);
+        SceneManagerScript.Instance.loadSceneByIndex(2);
     }
 }

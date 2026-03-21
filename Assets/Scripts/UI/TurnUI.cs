@@ -48,11 +48,14 @@ public class TurnUI : MonoBehaviour
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
                 break;
+            
             case TurnState.WaitingOnEnemyTurn:
+                /*
                 UpdateTurnTextForEnemy();
                 TurnText.text = "WAITING";
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
+                */
                 break;
             case TurnState.EnemyTurn:
                 UpdateTurnTextForEnemy();
@@ -60,11 +63,14 @@ public class TurnUI : MonoBehaviour
                 PlayerTurnArrow.enabled = false;
                 EnemyTurnArrow.enabled = true;
                 break;
+            
             case TurnState.WaitingOnPlayerTurn:
+                /*
                 UpdateTurnTextForPlayer();
                 TurnText.text = "WAITING";
                 PlayerTurnArrow.enabled = true;
                 EnemyTurnArrow.enabled = false;
+                */
                 break;
             default:
                 // We can just hide this if it isn't a turn 

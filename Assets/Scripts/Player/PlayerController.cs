@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            GameManager.Instance.ForceUpdateEvents(TurnState.GameOver);
+            GameManager.Instance.ForceUpdateEvents(TurnState.MatchEnd);
         }
 #endif
         bool isPlayerTurnAndHasSelectedMarble =
@@ -170,7 +170,6 @@ public class PlayerController : MonoBehaviour
 
                 MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
-            bCanShootMarble = true;
         }
     }
 

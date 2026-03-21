@@ -70,10 +70,11 @@ public class MarbleLauncher : MonoBehaviour
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
         
+        MarbleEvents.OnMarbleSpawn();
         if (!bOverrideWaiting)
         {
             AudioManager.TriggerSound(launchSound,Location);
-            StartCoroutine(GameManager.Instance.WaitForMarblesToSettle());
+            MarbleEvents.OnMarbleLaunch();
         }
 
         if (Team == MarbleTeam.Player)

@@ -18,6 +18,8 @@ public class MainUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI EnemyScore;
     [SerializeField]
+    private TextMeshProUGUI MatchVictoryText;
+    [SerializeField]
     private Transform HandStartingPoint;
     [SerializeField]
     private GameObject CardPrefab;
@@ -31,6 +33,8 @@ public class MainUI : MonoBehaviour
     private float ScoreBounceDuration = 0.3f;
     private List<GameObject> Cards = new List<GameObject>();
     private int previouslyWonRounds = 0;
+    private int playedRounds = 0;
+    private bool shouldShowRoundStart = true;
 
     private RectOffset handDefaultPadding;
     private RectOffset bestOfIndicatorDefaultPadding;
@@ -45,6 +49,7 @@ public class MainUI : MonoBehaviour
         MarbleEvents.OnRoundsWonChanged += UpdateRoundsWon;
 
         TurnStateEvents.OnGameOver += ResetColors;
+        TurnStateEvents.OnTurnProgress += OnTurnStateProgress;
 
         DeckEvents.OnDeckGenerated += UpdateDeckCount;
         DeckEvents.OnMarbleUsed += UpdateDeckCount;
@@ -59,6 +64,7 @@ public class MainUI : MonoBehaviour
         MarbleEvents.OnRoundsWonChanged -= UpdateRoundsWon;
 
         TurnStateEvents.OnGameOver -= ResetColors;
+        TurnStateEvents.OnTurnProgress -= OnTurnStateProgress;
 
         DeckEvents.OnDeckGenerated -= UpdateDeckCount;
         DeckEvents.OnMarbleUsed -= UpdateDeckCount;
@@ -124,28 +130,38 @@ public class MainUI : MonoBehaviour
     {
         foreach (Image i in BestOfIndicators)
         {
-            i.color = Color.white;
+            i.color = Color.black;
         }
 
         PlayerRoundsWon.text = "";
         previouslyWonRounds = 0;
+        playedRounds = 0;
     }
     private void UpdateRoundsWon(int RoundNum, int RoundsWon)
     {
-        PlayerRoundsWon.text = $"{RoundsWon} / 3 Games Won";
+        //PlayerRoundsWon.text = $"{RoundsWon} / 3 Matches Won";
 
         // Round Num will always sum to 3 
         // --> 0 index round num to indicate which index we are modifying
         // --> save previous rounds won value. if it is less than incoming, means we won a new round, otherwise we lost
         if (previouslyWonRounds < RoundsWon)
         {
-            BestOfIndicators[RoundNum - 1].color = Color.green;
+            BestOfIndicators[RoundNum - 1].color = GameManager.Instance.playerColor;
+            MatchVictoryText.color = GameManager.Instance.playerColor;
+            MatchVictoryText.text = "GAME WIN!";
         }
         else
         {
-            BestOfIndicators[RoundNum - 1].color = Color.red;
+            BestOfIndicators[RoundNum - 1].color = GameManager.Instance.enemyColor;
+            MatchVictoryText.color = GameManager.Instance.enemyColor;
+            MatchVictoryText.text = "GAME DEFEAT!";
         }
         previouslyWonRounds = RoundsWon;
+        playedRounds = RoundNum;
+        
+        shouldShowRoundStart = true;
+        MatchVictoryText.gameObject.SetActive(true);
+        StartCoroutine(ProgressGameWinsText());
     }
     private void UpdateScore(MarbleTeam Team)
     {
@@ -263,5 +279,45 @@ public class MainUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnTurnStateProgress(TurnState turnState)
+    {
+        if (turnState == TurnState.EnemyTurn && shouldShowRoundStart)
+        {
+            shouldShowRoundStart = false;
+            StartCoroutine(ShowRoundStartText());
+        }
+        else if (turnState == TurnState.CardSelect)
+        {
+            MatchVictoryText.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator ProgressGameWinsText()
+    {
+        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+        yield return new WaitForSeconds(4.0f);
+        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+        if (previouslyWonRounds == 2)
+        {
+            MatchVictoryText.text = "RIVAL VANQUISHED!";
+        }
+        else
+        {
+            MatchVictoryText.text = $"{previouslyWonRounds} - {playedRounds - previouslyWonRounds}";
+        }
+        yield return new WaitForSeconds(4.0f);
+        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+    }
+
+    private IEnumerator ShowRoundStartText()
+    {
+        MatchVictoryText.text = "GAME " + $"{playedRounds + 1}" + " START";
+        MatchVictoryText.color = Color.white;
+        MatchVictoryText.gameObject.SetActive(true);
+        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+        yield return new WaitForSeconds(4.0f);
+        MatchVictoryText.gameObject.SetActive(false);
     }
 }

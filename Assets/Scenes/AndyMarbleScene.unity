@@ -646,6 +646,26 @@ PrefabInstance:
       objectReference: {fileID: 1759644512531380692}
     - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
         type: 3}
+      propertyPath: enemyColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: enemyColor.b
+      value: 0.23529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: enemyColor.g
+      value: 0.23529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: enemyColor.r
+      value: 0.7921569
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
       propertyPath: MainUIButtons
       value: 
       objectReference: {fileID: 976527982}
@@ -659,6 +679,26 @@ PrefabInstance:
       propertyPath: ScoringCircle
       value: 
       objectReference: {fileID: 237148537}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: playerColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: playerColor.b
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: playerColor.g
+      value: 0.6627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
+      propertyPath: playerColor.r
+      value: 0.28627452
+      objectReference: {fileID: 0}
     - target: {fileID: 4012822774278157996, guid: 57ace5307228fe441a49b0bd651cc848,
         type: 3}
       propertyPath: m_Name
@@ -2252,6 +2292,26 @@ PrefabInstance:
 
         Click'
       objectReference: {fileID: 0}
+    - target: {fileID: 326750477431098242, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 326750477431098242, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 326750477431098242, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 534186569965628406, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_text
+      value: "And finally, the game \nends when you play \nall your marbles!"
+      objectReference: {fileID: 0}
     - target: {fileID: 996431477824365194, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2271,6 +2331,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341219034816846586, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 87.2
       objectReference: {fileID: 0}
     - target: {fileID: 1442800855705649270, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
@@ -2682,6 +2747,11 @@ PrefabInstance:
       propertyPath: TutorialDragHandle
       value: 
       objectReference: {fileID: 1115602656}
+    - target: {fileID: 6718042200289846375, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7036687276133781887, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_Name
@@ -2727,6 +2797,21 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7670809745433640142, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7670809745433640142, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7670809745433640142, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7711106969228022749, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2766,6 +2851,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8131539681872668080, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175695696764941647, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175695696764941647, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.21176471
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175695696764941647, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.11764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 8175695696764941647, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.0627451
       objectReference: {fileID: 0}
     - target: {fileID: 8190465054275762357, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
         type: 3}
@@ -2816,6 +2926,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9058677944119791360, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9058677944119791360, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9058677944119791360, guid: cb512dda7dc7a5d4b902efa8ad310bb8,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
