@@ -13,10 +13,23 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         OnAttemptEnterLevel?.Invoke(level);
     }
+
+    public static event Func<int, bool> OnCheckLevelAccessibility;
+    public static bool CheckLevelAccess(int level)
+    {
+        bool? ret = OnCheckLevelAccessibility?.Invoke(level);
+        if (ret.HasValue)
+        {
+            return ret.Value;
+        }
+        return false;
+    }
+    
     public Transform GetPreviousNode() { return PreviousNode; }
     public Transform GetNextNode() { return NextNode; }
 
     public bool GetIsTraversed() { return bIsTraversed; }
+    public bool GetIsInaccessible() { return bIsInaccessible; }
     public bool GetHasChildren() { return bHasChildren; }
     public void SetHasChildren(bool Value) { bHasChildren = Value; }
     public void SetLayer(int Value) { Layer = Value; }
@@ -36,6 +49,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         NodeToLine.Add(Parent, Line);
     }
     public List<Node> GetChildren() { return ChildrenList; }
+    public List<Node> GetParents() { return ParentList; }
     public UILineRenderer GetUILineRenderer(Node Key)
     {
         if (Key == null)
@@ -86,6 +100,15 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         foreach (Node Child in ChildrenList)
         {
             if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
+            {
+                value.SetIsInaccessible(true);
+                value.SetColor();
+            }
+        }
+
+        foreach (var Parent in ParentList)
+        {
+            if (NodeToLine.TryGetValue(Parent, out UILineRenderer value))
             {
                 value.SetIsInaccessible(true);
                 value.SetColor();
@@ -160,24 +183,42 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         image.color = DefaultColor;
     }
 
-    public void SetOutlineColor(bool isHovered) 
+    public void SetOutlineColor(bool isHovered)
     {
+        Color lineColor = NodeManager.Instance.lockedLevelOutlineColor;
+        Color outLineColor = NodeManager.Instance.lockedLevelOutlineColor;
+        bool selectable = CheckLevelAccess(DataRep);
         if (bIsInaccessible) 
         {
             float grayscale = NodeManager.Instance.clearedLevelOutlineColor.grayscale;
-            outline.effectColor = new Color(grayscale, grayscale, grayscale);
-        }
-        else if (isHovered)
-        {
-            outline.effectColor = NodeManager.Instance.hoverLevelOutlineColor;
+            lineColor = outLineColor = new Color(grayscale, grayscale, grayscale);
         }
         else if (bIsTraversed)
         {
-            outline.effectColor = NodeManager.Instance.clearedLevelOutlineColor;
+            lineColor = outLineColor = NodeManager.Instance.clearedLevelOutlineColor;
+        }
+        else if (isHovered && selectable)
+        {
+            lineColor = outLineColor = NodeManager.Instance.hoverLevelOutlineColor;
+        }
+        else if(selectable)
+        {
+            lineColor = NodeManager.Instance.lockedLevelOutlineColor;
+            outLineColor = NodeManager.Instance.accessibleLevelOutlineColor;
         }
         else
         {
-            outline.effectColor = NodeManager.Instance.lockedLevelOutlineColor;
+            lineColor = outLineColor = NodeManager.Instance.lockedLevelOutlineColor;
+        }
+
+        outline.effectColor = outLineColor;
+        // Highlight each child route
+        foreach (Node Child in ChildrenList)
+        {
+            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
+            {
+                value.SetColor(lineColor);
+            }
         }
     }
     public void OnPointerEnter(PointerEventData eventData)
@@ -187,28 +228,10 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         }
 
         SetOutlineColor(true);
-
-        // Highlight each child route
-        foreach (Node Child in ChildrenList)
-        {
-            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
-            {
-                value.SetColor(NodeManager.Instance.hoverLevelOutlineColor);
-            }
-        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         SetOutlineColor(false);
-
-        // Unhighlight each child route
-        foreach (Node Child in ChildrenList)
-        {
-            if (NodeToLine.TryGetValue(Child, out UILineRenderer value))
-            {
-                value.SetColor();
-            }
-        }
     }
 }

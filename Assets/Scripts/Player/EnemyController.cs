@@ -43,8 +43,8 @@ public class EnemyController : MonoBehaviour
         Vector3 Location = Vector3.zero;
         float Force = 0.0f;
 
-        GameObject scoreZone = GameManager.Instance.GetScoringCircle();
-        CapsuleCollider capsuleCollider = scoreZone.GetComponent<CapsuleCollider>();
+        ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
+        CapsuleCollider capsuleCollider = (CapsuleCollider)scoreZone.GetDefaultScoringZone();
         float colliderLength = capsuleCollider.radius;
         bool bTryToHitOut = false;
 

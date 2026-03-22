@@ -15,6 +15,7 @@ public class NodeManager : MonoBehaviour
     public Color hoverLevelOutlineColor;
     public Color clearedLevelOutlineColor;
     public Color lockedLevelOutlineColor;
+    public Color accessibleLevelOutlineColor;
 
     public Color[] getLevelColorsByDifficulty()
     {
@@ -126,6 +127,11 @@ public class NodeManager : MonoBehaviour
                     DrawLevelGraph();
                     UpdateMapToLatest();
                     bHasUIBeenInitialized = true;
+                    if (TraversedNodes.Count >= Layers)
+                    {
+                        // all levels have been cleared
+                        SceneManagerScript.Instance.loadSceneByIndex(0);
+                    }
                 }
                 break;
             }
@@ -134,6 +140,7 @@ public class NodeManager : MonoBehaviour
             default:
             {
                 bHasInitialized = false;
+                bHasUIBeenInitialized = false;
                 NodeManagerData.ClearPlayerDeck();
                 TraversedNodes.Clear();
                 break;
@@ -153,11 +160,13 @@ public class NodeManager : MonoBehaviour
     private void OnEnable()
     {
         Node.OnAttemptEnterLevel += DoAttemptEnterLevel;
+        Node.OnCheckLevelAccessibility += CheckLevelAccess;
     }
 
     private void OnDisable()
     {
         Node.OnAttemptEnterLevel -= DoAttemptEnterLevel;
+        Node.OnCheckLevelAccessibility -= CheckLevelAccess;
     }
 
 
@@ -168,6 +177,10 @@ public class NodeManager : MonoBehaviour
     {
         if (TraversedNodes.Count == 0)
         {
+            if(LevelNumToNodeComp.TryGetValue(0, out Node val))
+            {
+                val.SetOutlineColor(false);
+            }
             return;
         }
 
@@ -191,48 +204,73 @@ public class NodeManager : MonoBehaviour
         }
 
         // Mark all untraversed nodes on current or lower layers as inaccessible
-        foreach (Node node in LevelNumToNodeComp.Values) {
-            if (node.GetLayer() <= currLayer) {
+        foreach (Node node in LevelNumToNodeComp.Values)
+        {
+            if (node.GetLayer() <= currLayer)
+            {
                 node.MarkInaccessible();
             }
+            else if (node.GetLayer() == currLayer + 1)
+            {
+                if (!CheckLevelAccess(node.GetCorrespondingLevelSO()))
+                    node.MarkInaccessible();
+            }
+            else
+            {
+
+                bool couldBeReached = false;
+                foreach (var parent in node.GetParents())
+                {
+                    if (!parent.GetIsInaccessible())
+                        couldBeReached = true;
+                }
+
+                if (!couldBeReached)
+                    node.MarkInaccessible();
+            }
+            
+            node.SetOutlineColor(false);
         }
+    }
+
+    private bool CheckLevelAccess(int level)
+    {
+        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
+        if (level >= Levels.Count || level < 0)
+        {
+            return false;
+        }
+        
+        if (TraversedNodes.Count == 0)
+        {
+            return level == 0;
+        }
+
+        // Check to see if the latest node can connect to this input level
+        int lastVisitedLevel = TraversedNodes[TraversedNodes.Count - 1];
+        LevelNumToNodeComp.TryGetValue(lastVisitedLevel, out Node lastTraversedNode);
+        
+        if (LevelNumToNodeComp.TryGetValue(level, out Node node))
+        {
+            if (lastTraversedNode.GetChildren().Contains(node))
+            {
+                return true;
+            }
+        }
+        
+        
+        return false;
     }
 
     private void DoAttemptEnterLevel(int level)
     {
+        if (!CheckLevelAccess(level))
+        {
+            return;
+        }
+        
         List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        if (level >= Levels.Count || level < 0 || (TraversedNodes.Count == 0 && level != 0))
-        {
-            return;
-        }
-
-        bool validLevel = false;
-        if (TraversedNodes.Count == 0)
-        {
-            Levels[level].SetIsLevelVisited(true);
-            validLevel = true;
-        }
-        else
-        {
-            // Check to see if the latest node can connect to this input level
-            int lastVisitedLevel = TraversedNodes[TraversedNodes.Count - 1];
-            LevelNumToNodeComp.TryGetValue(lastVisitedLevel, out Node lastTraversedNode);
-            
-            if (LevelNumToNodeComp.TryGetValue(level, out Node node))
-            {
-                if (lastTraversedNode.GetChildren().Contains(node))
-                {
-                    Levels[level].SetIsLevelVisited(true);
-                    validLevel = true;
-                }
-            }
-        }
-
-        if (!validLevel)
-        {
-            return;
-        }
-
+        Levels[level].SetIsLevelVisited(true);
         previousScrollPosition = ScrollZone.normalizedPosition;
         TraversedNodes.Add(level);
         NodeManagerData.SetActiveLevel(level);

@@ -11,6 +11,7 @@ public class LevelDataSO : ScriptableObject
     public bool GetIsLevelVisited() { return bIsLevelVisited; }
     public void SetIsLevelVisited(bool value) { bIsLevelVisited = value; }
     public int GetLevelDifficulty() { return LevelDifficulty; }
+    public int GetArena() { return arena; }
     public string GetEnemyName() { return EnemyName; }
     [SerializeField, Range(0.0f, 10.0f), Tooltip("How accurate the enemy will shoot")]
     private float EnemyDifficulty = 1.0f;
@@ -21,6 +22,7 @@ public class LevelDataSO : ScriptableObject
     [SerializeField]
     private string EnemyName = "The Defaulter";
     // maybe we might want to modify how many like marbles also in here which could b cool 
+    [SerializeField] private int arena = 0;
 
     // Overall Rating of the level, 1 being easiest, 5 being hardest
     [SerializeField, Range(1, 5), Tooltip("Overall rating of the level, 1 being the easiest, 5 being the hardest")]

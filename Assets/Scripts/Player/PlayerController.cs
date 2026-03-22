@@ -45,7 +45,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            GameManager.Instance.ForceUpdateEvents(TurnState.GameOver);
+            GameManager.Instance.ForceUpdateEvents(TurnState.MatchEnd);
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GameManager.Instance.ForceUpdateEvents(TurnState.CardSelect);
         }
 #endif
         bool isPlayerTurnAndHasSelectedMarble =
@@ -170,7 +174,6 @@ public class PlayerController : MonoBehaviour
 
                 MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Player, MarbleData, Direction, DirectionMagnitude, StartLocationMouse, false);
             }
-            bCanShootMarble = true;
         }
     }
 
@@ -203,19 +206,8 @@ public class PlayerController : MonoBehaviour
 
     private bool IsNotInScoringZone(Vector3 testWorldPoint)
     {
-        Vector2 WorldPoint2D = new(testWorldPoint.x, testWorldPoint.z);
-        GameObject scoreZone = GameManager.Instance.GetScoringCircle();
-        CapsuleCollider capsuleCollider = scoreZone.GetComponent<CapsuleCollider>();
-
-        Vector2 zoneCenter = new(scoreZone.transform.position.x, scoreZone.transform.position.z);
-
-        float sqrMag = Vector2.SqrMagnitude(WorldPoint2D - zoneCenter);
-        float sqrRad = capsuleCollider.radius * capsuleCollider.radius;
-        if (sqrMag <= sqrRad)
-        {
-            return false;
-        }
-        return true;
+        ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
+        return scoreZone.CheckValidLaunchZone(testWorldPoint);
     }
 
     private bool IsNotInButtonsZone(Vector3 testWorldPoint)

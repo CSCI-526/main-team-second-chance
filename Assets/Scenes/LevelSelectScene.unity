@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level Select
+  m_text: MAP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ab711e4a089888e439f3749c8dd8b76b, type: 2}
   m_sharedMaterial: {fileID: 1376666352112082013, guid: ab711e4a089888e439f3749c8dd8b76b,
@@ -2644,6 +2644,7 @@ MonoBehaviour:
   hoverLevelOutlineColor: {r: 1, g: 0.8214651, b: 0.27735847, a: 1}
   clearedLevelOutlineColor: {r: 0.17144242, g: 0.78113204, b: 0.1164328, a: 1}
   lockedLevelOutlineColor: {r: 0.22745098, g: 0.22352941, b: 0.47843137, a: 1}
+  accessibleLevelOutlineColor: {r: 0.22745098, g: 0.7019608, b: 0.9137255, a: 1}
   NodeManagerData: {fileID: 11400000, guid: 9aef0cc63a815734d83a0e55d93e988a, type: 2}
   UIPrefab: {fileID: 3985359061539994621, guid: 0737337e9ef6686498d0f62be39dafad,
     type: 3}

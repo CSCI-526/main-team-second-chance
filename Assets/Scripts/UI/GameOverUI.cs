@@ -13,10 +13,6 @@ public class GameOverUI : MonoBehaviour
     private TextMeshProUGUI PlayAgainText;
     //[SerializeField]
     //private Button LevelSelectButton;
-    [SerializeField]
-    private Color playerColor;
-    [SerializeField]
-    private Color enemyColor;
 
     public string titleScene;
     public string gameScene;
@@ -62,13 +58,14 @@ public class GameOverUI : MonoBehaviour
         }
         else if (GameManager.Instance.GetPlayerScore() > GameManager.Instance.GetEnemyScore())
         {
-            GameOverText.text = "You win!".ToUpper();
-            GameOverText.color = playerColor;
+            //GameOverText.text = "You win!".ToUpper();
+            GameOverText.text = "Rival Vanquished".ToUpper();
+            GameOverText.color = GameManager.Instance.playerColor;
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
         {
             GameOverText.text = "Game over. You lose...".ToUpper();
-            GameOverText.color = enemyColor;
+            GameOverText.color = GameManager.Instance.enemyColor;
         }
         ShowPanel();
     }
