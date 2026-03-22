@@ -98,7 +98,11 @@ public class TutorialCanvasUI : MonoBehaviour
                 TutorialDragHandle.SetActive(false);
             }
         }
-        TutorialTexts[TutorialTextIndex].alpha = 0.0f;
+
+        if (TutorialTextIndex < TutorialTexts.Length)
+        {
+            TutorialTexts[TutorialTextIndex].alpha = 0.0f;
+        }
 
         // Now we update the phase of the tutorial manager to go to next
         if (TutorialManager.Instance)
@@ -129,13 +133,18 @@ public class TutorialCanvasUI : MonoBehaviour
             }
         }
         TutorialTextIndex = (int)Phase;
-        TextMeshProUGUI TutorialItem = TutorialTexts[TutorialTextIndex];
-        TutorialItem.alpha = 1.0f;
-        PosYStart = TutorialItem.transform.position.y;
-        PosYEnd = PosYStart + POS_Y_OFFSET;
-        TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);
-        TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOffset, 1f);
-        TutorialItem.fontSharedMaterial.SetColor(ShaderUtilities.ID_GlowColor, TutorialItem.color);
-        AnimTimer = 0.0f;
+        if (TutorialTextIndex < TutorialTexts.Length)
+        {
+            TextMeshProUGUI TutorialItem = TutorialTexts[TutorialTextIndex];
+
+
+            TutorialItem.alpha = 1.0f;
+            PosYStart = TutorialItem.transform.position.y;
+            PosYEnd = PosYStart + POS_Y_OFFSET;
+            TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);
+            TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOffset, 1f);
+            TutorialItem.fontSharedMaterial.SetColor(ShaderUtilities.ID_GlowColor, TutorialItem.color);
+            AnimTimer = 0.0f;
+        }
     }
 }

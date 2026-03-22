@@ -7,10 +7,10 @@ using UnityEngine;
 public static class MarbleEvents
 {
     // some stuff 
-    public static event Action OnMarbleSpawned;
-    public static void OnMarbleSpawn()
+    public static event Action<Marble> OnMarbleSpawned;
+    public static void OnMarbleSpawn(Marble marble)
     {
-        OnMarbleSpawned?.Invoke();
+        OnMarbleSpawned?.Invoke(marble);
     }
     public static event Action OnMarbleLaunched;
     public static void OnMarbleLaunch()

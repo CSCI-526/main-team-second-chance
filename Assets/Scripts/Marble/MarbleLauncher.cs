@@ -48,8 +48,6 @@ public class MarbleLauncher : MonoBehaviour
             return;
         }
         MarbleIns.Team = Team;
-        // Register the marble 
-        GameManager.Instance.RegisterMarble(MarbleIns);
         MeshRenderer MarbleRenderer = MarbleObject.GetComponent<MeshRenderer>();
         if (!MarbleRenderer)
         {
@@ -69,8 +67,8 @@ public class MarbleLauncher : MonoBehaviour
         Direction.Normalize();
         Direction *= LaunchForceScale * Force;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
+        MarbleEvents.OnMarbleSpawn(MarbleIns);
         
-        MarbleEvents.OnMarbleSpawn();
         if (!bOverrideWaiting)
         {
             AudioManager.TriggerSound(launchSound,Location);
