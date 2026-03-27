@@ -28,7 +28,7 @@ public class MarbleLauncher : MonoBehaviour
     {
         MarbleEvents.OnMarbleReadyToLaunch -= LaunchMarble;
     }
-    public void LaunchMarble(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
+    public void LaunchMarble(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting, bool triggerCast)
     {
         if (GameManager.Instance.GetAreMarblesMoving() && !bOverrideWaiting)
         {
@@ -73,6 +73,11 @@ public class MarbleLauncher : MonoBehaviour
         {
             AudioManager.TriggerSound(launchSound,Location);
             MarbleEvents.OnMarbleLaunch();
+        }
+
+        if (triggerCast)
+        {
+            MarbleIns.CastAbility();
         }
 
         if (Team == MarbleTeam.Player)

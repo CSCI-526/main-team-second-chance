@@ -19,8 +19,7 @@ public class AudioManager : MonoBehaviour
     
     [SerializeField]
     private AudioInfo Synth;
-
-    private float timer = 0.0f;
+    
     private double sectionlength = 16.0;
     private double goalTime = 0.0;
 

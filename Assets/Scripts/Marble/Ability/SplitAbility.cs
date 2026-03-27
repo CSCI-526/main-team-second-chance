@@ -15,7 +15,7 @@ public class SplitAbility : Ability
         Vector3 Position = marble.transform.position + 0.1f * Offset.normalized;
 
 
-        MarbleEvents.MarbleReadyToLaunch(marble.Team, GameManager.Instance.GetDeckManager().GetDefaultMarble(), Offset.normalized, Offset.magnitude, Position, true);
+        MarbleEvents.MarbleReadyToLaunch(marble.Team, marble.GetMarbleData(), Offset.normalized, Offset.magnitude, Position, true, false);
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
     }
 }

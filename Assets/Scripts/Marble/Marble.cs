@@ -51,12 +51,6 @@ public class Marble : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        OneTimeCasted = false;
-        CastAbility();
-    }
-
     public void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Marble"))
@@ -100,21 +94,6 @@ public class Marble : MonoBehaviour
             return marbleData.AbilityObject.SettledCast(this);
         }
         return 0.0f;
-    }
-
-    // Explosive Marble Ability
-    public void Explode(float radius, float power)
-    {
-        Vector3 explosionPos = transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
-
-        foreach (Collider hit in colliders)
-        {
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
-
-            if (rb != null && hit.CompareTag("Marble") && hit != this.GetComponent<SphereCollider>())
-                rb.AddExplosionForce(power, explosionPos, radius, 0.0f, ForceMode.Impulse);
-        }
     }
 
     public void Grow(float time, float scale)

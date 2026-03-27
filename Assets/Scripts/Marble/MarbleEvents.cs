@@ -17,10 +17,10 @@ public static class MarbleEvents
     {
         OnMarbleLaunched?.Invoke();
     }
-    public static event Action<MarbleTeam, MarbleData, Vector3, float, Vector3, bool> OnMarbleReadyToLaunch;
-    public static void MarbleReadyToLaunch(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting)
+    public static event Action<MarbleTeam, MarbleData, Vector3, float, Vector3, bool, bool> OnMarbleReadyToLaunch;
+    public static void MarbleReadyToLaunch(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting, bool bTriggerCast = true)
     {
-        OnMarbleReadyToLaunch?.Invoke(Team, Type, Direction, Force, Location, bOverrideWaiting);
+        OnMarbleReadyToLaunch?.Invoke(Team, Type, Direction, Force, Location, bOverrideWaiting, bTriggerCast);
     }
     public static event Action<MarbleTeam> OnScoreChange;
     public static void OnScoreChanged(MarbleTeam Team)

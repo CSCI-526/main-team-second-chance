@@ -2037,6 +2037,10 @@ MonoBehaviour:
   bestOfIndicatorLayoutGroup: {fileID: 8292226965273662240}
   ScoreBounceHeight: 30
   ScoreBounceDuration: 0.3
+  rivalVanquishedSound: {fileID: 11400000, guid: 4a6b1a3fc1da14cd5a9101d485a95238,
+    type: 2}
+  winRoundSound: {fileID: 11400000, guid: b9c49105a1b51458a8e8ac791f74cb6e, type: 2}
+  loseRoundSound: {fileID: 11400000, guid: 62d570eaaf4834db2a21f1bfdf6fce1e, type: 2}
 --- !u!1 &7395006179926995648
 GameObject:
   m_ObjectHideFlags: 0

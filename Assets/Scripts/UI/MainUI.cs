@@ -36,6 +36,10 @@ public class MainUI : MonoBehaviour
     private int playedRounds = 0;
     private bool shouldShowRoundStart = true;
 
+    [SerializeField] private AudioInfo rivalVanquishedSound;
+    [SerializeField] private AudioInfo winRoundSound;
+    [SerializeField] private AudioInfo loseRoundSound;
+
     private RectOffset handDefaultPadding;
     private RectOffset bestOfIndicatorDefaultPadding;
     private int prevCanSelectMarble = -1;
@@ -149,12 +153,14 @@ public class MainUI : MonoBehaviour
             BestOfIndicators[RoundNum - 1].color = GameManager.Instance.playerColor;
             MatchVictoryText.color = GameManager.Instance.playerColor;
             MatchVictoryText.text = "GAME WIN!";
+            AudioManager.TriggerSound(winRoundSound,Vector3.zero);
         }
         else
         {
             BestOfIndicators[RoundNum - 1].color = GameManager.Instance.enemyColor;
             MatchVictoryText.color = GameManager.Instance.enemyColor;
             MatchVictoryText.text = "GAME DEFEAT!";
+            AudioManager.TriggerSound(loseRoundSound,Vector3.zero);
         }
         previouslyWonRounds = RoundsWon;
         playedRounds = RoundNum;
@@ -302,13 +308,13 @@ public class MainUI : MonoBehaviour
         if (previouslyWonRounds == 2)
         {
             MatchVictoryText.text = "RIVAL VANQUISHED!";
+            AudioManager.TriggerSound(rivalVanquishedSound,Vector3.zero);
         }
         else
         {
             MatchVictoryText.text = $"{previouslyWonRounds} - {playedRounds - previouslyWonRounds}";
         }
         yield return new WaitForSeconds(4.0f);
-        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
     }
 
     private IEnumerator ShowRoundStartText()
