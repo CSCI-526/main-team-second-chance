@@ -525,7 +525,7 @@ public class GameManager : MonoBehaviour
         PlayerManager.InitializePlayerDeck();
         MarbleEvents.OnScoreChanged(MarbleTeam.Player);
         MarbleEvents.OnScoreChanged(MarbleTeam.Enemy);
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(2.0f);
         OverrideTurnState(TurnState.EnemyTurn);
     }
 
