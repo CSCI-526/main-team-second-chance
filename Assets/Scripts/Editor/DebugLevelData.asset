@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ea8ea9a6c6e400e9ad4fc85929ea87, type: 3}
+  m_Name: DebugLevelData
+  m_EditorClassIdentifier: 
+  playerDeck:
+  - {fileID: 11400000, guid: ba5ebb98c27d9b94193e3aa2237d5620, type: 2}
+  - {fileID: 11400000, guid: ba5ebb98c27d9b94193e3aa2237d5620, type: 2}
+  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
+  - {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816, type: 2}
+  - {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d, type: 2}
+  - {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d, type: 2}
+  enemyDifficulty: 10
+  enemyAggressionLevel: 0
+  enemyDeckType: 10
+  enemyName: The Defaulter
+  arena: 2
+  levelDifficulty: 1

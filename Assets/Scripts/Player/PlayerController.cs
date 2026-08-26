@@ -229,28 +229,28 @@ public class PlayerController : MonoBehaviour
         bool bRestrictedZoneTest = IsNotInRestrictedZones(testWorldPoint);
         if (!bRestrictedZoneTest)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
         }
         bool bValidDeckSize = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 || GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize() > 0;
         if (!bValidDeckSize)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Your deck is empty. You cannot shoot anymore");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): Your deck is empty. You cannot shoot anymore");
         }
         bool bHasSelectedAMarble = GameManager.Instance.PlayerHasSelectedMarble();
         if (!bHasSelectedAMarble)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You have not yet selected a marble. Please pick one to shoot");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): You have not yet selected a marble. Please pick one to shoot");
         }
         bool bMarblesMoving = GameManager.Instance.GetAreMarblesMoving();
         if (bMarblesMoving)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
         }
 
         bool bIsCorrectState = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
         if (!bIsCorrectState)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): It is not the player's turn. Please wait");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): It is not the player's turn. Please wait");
         }
         return bRestrictedZoneTest && bValidDeckSize && bHasSelectedAMarble && !bMarblesMoving && bIsCorrectState;
     }

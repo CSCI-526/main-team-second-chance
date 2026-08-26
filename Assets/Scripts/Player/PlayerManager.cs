@@ -16,10 +16,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private Deck PlayerDeck;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         PlayerDeck = GetComponent<Deck>();
-        InitializePlayerDeck();
     }
     private void OnEnable()
     {

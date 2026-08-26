@@ -400,24 +400,28 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Scoring Zone Reference is null (GameManager)");
         }
-        if (EnemyManager)
+
+        GameObject MapManager = GameObject.Find("MapManager");
+        if (MapManager)
         {
-            GameObject MapManager = GameObject.Find("MapManager");
-            if (MapManager)
+            NodeManager NodeManager = MapManager.GetComponent<NodeManager>();
+            if (NodeManager)
             {
-                NodeManager NodeManager = MapManager.GetComponent<NodeManager>();
-                if (NodeManager)
+                LevelDataSO LevelData = NodeManager.GetLevelData();
+        
+                if (PlayerManager)
                 {
-                    LevelDataSO LevelData = NodeManager.GetLevelData();
-                    
+                    PlayerManager.InitializePlayerDeck();
+                }
+
+                if (EnemyManager)
+                {
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
                     ForceUpdateEvents(TurnState.EnemyTurn);
                 }
             }
         }
-
-        
 
         Time.timeScale = 2.0f;
     }
