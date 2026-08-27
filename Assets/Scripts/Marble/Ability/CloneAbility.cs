@@ -17,7 +17,7 @@ public class CloneAbility : Ability
         marble.OneTimeCasted = true;
         //AudioManager.TriggerSound(AbilitySound, marble.transform.position);
 
-        Rigidbody rb = marble.GetComponent<Rigidbody>();
+        Rigidbody rb = marble.GetMarbleRigidbody();
         Quaternion rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         Vector3 Offset = rotation * rb.velocity;
         Vector3 Position = marble.transform.position + 0.1f * Offset.normalized;

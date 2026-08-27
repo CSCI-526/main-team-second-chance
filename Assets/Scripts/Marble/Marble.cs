@@ -17,8 +17,15 @@ public class Marble : MonoBehaviour
     private float maxSize = 2.0f;
 
     public ParticleSystem particleSystem;
-
+    [SerializeField] private Collider scoringCollider;
+    [SerializeField] private Collider physicsCollider;
     public MarbleData GetMarbleData() { return marbleData; }
+
+    public Collider GetScoringCollider() { return scoringCollider; }
+
+    public Collider GetPhysicsCollider() { return physicsCollider; }
+
+    public Rigidbody GetMarbleRigidbody() { return rb; }
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
     public bool bIsInsideGameplayCircle = true;
@@ -34,7 +41,7 @@ public class Marble : MonoBehaviour
         //If not already set in prefab, set Marble properities based on MarbleData
         if (marbleData != null)
         {
-            rb = this.GetComponent<Rigidbody>();
+            rb = GetComponent<Rigidbody>();
             var currentScale = this.gameObject.transform.localScale;
 
             this.gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);

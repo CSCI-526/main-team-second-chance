@@ -16,7 +16,6 @@ namespace Editor
         
         private Vector2 scrollPosition;
         private SerializedObject serializedTarget;
-        private SerializedProperty listProperty;
         
         private void Play()
         {
@@ -71,16 +70,16 @@ namespace Editor
         {
             _debugLevelData = GetOrCreateDebugLevelData();
             serializedTarget = new SerializedObject(_debugLevelData);
-            listProperty = serializedTarget.FindProperty(nameof(_debugLevelData.playerDeck));
         }
 
         private void OnGUI()
         {
+            serializedTarget?.UpdateIfRequiredOrScript();
             GUILayout.BeginVertical();
             GUILayout.Label("Debug Player Deck", EditorStyles.boldLabel);
-            serializedTarget.Update();
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            EditorGUILayout.PropertyField(listProperty, new GUIContent("Debug Deck"), true);
+            if(serializedTarget != null)
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.playerDeck)), new GUIContent("Debug Deck"), true);
             EditorGUILayout.EndScrollView();
             
         
@@ -99,14 +98,18 @@ namespace Editor
             */
         
             GUILayout.Label("Debug Level Settings", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyDifficulty)));
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyAggressionLevel)));
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyDeckType)));
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyName)));
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.arena)));
-            EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.levelDifficulty)));
-            serializedTarget.ApplyModifiedProperties();
-            
+            if (serializedTarget != null)
+            {
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyDifficulty)));
+                EditorGUILayout.PropertyField(
+                    serializedTarget.FindProperty(nameof(_debugLevelData.enemyAggressionLevel)));
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyDeckType)));
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyName)));
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.arena)));
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.levelDifficulty)));
+                serializedTarget.ApplyModifiedProperties();
+            }
+
             _levelDataSo = (LevelDataSO)EditorGUILayout.ObjectField(
                 "Level:", 
                 _levelDataSo, 
@@ -119,13 +122,13 @@ namespace Editor
                 LoadDebugLevelDataFromAsset();
             }
         
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
             GUILayout.Label("Launch Debug Level with Debug Deck", EditorStyles.boldLabel);
             if (GUILayout.Button("Start Game"))
             {
                 Play();
             }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
         }
 
         private void LoadDebugLevelDataFromAsset()

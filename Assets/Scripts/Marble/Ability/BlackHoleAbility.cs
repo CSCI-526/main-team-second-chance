@@ -17,13 +17,13 @@ public class BlackHoleAbility : Ability
     private void BlackHole(Marble marble, float r, float p)
     {
         Vector3 castPos = marble.gameObject.transform.position;
-        Collider[] colliders = Physics.OverlapSphere(castPos, radius);
+        Collider[] colliders = Physics.OverlapSphere(castPos, radius, LayerMask.GetMask("MarblePhysics"));
 
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
-            if (rb != null && hit.CompareTag("Marble") && hit != marble.GetComponent<SphereCollider>())
+            if (rb != null && hit.CompareTag("Marble") && hit != marble.GetPhysicsCollider())
             {
                 Vector3 otherPos = rb.gameObject.transform.position;
 

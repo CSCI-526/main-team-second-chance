@@ -304,8 +304,8 @@ public class GameManager : MonoBehaviour
                 }
                 if (marble.bIsInsideGameplayCircle)
                 {
-                    Rigidbody physics = marble.GetComponent<Rigidbody>();
-                    if (physics.velocity.sqrMagnitude > 0.05f)
+                    Rigidbody physics = marble.GetMarbleRigidbody();
+                    if (physics.velocity.sqrMagnitude > 0.035f)
                     {
                         bMarblesSettled = false;
                     }
@@ -327,7 +327,7 @@ public class GameManager : MonoBehaviour
             timeWaited += 2;
         }
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.5f);
 
         CleanupMarbles();
 

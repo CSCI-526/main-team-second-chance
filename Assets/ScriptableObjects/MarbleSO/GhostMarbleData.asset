@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: GhostMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 8896970215918674003, guid: 21cf31e8a3d7249faad097cfd0fad973,
+  MarblePrefab: {fileID: 8896970215918674003, guid: 970b825bfbe57426b8302803e40d8dc5,
     type: 3}
-  marbleType: 2
   Sprite: {fileID: 0}
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Ghost
   MarbleDescription: Phases Through Other Marbles
-  abilityTriggerDelay: 1.5
-  AbilityObject: {fileID: 0}
+  abilityTriggerDelay: 0
+  AbilityObject: {fileID: 11400000, guid: 4ea21c04bf660499896c85ebe5efca59, type: 2}
   CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
