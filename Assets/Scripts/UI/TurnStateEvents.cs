@@ -18,4 +18,16 @@ public static class TurnStateEvents
     {
         OnSuddenDeath?.Invoke();
     }
+
+    public enum MatchResult
+    {
+        PlayerWin,
+        EnemyWin
+    }
+    
+    public static event Action<MatchResult> OnMatchEnd;
+    public static void OnMatchEnded(MatchResult result)
+    {
+        OnMatchEnd?.Invoke(result);
+    }
 }

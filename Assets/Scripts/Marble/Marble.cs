@@ -74,7 +74,6 @@ public class Marble : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 1.5f); //Temp debug render explosion radius
     }
 
     #region Abilities

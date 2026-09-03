@@ -18,15 +18,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d47ff3bfdbc0d2542991a47fd60b8f89, type: 2}
   - {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816, type: 2}
   - {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659, type: 2}
-  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d, type: 2}
-  - {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d, type: 2}
   enemyDifficulty: 10
   enemyAggressionLevel: 0
-  enemyDeckType: 10
+  enemyDeckType: 0
   enemyName: The Defaulter
-  arena: 2
+  arena: 0
   levelDifficulty: 1

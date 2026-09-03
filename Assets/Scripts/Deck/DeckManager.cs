@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum EnemyDeckType
 {
@@ -75,40 +77,40 @@ public class DeckManager : MonoBehaviour
         switch (DeckType)
         {
             case EnemyDeckType.DEFAULT:
-                GenerateMonoTypeDeck(DeckSize, marbles, 0);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Basic");
                 break;
             case EnemyDeckType.RANDOM:
                 GenerateRandomEnemyDeck(DeckSize, marbles);
                 break;
             case EnemyDeckType.EXPLODER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 4);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Bomble");
                 break;
             case EnemyDeckType.BLACKHOLER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 2);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Black Hole");
                 break;
             case EnemyDeckType.GROWER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 8);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Grower");
                 break;
             case EnemyDeckType.BABYER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 1);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Baby");
                 break;
             case EnemyDeckType.CHONKER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 3);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Chonker");
                 break;
             case EnemyDeckType.SHRINKER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 9);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Shrinker");
                 break;
             case EnemyDeckType.SQUARBLEER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 6);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Squarble");
                 break;
             case EnemyDeckType.VAMPIREER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 7);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Vampire");
                 break;
             case EnemyDeckType.SPLITTERER:
-                GenerateMonoTypeDeck(DeckSize, marbles, 5);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Splitter");
                 break;
             default:
-                GenerateMonoTypeDeck(DeckSize, marbles, 0);
+                GenerateMonoTypeDeck(DeckSize, marbles, "Basic");
                 break;
         }
         return marbles;
@@ -121,17 +123,20 @@ public class DeckManager : MonoBehaviour
             marbles.Add(MarbleSpace.MarblePrefabs[Random.Range(0, Count)]);
         }
     }
-    private void GenerateMonoTypeDeck(int DeckSize, List<MarbleData> marbles, int TypeIndex)
+    private void GenerateMonoTypeDeck(int DeckSize, List<MarbleData> marbles, string marbleName)
     {
         int halfDeckSize = DeckSize / 2;
         int quarterDeckSize = DeckSize / 4;
         // we want at most half the deck to be whatever with a quarter of the deck as the minimum
         int numSpecials = Random.Range(quarterDeckSize, halfDeckSize);
 
+        var marbleData = MarbleSpace.MarblePrefabs.Find((MarbleData data) => data.MarbleName == marbleName);
+
         for (int i = 0; i < DeckSize; ++i)
         {
             // this prob shouldn't be hard coded and should be set as an enum but like :shrug: who's gonna change the prefab order amirite
-            marbles.Add(MarbleSpace.MarblePrefabs[TypeIndex]);
+            // I changed it now - samhi
+            marbles.Add(marbleData);
         }
 
         int remainder = DeckSize - numSpecials;
