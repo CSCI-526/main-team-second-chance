@@ -21,12 +21,12 @@ public class StealAbility : Ability
 
     public override void CollisionCast(Marble marble, Marble other)
     {
-        if (marble.OneTimeCasted)
+        if (marble.timesCasted >= abilityMaxTriggers)
         {
             return;
         }
 
-        marble.OneTimeCasted = true;
+        marble.timesCasted++;
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
 
         if (other.Team != marble.Team)

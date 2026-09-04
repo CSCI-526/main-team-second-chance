@@ -79,6 +79,10 @@ public class MarbleLauncher : MonoBehaviour
         {
             MarbleIns.CastAbility();
         }
+        else
+        {
+            MarbleIns.timesCasted = MarbleIns.GetMarbleData().AbilityObject.abilityMaxTriggers;
+        }
 
         if (Team == MarbleTeam.Player)
         {

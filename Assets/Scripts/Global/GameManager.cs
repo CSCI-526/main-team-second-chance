@@ -85,6 +85,11 @@ public class GameManager : MonoBehaviour
     {
         return enemyScore;
     }
+    
+    public int NumPlayerTurns
+    {
+        get { return numPlayerTurns; }
+    }
 
     public TurnState GetTurnState()
     {
@@ -121,7 +126,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void IncremetTurnState()
+    private void IncrementTurnState()
     {
         if (turnState == TurnState.WaitingOnEnemyTurn)
         {
@@ -156,7 +161,7 @@ public class GameManager : MonoBehaviour
         // We go to card select since we assume that we have not yet finished all matches yet
         if (turnState == TurnState.EnemyTurn)
         {
-            if (PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize() ||
+            if (HasGameEnded() ||
                 bInSuddenDeath)
             {
                 if (enemyScore == playerScore)
@@ -165,10 +170,11 @@ public class GameManager : MonoBehaviour
                     {
                         bInSuddenDeath = true;
                         PlayerManager.InitializePlayerDeck();
-                        TurnStateEvents.DoSuddenDeath();
-                        StartCoroutine(SuddenDeathRoutine());
-                        AudioManager.TriggerSound(SuddenDeath, transform.position);
+                        SuddenDeathRoutine().OnComplete(() => {
+                            CleanupMarbles();
+                            TurnStateEvents.OnTurnProgressed(TurnState.EnemyTurn); });
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
+                        // now we notify from the completion delegate of shrinking the scoring zones
                         return;
                     }
                     // protect from double deck out
@@ -181,13 +187,6 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     // Match IS OVER HERE
-                    bool oldSuddenDeath = bInSuddenDeath;
-                    bInSuddenDeath = false;
-                    if (oldSuddenDeath)
-                    {
-                        StartCoroutine(SuddenDeathRoutine());
-                    }
-
                     OverrideTurnState(TurnState.MatchEnd);
                     return;
                 }
@@ -198,32 +197,28 @@ public class GameManager : MonoBehaviour
         TurnStateEvents.OnTurnProgressed(turnState);
     }
 
-    IEnumerator SuddenDeathRoutine()
+    private bool HasGameEnded()
     {
-        float timer = 0.0f;
-        float length = 3.0f;
-        while (timer < length)
+        return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
+    }
+
+    Sequence SuddenDeathRoutine()
+    {
+        TurnStateEvents.DoSuddenDeath();
+        AudioManager.TriggerSound(SuddenDeath, transform.position);
+
+        float t = 1.0f;
+        Sequence shrinkSequence = DOTween.Sequence();
+        shrinkSequence.Append(
+        DOTween.To(() => t, x =>
         {
-            float t = timer / length;
-            if (bInSuddenDeath) t = 1 - t;
+            t = x;
             scoringZoneManager.SetScoringCircleScales(t);
-            
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        
-        if (bInSuddenDeath)
-        {
-            CleanupMarbles();
-            TurnStateEvents.OnTurnProgressed(TurnState.EnemyTurn);
-        }
-        else
-        {
-            scoringZoneManager.SetScoringCircleScales(1.0f);
-        }
+        }, 0.0f, 2.0f * Time.timeScale));
+        shrinkSequence.AppendInterval(2.0f * Time.timeScale);
+        return shrinkSequence;
     }
     
-
     public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone)
     {
         if (Team == MarbleTeam.Player)
@@ -275,7 +270,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WaitForMarblesToSettle()
     {
-        IncremetTurnState();
+        IncrementTurnState();
         bAreMarblesMoving = true;
         yield return new WaitForSeconds(1.0f);
 
@@ -325,11 +320,13 @@ public class GameManager : MonoBehaviour
 
         foreach (var marble in MarblesList)
         {
-            yield return new WaitForSeconds(marble.CastSettleAbility());
+            Sequence settleSequence = marble.CastSettleAbility();
+            if(settleSequence != null)
+                yield return settleSequence.WaitForCompletion();
         }
 
         bAreMarblesMoving = false;
-        IncremetTurnState();
+        IncrementTurnState();
     }
 
     [SerializeField]
@@ -361,10 +358,6 @@ public class GameManager : MonoBehaviour
     public Color playerColor;
     [SerializeField]
     public Color enemyColor;
-    public int NumPlayerTurns
-    {
-        get { return numPlayerTurns; }
-    }
     private void Awake()
     {
         if (Instance != null && Instance != this)

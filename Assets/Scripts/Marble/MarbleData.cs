@@ -19,11 +19,7 @@ public class MarbleData : ScriptableObject
     public string MarbleName;
     public string MarbleDescription;
     //...and whatever properties we want to individually adjust
-
-    [Header("Ability Properties")]
-    [Range(0f, 10f)] public float abilityTriggerDelay = 1.5f;
-    public Ability AbilityObject;
-
     public AudioInfo CollisionSounds;
-
+    [Header("Ability Properties")]
+    public Ability AbilityObject;
 }

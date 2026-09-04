@@ -17,5 +17,6 @@ public class SplitAbility : Ability
 
         MarbleEvents.MarbleReadyToLaunch(marble.Team, marble.GetMarbleData(), Offset.normalized, Offset.magnitude, Position, true, false);
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        marble.timesCasted++;
     }
 }

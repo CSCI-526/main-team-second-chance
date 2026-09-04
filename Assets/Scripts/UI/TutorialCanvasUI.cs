@@ -57,7 +57,7 @@ public class TutorialCanvasUI : MonoBehaviour
         newPosition.y = newPosY;
 
         TutorialItem.transform.position = newPosition;
-        TutorialItem.fontSharedMaterial.SetFloat(
+        TutorialItem.fontMaterial.SetFloat(
             ShaderUtilities.ID_GlowPower, 
             Mathf.Lerp(GlowPowerStart, GlowPowerEnd, AnimTimer / ANIM_DURATION)
             );

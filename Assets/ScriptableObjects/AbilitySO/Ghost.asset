@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Ghost
   m_EditorClassIdentifier: 
   AbilitySound: {fileID: 0}
+  abilityTriggerDelay: 0

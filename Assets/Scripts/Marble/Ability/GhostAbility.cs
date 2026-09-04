@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewGhostAbility", menuName = "ScriptableObjects/Abilities/Ghost")]
 
 public class GhostAbility : Ability
 {
+    [SerializeField] private float rematerializeTime = 1.0f;
     private Material[] materialCopies;
     
     public override void Cast(Marble marble)
@@ -17,11 +19,17 @@ public class GhostAbility : Ability
         MarbleRenderer.materials = outlineOnly;
     }
     
-    public override float SettledCast(Marble marble)
+    public override Sequence SettledCast(Marble marble)
     {
+        if (marble.timesCasted >= abilityMaxTriggers)
+            return null;
+        
         marble.GetPhysicsCollider().excludeLayers = 0;
         MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();
         MarbleRenderer.materials = materialCopies;
-        return 1.0f;
+        Sequence rematerializeSequence = DOTween.Sequence();
+        rematerializeSequence.AppendInterval(rematerializeTime * Time.timeScale);
+        marble.timesCasted++;
+        return rematerializeSequence;
     }
 }

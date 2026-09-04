@@ -36,5 +36,6 @@ public class BlackHoleAbility : Ability
 
         marble.GetComponentInChildren<ParticleSystem>().Play();
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        marble.timesCasted++;
     }
 }

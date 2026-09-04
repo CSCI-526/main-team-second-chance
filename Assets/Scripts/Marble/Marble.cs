@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public enum MarbleTeam
@@ -13,8 +14,6 @@ public class Marble : MonoBehaviour
 {
     [SerializeField]
     private MarbleData marbleData;
-
-    private float maxSize = 2.0f;
 
     public ParticleSystem particleSystem;
     [SerializeField] private Collider scoringCollider;
@@ -33,7 +32,7 @@ public class Marble : MonoBehaviour
     public MarbleTeam Team;
     //public bool cool = false;
 
-    public bool OneTimeCasted = false;
+    public int timesCasted = 0;
 
     private Rigidbody rb;
     private void Awake()
@@ -80,52 +79,19 @@ public class Marble : MonoBehaviour
     // Function call to start ability cast, can be hooked up to event/action later
     public void CastAbility()
     {
-        if (marbleData.AbilityObject != null) StartCoroutine(AbilityCoroutine());
-    }
-
-    // Marble Abilities, called via polymorphic scriptable object abilities
-    private IEnumerator AbilityCoroutine()
-    {
-        // Delay ability cast        
-        yield return new WaitForSeconds(marbleData.abilityTriggerDelay);
-        marbleData.AbilityObject.Cast(this);
-        yield return null;
+        // Marble Abilities, called via polymorphic scriptable object abilities
+        if (marbleData.AbilityObject != null) 
+            DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () => marbleData.AbilityObject.Cast(this),false);
     }
 
     // returns time to wait before next round
-    public float CastSettleAbility()
+    public Sequence CastSettleAbility()
     {
         if (marbleData.AbilityObject != null)
         {
             return marbleData.AbilityObject.SettledCast(this);
         }
-        return 0.0f;
-    }
-
-    public void Grow(float time, float scale)
-    {
-        StartCoroutine(GrowRoutine(time, scale));
-    }
-
-    IEnumerator GrowRoutine(float time, float scale)
-    {
-        var currentScale = this.gameObject.transform.localScale;
-        if (this.gameObject.transform.localScale.x > maxSize)
-            yield break;
-        var finalScale = currentScale * scale;
-        Vector3.ClampMagnitude(finalScale, maxSize);
-        float startMass = rb.mass;
-        float finalMass = startMass * Mathf.Pow(scale, 2.0f);
-        float timer = 0.0f;
-        while (timer < time)
-        {
-            var newScale = Vector3.Lerp(currentScale, finalScale, timer / time);
-            this.gameObject.transform.localScale = newScale;
-
-            rb.mass = Mathf.Lerp(startMass, finalMass, timer / time);
-            yield return null;
-            timer += Time.deltaTime;
-        }
+        return null;
     }
 
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
