@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            UpdateMarbleInspect();
         }
         // Mouse Indicator
         if (MouseRectTrsfm == null)
@@ -195,6 +196,23 @@ public class PlayerController : MonoBehaviour
         else
         {
             Cursor.SetCursor(allowedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
+        }
+    }
+
+    private void UpdateMarbleInspect()
+    {
+        Vector3 mousePos = ConvertMouseIntoWorldSpace();
+        if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck && !IsNotInButtonsZone(mousePos))
+        {
+            return;
+        }
+        if(Physics.Raycast(mousePos,Vector3.down, out RaycastHit hitInfo,10.0f,LayerMask.GetMask("MarblePhysics")))
+        {
+            if (hitInfo.collider.CompareTag("Marble"))
+            {
+                Marble marble = hitInfo.collider.GetComponent<Marble>();
+                Debug.Log(marble.GetMarbleName());
+            }
         }
     }
 

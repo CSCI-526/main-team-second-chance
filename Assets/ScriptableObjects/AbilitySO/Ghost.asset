@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AbilitySound: {fileID: 0}
   abilityTriggerDelay: 0
+  abilityMaxTriggers: 1
+  rematerializeTime: 1.5

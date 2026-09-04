@@ -141,9 +141,9 @@ public class TutorialCanvasUI : MonoBehaviour
             TutorialItem.alpha = 1.0f;
             PosYStart = TutorialItem.transform.position.y;
             PosYEnd = PosYStart + POS_Y_OFFSET;
-            TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);
-            TutorialItem.fontSharedMaterial.SetFloat(ShaderUtilities.ID_GlowOffset, 1f);
-            TutorialItem.fontSharedMaterial.SetColor(ShaderUtilities.ID_GlowColor, TutorialItem.color);
+            TutorialItem.fontMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);
+            TutorialItem.fontMaterial.SetFloat(ShaderUtilities.ID_GlowOffset, 1f);
+            TutorialItem.fontMaterial.SetColor(ShaderUtilities.ID_GlowColor, TutorialItem.color);
             AnimTimer = 0.0f;
         }
     }
