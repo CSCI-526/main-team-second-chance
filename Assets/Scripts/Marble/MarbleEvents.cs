@@ -27,4 +27,11 @@ public static class MarbleEvents
     {
         OnScoreChange?.Invoke(Team);
     }
+
+    public static event Action<Marble> OnMarbleHover;
+
+    public static void OnMarbleHovered(Marble marble)
+    {
+        OnMarbleHover?.Invoke(marble);
+    }
 }

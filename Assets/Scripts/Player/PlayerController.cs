@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
     private bool bCanShootMarble = false;
+    private Marble _hoveredMarble;
 
     public Texture2D restrictedCursorTexture;
     public Texture2D allowedCursorTexture;
@@ -201,6 +202,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMarbleInspect()
     {
+        Marble marble = null;
         Vector3 mousePos = ConvertMouseIntoWorldSpace();
         if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck && !IsNotInButtonsZone(mousePos))
         {
@@ -210,9 +212,14 @@ public class PlayerController : MonoBehaviour
         {
             if (hitInfo.collider.CompareTag("Marble"))
             {
-                Marble marble = hitInfo.collider.GetComponent<Marble>();
-                Debug.Log(marble.GetMarbleName());
+                marble = hitInfo.collider.GetComponent<Marble>();
             }
+        }
+
+        if (marble != _hoveredMarble)
+        {
+            MarbleEvents.OnMarbleHovered(marble);
+            _hoveredMarble = marble;
         }
     }
 
