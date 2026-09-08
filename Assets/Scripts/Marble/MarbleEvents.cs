@@ -34,4 +34,11 @@ public static class MarbleEvents
     {
         OnMarbleHover?.Invoke(marble);
     }
+
+    public static event Action<Marble> OnMarbleAbilityCast;
+
+    public static void OnMarbleAbilityCasted(Marble marble)
+    {
+        OnMarbleAbilityCast?.Invoke(marble);
+    }
 }

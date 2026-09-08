@@ -65,6 +65,7 @@ public class Marble : MonoBehaviour
             if (marbleData.AbilityObject != null && otherMarble != null)
             {
                 marbleData.AbilityObject.CollisionCast(this, otherMarble);
+                MarbleEvents.OnMarbleAbilityCasted(this);
             }
             AudioManager.TriggerSound(marbleData.CollisionSounds,transform.position);
         }
@@ -81,7 +82,11 @@ public class Marble : MonoBehaviour
     {
         // Marble Abilities, called via polymorphic scriptable object abilities
         if (marbleData.AbilityObject != null) 
-            DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () => marbleData.AbilityObject.Cast(this),false);
+            DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () =>
+            {
+                marbleData.AbilityObject.Cast(this);
+                MarbleEvents.OnMarbleAbilityCasted(this);
+            },false);
     }
 
     // returns time to wait before next round

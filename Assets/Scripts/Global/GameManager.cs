@@ -321,8 +321,11 @@ public class GameManager : MonoBehaviour
         foreach (var marble in MarblesList)
         {
             Sequence settleSequence = marble.CastSettleAbility();
-            if(settleSequence != null)
+            if (settleSequence != null)
+            {
+                MarbleEvents.OnMarbleAbilityCasted(marble);
                 yield return settleSequence.WaitForCompletion();
+            }
         }
 
         bAreMarblesMoving = false;
