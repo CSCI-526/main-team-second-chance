@@ -1503,6 +1503,12 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
         type: 3}
+      propertyPath: playerMaterial
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 0b32d84cc22bf4fafb74f900b46c7947,
+        type: 3}
+    - target: {fileID: 8822374831514745676, guid: 0f136cfa55ebe234c8abedfb24e9c8b1,
+        type: 3}
       propertyPath: LaunchForceScale
       value: 1.35
       objectReference: {fileID: 0}
