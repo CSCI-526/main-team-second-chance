@@ -69,7 +69,7 @@ public class ScoringZoneManager : MonoBehaviour
 
         if (marble.bIsInsideScoringCircle != prevScoringCircleState)
         {
-            GameManager.Instance.UpdateEntityScore(marble.Team, marble.bIsInsideScoringCircle);
+            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetMarbleData().Points, marble.bIsInsideScoringCircle);
         }
     }
 

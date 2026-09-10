@@ -224,15 +224,15 @@ public class GameManager : MonoBehaviour
         return shrinkSequence;
     }
     
-    public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone)
+    public void UpdateEntityScore(MarbleTeam Team, int points, bool bIsInScoreZone)
     {
         if (Team == MarbleTeam.Player)
         {
-            playerScore += bIsInScoreZone ? 1 : -1;
+            playerScore += bIsInScoreZone ? points : -points;
         }
         else
         {
-            enemyScore += bIsInScoreZone ? 1 : -1;
+            enemyScore += bIsInScoreZone ? points : -points;
         }
 
         if (bIsInScoreZone)

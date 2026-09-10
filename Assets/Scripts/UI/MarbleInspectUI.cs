@@ -37,7 +37,7 @@ public class MarbleInspectUI : MonoBehaviour
         else
         {
             hoverView.UpdateInformation(obj);
-            hoverView.transform.position = Camera.main.WorldToScreenPoint(obj.transform.position);
+            hoverView.transform.position = Camera.main.WorldToScreenPoint(obj.transform.position + new Vector3(0.25f,0.0f,-0.25f));
             hoverView.gameObject.SetActive(true);
         }
     }

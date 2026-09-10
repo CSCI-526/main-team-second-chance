@@ -474,6 +474,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278355076}
   m_CullTransparentMesh: 1
+--- !u!114 &474868526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1072808316625358087, guid: 7a5b73105bd4a6f4e94933e8a29ccfba,
+    type: 3}
+  m_PrefabInstance: {fileID: 2100266605}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &493952255 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1607699092490750952, guid: bf3a2cc5adbcf4dc2ac5db574edf17f6,
@@ -2504,6 +2516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleText: {fileID: 2100266608}
   descriptionText: {fileID: 2100266607}
+  pointsText: {fileID: 474868526}
   cardPanel: {fileID: 2100266610}
 --- !u!1001 &1759644512531380690
 PrefabInstance:

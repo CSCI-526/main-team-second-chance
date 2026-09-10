@@ -11,6 +11,8 @@ public class MarbleInpsectCardUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI descriptionText;
     [SerializeField]
+    private TextMeshProUGUI pointsText;
+    [SerializeField]
     private Image cardPanel;
     
     public void UpdateInformation(Marble marble)
@@ -25,5 +27,7 @@ public class MarbleInpsectCardUI : MonoBehaviour
             description += $"\n\n(Uses left {maxTriggers - marble.timesCasted}/{maxTriggers})";
         }
         descriptionText.SetText(description);
+        string points = marbleData.Points + " PT" + (marbleData.Points > 1 ? "S" : "");
+        pointsText.SetText(points);
     }
 }

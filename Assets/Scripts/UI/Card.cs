@@ -91,6 +91,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         titleText.SetText(MarbleObject.MarbleName);
         //cardPanel.sprite = MarbleObject.sprite;
         descriptionText.SetText(MarbleObject.MarbleDescription);
+        string points = MarbleObject.Points + " PT" + (MarbleObject.Points > 1 ? "S" : "");
+        pointsText.SetText(points);
 
         if (addNewMarble)
         {
@@ -105,12 +107,14 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             cardPanel.color = Color.white;
             titleText.color = Color.black;
             descriptionText.color = Color.black;
+            pointsText.color = Color.black;
         }
         else
         {
             cardPanel.color = defaultCardColor;
             titleText.color = defaultTitleTextColor;
             descriptionText.color = defaultDescriptionTextColor;
+            pointsText.color = defaultTitleTextColor;
         }
     }
 
@@ -204,6 +208,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private TextMeshProUGUI titleText;
     [SerializeField]
     private TextMeshProUGUI descriptionText;
+    [SerializeField]
+    private TextMeshProUGUI pointsText;
     [SerializeField]
     private Image cardPanel;
     [SerializeField]

@@ -12,7 +12,9 @@ public class MarbleData : ScriptableObject
     public GameObject MarblePrefab; //Redundent under current implementation, might delete
     public Sprite sprite; // For later reference when we add UI/bag
 
-    [Header("Marble Properties")]
+    [Header("Marble Properties")] 
+    [Min(0)] public int EnergyCost = 1;
+    [Min(0)] public int Points = 1;
     [Min(0.1f)] public float Mass = 1f;
     [Min(0.1f)] public float UniformScale = 1f;
     [Min(0.1f)] public float Drag = 0.7f;
