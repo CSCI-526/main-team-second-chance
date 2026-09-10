@@ -309,7 +309,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 9433be0fed2d64d4eadd36892b2500f5, type: 2}
+      objectReference: {fileID: 2100000, guid: 5ff087a3c88fb4751b0c44d686654714, type: 2}
     - target: {fileID: 3970714632125590437, guid: 8bbc196ee2bdc3240be1770d11a9b100,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -318,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.719
+      value: 0.637
       objectReference: {fileID: 0}
     - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
         type: 3}
@@ -369,6 +369,74 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Marble (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8bbc196ee2bdc3240be1770d11a9b100, type: 3}
+--- !u!1001 &661998146
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.181
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369151989592507816, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_Name
+      value: Marble (3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -505,7 +573,7 @@ GameObject:
   - component: {fileID: 1745257760}
   - component: {fileID: 1745257759}
   - component: {fileID: 1745257758}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -779,6 +847,7 @@ SceneRoots:
   - {fileID: 451871556}
   - {fileID: 1457115656}
   - {fileID: 1812667281}
+  - {fileID: 661998146}
   - {fileID: 199364490}
   - {fileID: 486569655}
   - {fileID: 1745257761}

@@ -7,18 +7,6 @@ using UnityEngine;
 
 public class StealAbility : Ability
 {
-    [SerializeField] private Material playerMaterial;
-    [SerializeField] private Material playerOutlineMaterial;
-    [SerializeField] private Material enemyMaterial;
-    [SerializeField] private Material enemyOutlineMaterial;
-
-    private Material[] materialCopies;
-
-    private void Awake()
-    {
-        materialCopies = new Material[2];
-    }
-
     public override void CollisionCast(Marble marble, Marble other)
     {
         if (marble.timesCasted >= abilityMaxTriggers)
@@ -36,22 +24,7 @@ public class StealAbility : Ability
                 GameManager.Instance.UpdateEntityScore(other.Team, false);
                 GameManager.Instance.UpdateEntityScore(marble.Team, true);
             }
-            other.Team = marble.Team;
+            other.SetMarbleTeam(marble.Team);
         }
-
-
-
-        MeshRenderer MarbleRenderer = other.GetComponent<MeshRenderer>();
-        if (!MarbleRenderer)
-        {
-            Debug.LogError("MarbleLauncher.LaunchMarble(): Prefab does not contain a mesh renderer is not attached to marble prefab");
-            return;
-        }
-        //MarbleRenderer.material = marble.Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
-        materialCopies[0] = marble.Team == MarbleTeam.Player ? playerMaterial : enemyMaterial;
-        materialCopies[1] = marble.Team == MarbleTeam.Player ? playerOutlineMaterial : enemyOutlineMaterial;
-
-        MarbleRenderer.materials = materialCopies;
-
     }
 }

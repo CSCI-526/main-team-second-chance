@@ -8,15 +8,17 @@ using UnityEngine;
 public class GhostAbility : Ability
 {
     [SerializeField] private float rematerializeTime = 1.0f;
-    private Material[] materialCopies;
-    
+    [SerializeField] private float ghostColor = 0.2f;
+    private static readonly int MarbleColor = Shader.PropertyToID("_MarbleColor");
+    private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
+
     public override void Cast(Marble marble)
     {
         marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics");
         MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();
-        materialCopies = MarbleRenderer.materials;
-        Material[] outlineOnly = { materialCopies[1] };
-        MarbleRenderer.materials = outlineOnly;
+        MarbleRenderer.materials[0].SetColor(MarbleColor,GameManager.Instance.GetColorInfo().playerMarbleColor * ghostColor);
+        MarbleRenderer.materials[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        MarbleRenderer.materials[1].SetColor(OutlineColor,GameManager.Instance.GetColorInfo().playerOutlineColor * ghostColor);
     }
     
     public override Sequence SettledCast(Marble marble)
@@ -25,8 +27,7 @@ public class GhostAbility : Ability
             return null;
         
         marble.GetPhysicsCollider().excludeLayers = 0;
-        MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();
-        MarbleRenderer.materials = materialCopies;
+        marble.SetMarbleTeam(marble.Team);
         Sequence rematerializeSequence = DOTween.Sequence();
         rematerializeSequence.AppendInterval(rematerializeTime * Time.timeScale);
         marble.timesCasted++;

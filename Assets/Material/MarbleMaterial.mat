@@ -127,7 +127,7 @@ Material:
     - _GlossyReflections: 0
     - _MaxOpacity: 1
     - _Metallic: 0
-    - _MinOpacity: 0.1
+    - _MinOpacity: 0.9
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -145,5 +145,6 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0, g: 0.8627451, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MarbleColor: {r: 0, g: 0.8627451, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

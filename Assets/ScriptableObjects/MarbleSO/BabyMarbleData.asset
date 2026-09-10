@@ -14,13 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MarblePrefab: {fileID: 2147782361639434371, guid: 24267b2042fb89448b41c2d2d76a309e,
     type: 3}
-  marbleType: 6
-  Sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 119f93d0bcbf1e743bf5fcf237507d39, type: 3}
   Mass: 0.5
   UniformScale: 0.25
   Drag: 0.7
   MarbleName: Baby
   MarbleDescription: Smaller than other marbles
-  abilityTriggerDelay: 0.5
-  AbilityObject: {fileID: 0}
   CollisionSounds: {fileID: 11400000, guid: 24997c15e3d284fd684063d7b6ae65ba, type: 2}
+  AbilityObject: {fileID: 0}

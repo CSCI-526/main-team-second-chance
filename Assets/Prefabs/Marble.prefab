@@ -5094,6 +5094,7 @@ MonoBehaviour:
   particleSystem: {fileID: 0}
   scoringCollider: {fileID: 2685082599019317028}
   physicsCollider: {fileID: 3917628534315736544}
+  marbleImage: {fileID: 340172502792701831}
   bIsInsideGameplayCircle: 1
   bIsInsideScoringCircle: 0
   Team: 0

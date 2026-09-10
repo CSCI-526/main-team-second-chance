@@ -631,6 +631,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
         type: 3}
+      propertyPath: colorInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: d6a0ad75fa8be4f64b487c459cc75a55,
+        type: 2}
+    - target: {fileID: 462252581072221425, guid: 57ace5307228fe441a49b0bd651cc848,
+        type: 3}
       propertyPath: turnState
       value: 0
       objectReference: {fileID: 0}

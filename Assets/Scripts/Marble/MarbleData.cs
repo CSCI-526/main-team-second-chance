@@ -10,7 +10,7 @@ public class MarbleData : ScriptableObject
     // Prefab & Type
     [Header("Marble Identification")]
     public GameObject MarblePrefab; //Redundent under current implementation, might delete
-    public Image Sprite; // For later reference when we add UI/bag
+    public Sprite sprite; // For later reference when we add UI/bag
 
     [Header("Marble Properties")]
     [Min(0.1f)] public float Mass = 1f;

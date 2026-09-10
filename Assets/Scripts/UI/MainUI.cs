@@ -52,13 +52,13 @@ public class MainUI : MonoBehaviour
     {
         if (matchResult == TurnStateEvents.MatchResult.PlayerWin)
         {
-            MatchVictoryText.color = GameManager.Instance.playerColor;
+            MatchVictoryText.color = GameManager.Instance.GetColorInfo().playerUIColor;
             MatchVictoryText.text = "VICTORY!";
             AudioManager.TriggerSound(winRoundSound,Vector3.zero);
         }
         else
         {
-            MatchVictoryText.color = GameManager.Instance.enemyColor;
+            MatchVictoryText.color = GameManager.Instance.GetColorInfo().enemyUIColor;
             MatchVictoryText.text = "DEFEAT!";
             AudioManager.TriggerSound(loseRoundSound,Vector3.zero);
         }

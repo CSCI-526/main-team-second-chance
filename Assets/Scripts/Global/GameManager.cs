@@ -106,6 +106,11 @@ public class GameManager : MonoBehaviour
         return PlayerManager.GetPlayerDeck().GetSelectedMarbleIndex() >= 0;
     }
 
+    public ColorInfo GetColorInfo()
+    {
+        return colorInfo;
+    }
+
     private void OverrideTurnState(TurnState newTurnState)
     {
         turnState = newTurnState;
@@ -345,6 +350,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject MainUIButtons;
 
+    [SerializeField] private ColorInfo colorInfo;
+
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
@@ -356,11 +363,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
-    
-    [SerializeField]
-    public Color playerColor;
-    [SerializeField]
-    public Color enemyColor;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

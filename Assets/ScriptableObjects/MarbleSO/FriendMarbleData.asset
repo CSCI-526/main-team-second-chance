@@ -14,13 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MarblePrefab: {fileID: 8896970215918674003, guid: 23525d785c1ec664b84cd7a74bfce11d,
     type: 3}
-  marbleType: 9
-  Sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 119f93d0bcbf1e743bf5fcf237507d39, type: 3}
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Friend Marble
   MarbleDescription: Befriends the nearest enemy marble and adds them to your team.
-  abilityTriggerDelay: 1.5
-  AbilityObject: {fileID: 11400000, guid: 22919a6f9db847846af6a782c287e2f4, type: 2}
   CollisionSounds: {fileID: 11400000, guid: 94a8d4ca3bc09574abf00a329ad195ce, type: 2}
+  AbilityObject: {fileID: 11400000, guid: 22919a6f9db847846af6a782c287e2f4, type: 2}
