@@ -89,7 +89,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     public void UpdateInformation(MarbleData MarbleObject, bool addNewMarble = true)
     {
         titleText.SetText(MarbleObject.MarbleName);
-        cardPanel.sprite = MarbleObject.sprite;
+        //cardPanel.sprite = MarbleObject.sprite;
         descriptionText.SetText(MarbleObject.MarbleDescription);
 
         if (addNewMarble)

@@ -17,7 +17,7 @@ public class MarbleInpsectCardUI : MonoBehaviour
     {
         MarbleData marbleData = marble.GetMarbleData();
         titleText.SetText(marbleData.MarbleName);
-        cardPanel.sprite = marbleData.sprite;
+        //cardPanel.sprite = marbleData.sprite;
         string description = marbleData.MarbleDescription;
         if (marbleData.AbilityObject != null)
         {

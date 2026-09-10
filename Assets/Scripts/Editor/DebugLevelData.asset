@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DebugLevelData
   m_EditorClassIdentifier: 
   playerDeck:
+  - {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d, type: 2}
   - {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659, type: 2}
   - {fileID: 11400000, guid: 6c37e932eaa9b4b64a89513fdcd4921b, type: 2}
   - {fileID: 11400000, guid: ba5ebb98c27d9b94193e3aa2237d5620, type: 2}

@@ -85,7 +85,7 @@ MonoBehaviour:
     m_Bits: 183
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 191
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: Marbles
+    passTag: MarblesStencil
     Event: 250
     filterSettings:
       RenderQueueType: 1
@@ -210,7 +210,7 @@ MonoBehaviour:
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
     overrideMode: 0
-    overrideDepthState: 1
+    overrideDepthState: 0
     depthCompareFunction: 8
     enableWrite: 0
     stencilSettings:
