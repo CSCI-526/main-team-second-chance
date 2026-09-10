@@ -29,8 +29,7 @@ public class Marble : MonoBehaviour
     public Collider GetPhysicsCollider() { return physicsCollider; }
 
     public Rigidbody GetMarbleRigidbody() { return rb; }
-
-    public SpriteRenderer GetSpriteRenderer() { return marbleImage;}
+    
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
     public bool bIsInsideGameplayCircle = true;
@@ -123,5 +122,15 @@ public class Marble : MonoBehaviour
         MarbleRenderer.materials[0].SetColor(MarbleColor, team == MarbleTeam.Player ? colorInfo.playerMarbleColor : colorInfo.enemyMarbleColor);
         MarbleRenderer.materials[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         MarbleRenderer.materials[1].SetColor(OutlineColor, team == MarbleTeam.Player ? colorInfo.playerOutlineColor : colorInfo.enemyOutlineColor);
+    }
+
+    public void SetMarbleSprite(Sprite sprite)
+    {
+        marbleImage.sprite = sprite;
+        if (sprite != null)
+        {
+            float scale = 0.25f * 256.0f / sprite.rect.size.y;
+            marbleImage.transform.localScale = new Vector3(scale, scale, scale);
+        }
     }
 }

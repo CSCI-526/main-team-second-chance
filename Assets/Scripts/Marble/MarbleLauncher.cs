@@ -39,7 +39,7 @@ public class MarbleLauncher : MonoBehaviour
         }
         MarbleIns.SetMarbleTeam(Team);
 
-        MarbleIns.GetSpriteRenderer().sprite = MarbleIns.GetMarbleData().sprite; // uhhh why here
+        MarbleIns.SetMarbleSprite(MarbleIns.GetMarbleData().sprite); // uhhh why here
 
         Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
         // Normalize Direction then apply launch
