@@ -14,14 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MarblePrefab: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
     type: 3}
-  marbleType: 4
-  Sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: ae4400ee11a104d179fb831abd748255, type: 3}
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Black Hole
   MarbleDescription: After a delay, this marble sucks in nearby marbles towards this
     marble's current position.
-  abilityTriggerDelay: 1.5
-  AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}
   CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
+  AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}

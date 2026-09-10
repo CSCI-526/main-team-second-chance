@@ -27,9 +27,18 @@ public static class MarbleEvents
     {
         OnScoreChange?.Invoke(Team);
     }
-    public static event Action<int, int> OnRoundsWonChanged;
-    public static void OnRoundsWonChange(int RoundNum, int RoundsWon)
+
+    public static event Action<Marble> OnMarbleHover;
+
+    public static void OnMarbleHovered(Marble marble)
     {
-        OnRoundsWonChanged?.Invoke(RoundNum, RoundsWon);
+        OnMarbleHover?.Invoke(marble);
+    }
+
+    public static event Action<Marble> OnMarbleAbilityCast;
+
+    public static void OnMarbleAbilityCasted(Marble marble)
+    {
+        OnMarbleAbilityCast?.Invoke(marble);
     }
 }

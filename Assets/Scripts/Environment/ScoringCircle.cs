@@ -20,15 +20,19 @@ public class ScoringCircle : MonoBehaviour
     public int Priority = 0;
     [SerializeField] private float shrinkAmount = 0.5f;
     private float StartRadius = 3.0f;
+    private CapsuleCollider _scoringCollider;
 
-    private void Start()
+    public CapsuleCollider GetScoringCollider() { return _scoringCollider;}
+
+    private void Awake()
     {
-        StartRadius = GetComponent<CapsuleCollider>().radius;
+        _scoringCollider = GetComponent<CapsuleCollider>();
+        StartRadius = _scoringCollider.radius;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Marble marble = other.GetComponent<Marble>();
+        Marble marble = other.GetComponentInParent<Marble>();
         if (marble != null)
         {
             ScoringZoneManager.ZoneStatusChange(marble, this, true);
@@ -37,7 +41,7 @@ public class ScoringCircle : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Marble marble = other.GetComponent<Marble>();
+        Marble marble = other.GetComponentInParent<Marble>();
         if (marble != null)
         {
             ScoringZoneManager.ZoneStatusChange(marble, this, false);
@@ -47,7 +51,7 @@ public class ScoringCircle : MonoBehaviour
     public void SetScoringRadius(float t)
     {
         float newRadius = Mathf.Lerp(StartRadius * shrinkAmount, StartRadius, t);
-        GetComponent<CapsuleCollider>().radius = newRadius;
+        _scoringCollider.radius = newRadius;
         transform.GetChild(0).transform.localScale = new Vector3(newRadius * 2.0f, 1.0f, newRadius * 2.0f);
     }
 }

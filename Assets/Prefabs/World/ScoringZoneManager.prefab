@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6003408811349094491}
   - component: {fileID: 1607699092490750952}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ScoringZoneManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 536658163061430746}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arena2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6822544255210855326}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arena1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5221802314282851070}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arena3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,6 +222,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScoringCircle
       objectReference: {fileID: 0}
+    - target: {fileID: 7847470990076687840, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437532259428276500, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -316,6 +326,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScoringCircle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7847470990076687840, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437532259428276500, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -409,6 +429,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScoringCircle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847470990076687840, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437532259428276500, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -519,6 +549,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScoringCircle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7847470990076687840, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437532259428276500, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -597,6 +637,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScoringCircle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847470990076687840, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437532259428276500, guid: 789933f9e8181354fac7538e8e2d50c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

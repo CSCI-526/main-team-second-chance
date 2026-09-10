@@ -9,7 +9,7 @@ public class SplitAbility : Ability
         Debug.Log("Ability Casted: Split");
         if (marble == null) return;
 
-        Rigidbody rb = marble.GetComponent<Rigidbody>();
+        Rigidbody rb = marble.GetMarbleRigidbody();
         Quaternion rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         Vector3 Offset = rotation * rb.velocity;
         Vector3 Position = marble.transform.position + 0.1f * Offset.normalized;
@@ -17,5 +17,6 @@ public class SplitAbility : Ability
 
         MarbleEvents.MarbleReadyToLaunch(marble.Team, marble.GetMarbleData(), Offset.normalized, Offset.magnitude, Position, true, false);
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        marble.timesCasted++;
     }
 }

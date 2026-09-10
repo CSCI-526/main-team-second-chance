@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 EndLocationMouse = Vector3.zero;
     private LineRenderer LineRenderer;
     private bool bCanShootMarble = false;
+    private Marble _hoveredMarble;
 
     public Texture2D restrictedCursorTexture;
     public Texture2D allowedCursorTexture;
@@ -66,6 +67,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            UpdateMarbleInspect();
         }
         // Mouse Indicator
         if (MouseRectTrsfm == null)
@@ -198,6 +200,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void UpdateMarbleInspect()
+    {
+        Marble marble = null;
+        Vector3 mousePos = ConvertMouseIntoWorldSpace();
+        if (GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck && !IsNotInButtonsZone(mousePos))
+        {
+            return;
+        }
+        if(Physics.Raycast(mousePos,Vector3.down, out RaycastHit hitInfo,10.0f,LayerMask.GetMask("MarblePhysics")))
+        {
+            if (hitInfo.collider.CompareTag("Marble"))
+            {
+                marble = hitInfo.collider.GetComponent<Marble>();
+            }
+        }
+
+        if (marble != _hoveredMarble)
+        {
+            MarbleEvents.OnMarbleHovered(marble);
+            _hoveredMarble = marble;
+        }
+    }
+
     Vector3 ConvertMouseIntoWorldSpace()
     {
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -229,28 +254,28 @@ public class PlayerController : MonoBehaviour
         bool bRestrictedZoneTest = IsNotInRestrictedZones(testWorldPoint);
         if (!bRestrictedZoneTest)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): You are in a restricted zone. You should try shooting outside of the restricted zone");
         }
         bool bValidDeckSize = GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetDeckSize() > 0 || GameManager.Instance.GetPlayerManager().GetPlayerDeck().GetHandSize() > 0;
         if (!bValidDeckSize)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Your deck is empty. You cannot shoot anymore");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): Your deck is empty. You cannot shoot anymore");
         }
         bool bHasSelectedAMarble = GameManager.Instance.PlayerHasSelectedMarble();
         if (!bHasSelectedAMarble)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): You have not yet selected a marble. Please pick one to shoot");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): You have not yet selected a marble. Please pick one to shoot");
         }
         bool bMarblesMoving = GameManager.Instance.GetAreMarblesMoving();
         if (bMarblesMoving)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): Marbles are still moving. Wait until marbles have stopped until you shoot again");
         }
 
         bool bIsCorrectState = GameManager.Instance.GetTurnState() == TurnState.PlayerTurn;
         if (!bIsCorrectState)
         {
-            Debug.LogError("PlayerController.CanShootMarble(Vector3 testWorldPoint): It is not the player's turn. Please wait");
+            Debug.Log("PlayerController.CanShootMarble(Vector3 testWorldPoint): It is not the player's turn. Please wait");
         }
         return bRestrictedZoneTest && bValidDeckSize && bHasSelectedAMarble && !bMarblesMoving && bIsCorrectState;
     }

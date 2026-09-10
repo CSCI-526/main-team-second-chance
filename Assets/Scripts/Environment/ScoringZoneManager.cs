@@ -79,11 +79,11 @@ public class ScoringZoneManager : MonoBehaviour
         HashSet<ScoringCircle> scoringCircles = new HashSet<ScoringCircle>();
         
 
-        Collider marbleCollider = marble.GetComponent<Collider>();
+        Collider marbleCollider = marble.GetScoringCollider();
         
         foreach (var scoringCircle in _activeScoringCircles)
         {
-            Collider scoringCollider = scoringCircle.GetComponent<Collider>();
+            Collider scoringCollider = scoringCircle.GetScoringCollider();
 
             var transform1 = scoringCollider.transform;
             var transform2 = marble.transform;
@@ -130,7 +130,7 @@ public class ScoringZoneManager : MonoBehaviour
 
         for(int i = 0; i < _activeScoringCircles.Count; ++i)
         {
-            Collider circleCollider = _activeScoringCircles[i].GetComponent<Collider>();
+            Collider circleCollider = _activeScoringCircles[i].GetScoringCollider();
             if (circleCollider != null)
             {
                 Vector3 closestPoint = circleCollider.ClosestPoint(launchPosition);
@@ -153,6 +153,6 @@ public class ScoringZoneManager : MonoBehaviour
     public Collider GetDefaultScoringZone()
     {
         List<ScoringCircle> circle = _activeScoringCircles.FindAll((zone) => zone.Type == ZoneType.Scoring);
-        return circle[Random.Range(0,circle.Count)].GetComponent<Collider>();
+        return circle[Random.Range(0,circle.Count)].GetScoringCollider();
     }
 }

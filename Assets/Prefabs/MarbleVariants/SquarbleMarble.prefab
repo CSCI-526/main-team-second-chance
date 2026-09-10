@@ -79,6 +79,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 058049e9ae2234612bbf8784dde7844d,
         type: 2}
+    - target: {fileID: 6689578442746541978, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: physicsCollider
+      value: 
+      objectReference: {fileID: 1205258899387127779}
     - target: {fileID: 7987447798604913332, guid: 8bbc196ee2bdc3240be1770d11a9b100,
         type: 3}
       propertyPath: m_Mesh

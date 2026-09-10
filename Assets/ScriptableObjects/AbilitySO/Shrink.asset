@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Shrink
   m_EditorClassIdentifier: 
   AbilitySound: {fileID: 11400000, guid: ec4e73af1a50a48c4bb54b4c2d3fa25c, type: 2}
+  abilityTriggerDelay: 0.75
+  abilityMaxTriggers: 3
   GrowScale: 0.7
-  GrowTime: 1.5
+  GrowTime: 0.75

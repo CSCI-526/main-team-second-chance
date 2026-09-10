@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public enum MarbleTeam
@@ -11,14 +12,24 @@ public enum MarbleTeam
 
 public class Marble : MonoBehaviour
 {
+    private static readonly int MarbleColor = Shader.PropertyToID("_MarbleColor");
+    private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
+    
     [SerializeField]
     private MarbleData marbleData;
 
-    private float maxSize = 2.0f;
-
     public ParticleSystem particleSystem;
-
+    [SerializeField] private Collider scoringCollider;
+    [SerializeField] private Collider physicsCollider;
+    [SerializeField] private SpriteRenderer marbleImage;
     public MarbleData GetMarbleData() { return marbleData; }
+
+    public Collider GetScoringCollider() { return scoringCollider; }
+
+    public Collider GetPhysicsCollider() { return physicsCollider; }
+
+    public Rigidbody GetMarbleRigidbody() { return rb; }
+    
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
     public bool bIsInsideGameplayCircle = true;
@@ -26,7 +37,7 @@ public class Marble : MonoBehaviour
     public MarbleTeam Team;
     //public bool cool = false;
 
-    public bool OneTimeCasted = false;
+    public int timesCasted = 0;
 
     private Rigidbody rb;
     private void Awake()
@@ -34,7 +45,7 @@ public class Marble : MonoBehaviour
         //If not already set in prefab, set Marble properities based on MarbleData
         if (marbleData != null)
         {
-            rb = this.GetComponent<Rigidbody>();
+            rb = GetComponent<Rigidbody>();
             var currentScale = this.gameObject.transform.localScale;
 
             this.gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
@@ -59,6 +70,7 @@ public class Marble : MonoBehaviour
             if (marbleData.AbilityObject != null && otherMarble != null)
             {
                 marbleData.AbilityObject.CollisionCast(this, otherMarble);
+                MarbleEvents.OnMarbleAbilityCasted(this);
             }
             AudioManager.TriggerSound(marbleData.CollisionSounds,transform.position);
         }
@@ -67,61 +79,58 @@ public class Marble : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 1.5f); //Temp debug render explosion radius
     }
 
     #region Abilities
     // Function call to start ability cast, can be hooked up to event/action later
     public void CastAbility()
     {
-        if (marbleData.AbilityObject != null) StartCoroutine(AbilityCoroutine());
-    }
-
-    // Marble Abilities, called via polymorphic scriptable object abilities
-    private IEnumerator AbilityCoroutine()
-    {
-        // Delay ability cast        
-        yield return new WaitForSeconds(marbleData.abilityTriggerDelay);
-        marbleData.AbilityObject.Cast(this);
-        yield return null;
+        // Marble Abilities, called via polymorphic scriptable object abilities
+        if (marbleData.AbilityObject != null) 
+            DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () =>
+            {
+                marbleData.AbilityObject.Cast(this);
+                MarbleEvents.OnMarbleAbilityCasted(this);
+            },false);
     }
 
     // returns time to wait before next round
-    public float CastSettleAbility()
+    public Sequence CastSettleAbility()
     {
         if (marbleData.AbilityObject != null)
         {
             return marbleData.AbilityObject.SettledCast(this);
         }
-        return 0.0f;
-    }
-
-    public void Grow(float time, float scale)
-    {
-        StartCoroutine(GrowRoutine(time, scale));
-    }
-
-    IEnumerator GrowRoutine(float time, float scale)
-    {
-        var currentScale = this.gameObject.transform.localScale;
-        if (this.gameObject.transform.localScale.x > maxSize)
-            yield break;
-        var finalScale = currentScale * scale;
-        Vector3.ClampMagnitude(finalScale, maxSize);
-        float startMass = rb.mass;
-        float finalMass = startMass * Mathf.Pow(scale, 2.0f);
-        float timer = 0.0f;
-        while (timer < time)
-        {
-            var newScale = Vector3.Lerp(currentScale, finalScale, timer / time);
-            this.gameObject.transform.localScale = newScale;
-
-            rb.mass = Mathf.Lerp(startMass, finalMass, timer / time);
-            yield return null;
-            timer += Time.deltaTime;
-        }
+        return null;
     }
 
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
     #endregion
+
+    public void SetMarbleTeam(MarbleTeam team)
+    {
+        Team = team;
+        
+        MeshRenderer MarbleRenderer = GetComponent<MeshRenderer>();
+        if (!MarbleRenderer)
+        {
+            Debug.LogError("MarbleLauncher.LaunchMarble(): Prefab does not contain a mesh renderer is not attached to marble prefab");
+            return;
+        }
+
+        ColorInfo colorInfo = GameManager.Instance.GetColorInfo();
+        MarbleRenderer.materials[0].SetColor(MarbleColor, team == MarbleTeam.Player ? colorInfo.playerMarbleColor : colorInfo.enemyMarbleColor);
+        MarbleRenderer.materials[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        MarbleRenderer.materials[1].SetColor(OutlineColor, team == MarbleTeam.Player ? colorInfo.playerOutlineColor : colorInfo.enemyOutlineColor);
+    }
+
+    public void SetMarbleSprite(Sprite sprite)
+    {
+        marbleImage.sprite = sprite;
+        if (sprite != null)
+        {
+            float scale = 0.25f * 256.0f / sprite.rect.size.y;
+            marbleImage.transform.localScale = new Vector3(scale, scale, scale);
+        }
+    }
 }

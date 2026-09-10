@@ -52,6 +52,11 @@ public class NodeManager : MonoBehaviour
     {
         NodeManagerData.UpdatePlayerDeck(playerDeck);
     }
+
+    public void SetSaveData(NodeManagerSO newSaveData)
+    {
+        NodeManagerData = newSaveData;
+    }
     [SerializeField]
     private NodeManagerSO NodeManagerData;
     [SerializeField]
@@ -145,15 +150,6 @@ public class NodeManager : MonoBehaviour
                 TraversedNodes.Clear();
                 break;
             }
-        }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (Instance != this) 
-        {
-            return;
         }
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 // To create new abilities, make a new script inheriting the Ability class, then generate a new ScriptableObject of said child
@@ -7,6 +8,8 @@ using UnityEngine;
 public class Ability : ScriptableObject
 {
     public AudioInfo AbilitySound;
+    [Range(0f, 10f)] public float abilityTriggerDelay = 0.75f;
+    [SerializeField] public int abilityMaxTriggers = 1;
     
     public virtual void Cast(Marble marble)
     {
@@ -19,9 +22,9 @@ public class Ability : ScriptableObject
     }
 
     // returns a float for if the game should wait for the ability to finish
-    public virtual float SettledCast(Marble marble)
+    public virtual Sequence SettledCast(Marble marble)
     {
         Debug.Log("Settle Ability Casted: DEFAULT");
-        return 0.0f;
+        return null;
     }
 }

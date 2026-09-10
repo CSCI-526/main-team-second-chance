@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 1478161352384403374}
   - component: {fileID: 7151011619980216258}
   - component: {fileID: 5679021786991490665}
-  m_Layer: 2
+  - component: {fileID: 7685327789549073487}
+  m_Layer: 6
   m_Name: ScoringCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,9 +64,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 3
-  m_Height: 3
+  m_Height: 9
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5679021786991490665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,7 +79,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22ef01c1d14e4a88adaf50c4c9b3f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BaseRadius: 3
+  Type: 0
+  Priority: 0
+  shrinkAmount: 0.5
+--- !u!54 &7685327789549073487
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7847470990076687840}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8437532259428276500
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,7 +120,7 @@ GameObject:
   - component: {fileID: 7016736959944798445}
   - component: {fileID: 1109603246807807239}
   - component: {fileID: 5022494518939444772}
-  m_Layer: 2
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

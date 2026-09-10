@@ -18,17 +18,18 @@ public class ExplosionAbility : Ability
     private void Explode(Marble marble, float r, float p)
     {
         Vector3 explosionPos = marble.gameObject.transform.position;
-        Collider[] colliders = Physics.OverlapSphere(explosionPos, r);
+        Collider[] colliders = Physics.OverlapSphere(explosionPos, r, LayerMask.GetMask("MarblePhysics"));
 
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
-            if (rb != null && hit.CompareTag("Marble") && hit != marble.GetComponent<SphereCollider>())
+            if (rb != null && hit.CompareTag("Marble") && hit != marble.GetPhysicsCollider())
                 rb.AddExplosionForce(p, explosionPos, r, 0.0f, ForceMode.Impulse);
         }
 
         marble.GetComponentInChildren<ParticleSystem>().Play();
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        marble.timesCasted++;
     }
 }
