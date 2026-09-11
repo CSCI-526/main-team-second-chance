@@ -27,4 +27,10 @@ public class Ability : ScriptableObject
         Debug.Log("Settle Ability Casted: DEFAULT");
         return null;
     }
+    
+    public virtual Sequence RoundEndCast(Marble marble)
+    {
+        Debug.Log("Round End Ability Casted: DEFAULT");
+        return null;
+    }
 }

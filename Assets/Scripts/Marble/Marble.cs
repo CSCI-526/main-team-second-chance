@@ -103,6 +103,15 @@ public class Marble : MonoBehaviour
         }
         return null;
     }
+    
+    public Sequence CastRoundEndAbility()
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            return marbleData.AbilityObject.RoundEndCast(this);
+        }
+        return null;
+    }
 
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
     #endregion

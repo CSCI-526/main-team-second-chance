@@ -70,6 +70,7 @@ public class EnemyManager : MonoBehaviour
             EnemyController = GetComponent<EnemyController>();
         }
         EnemyController.ShootMarble(MarbleObject);
+        TurnStateEvents.OnEndTurnPressed(TurnState.EnemyTurn);
     }
     // LEGACY
     IEnumerator MarbleRepeater()

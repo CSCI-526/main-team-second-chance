@@ -9,7 +9,7 @@ public class GrowAbility : Ability
 {
     [SerializeField] private float GrowScale = 1.5f;
     [SerializeField] private float GrowTime = 0.75f;
-    public override Sequence SettledCast(Marble marble)
+    public override Sequence RoundEndCast(Marble marble)
     {
         if (marble.timesCasted >= abilityMaxTriggers)
             return null;

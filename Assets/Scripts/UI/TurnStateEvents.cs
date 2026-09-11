@@ -30,4 +30,10 @@ public static class TurnStateEvents
     {
         OnMatchEnd?.Invoke(result);
     }
+    
+    public static event Action<TurnState> OnEndTurnPress;
+    public static void OnEndTurnPressed(TurnState turnOwner)
+    {
+        OnEndTurnPress?.Invoke(turnOwner);
+    }
 }
