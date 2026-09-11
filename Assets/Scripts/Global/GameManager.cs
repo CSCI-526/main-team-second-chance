@@ -309,6 +309,7 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
+        TurnStateEvents.OnMarblesSettled(turnState);
     }
 
     private void SettleAfterRoundEnd()
@@ -336,6 +337,7 @@ public class GameManager : MonoBehaviour
         
         bAreMarblesMoving = false;
         IncrementTurnState();
+        TurnStateEvents.OnMarblesSettled(turnState);
     }
 
     private IEnumerator WaitForMarblesToSettle()

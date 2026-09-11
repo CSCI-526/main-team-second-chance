@@ -36,4 +36,11 @@ public static class TurnStateEvents
     {
         OnEndTurnPress?.Invoke(turnOwner);
     }
+
+    public static event Action<TurnState> OnMarblesSettle;
+
+    public static void OnMarblesSettled(TurnState currentTurn)
+    {
+        OnMarblesSettle?.Invoke(currentTurn);
+    }
 }
