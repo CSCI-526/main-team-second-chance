@@ -453,7 +453,7 @@ public class GameManager : MonoBehaviour
                 {
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
-                    ForceUpdateEvents(TurnState.EnemyTurn);
+                    ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
                 }
             }
         }

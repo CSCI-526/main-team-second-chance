@@ -9,10 +9,13 @@ public class EnemyManager : MonoBehaviour
     public MarbleTeam GetTeam() { return Team; }
     [SerializeField]
     private int DeckSize = 12;
+    [SerializeField] 
+    private int marblesPerRound = 2;
     [SerializeField]
     private MarbleTeam Team = MarbleTeam.Enemy;
     private Deck EnemyDeck;
     private EnemyController EnemyController;
+    private int _marblesPlayed = 0;
 
     void Start()
     {
@@ -25,11 +28,14 @@ public class EnemyManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        TurnStateEvents.OnTurnProgress += EnemyShootMarble;
+        TurnStateEvents.OnTurnProgress += OnTurnStart;
+        TurnStateEvents.OnMarblesSettle += OnMarblesSettle;
     }
+
     private void OnDisable()
     {
-        TurnStateEvents.OnTurnProgress -= EnemyShootMarble;
+        TurnStateEvents.OnTurnProgress -= OnTurnStart;
+        TurnStateEvents.OnMarblesSettle -= OnMarblesSettle;
     }
     public void InitializeEnemyDeck()
     {
@@ -47,13 +53,36 @@ public class EnemyManager : MonoBehaviour
 
         EnemyController.SetAggression(newLevel, newSkill);
     }
-    private void EnemyShootMarble(TurnState turnState)
+    private void OnTurnStart(TurnState turnState)
     {
         if (turnState != TurnState.EnemyTurn)
         {
             return;
         }
 
+        _marblesPlayed = 0;
+    }
+    
+    private void OnMarblesSettle(TurnState turn)
+    {
+        if (turn != TurnState.EnemyTurn)
+        {
+            return;
+        }
+
+        if (_marblesPlayed < marblesPerRound)
+        {
+            _marblesPlayed++;
+            PlayMarble();
+        }
+        else
+        {
+            TurnStateEvents.OnEndTurnPressed(TurnState.EnemyTurn);
+        }
+    }
+
+    private void PlayMarble()
+    {
         if (!EnemyDeck)
         {
             EnemyDeck = GetComponent<Deck>();
@@ -70,8 +99,8 @@ public class EnemyManager : MonoBehaviour
             EnemyController = GetComponent<EnemyController>();
         }
         EnemyController.ShootMarble(MarbleObject);
-        TurnStateEvents.OnEndTurnPressed(TurnState.EnemyTurn);
     }
+    
     // LEGACY
     IEnumerator MarbleRepeater()
     {
