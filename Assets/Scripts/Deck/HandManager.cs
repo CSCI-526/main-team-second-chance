@@ -44,12 +44,14 @@ public class HandManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private void OnEnable()
     {
         TurnStateEvents.OnTurnProgress += OnTurnProgress;
+        TurnStateEvents.OnMarblesSettle += OnTurnProgress;
         DeckEvents.OnMarbleSelectedFromHand += OnMarbleSelectedFromHand;
 
     }
     private void OnDisable()
     {
         TurnStateEvents.OnTurnProgress -= OnTurnProgress;
+        TurnStateEvents.OnMarblesSettle -= OnTurnProgress;
         DeckEvents.OnMarbleSelectedFromHand -= OnMarbleSelectedFromHand;
     }
 

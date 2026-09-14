@@ -1930,8 +1930,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8256674010565401400}
   - {fileID: 134621361979372169}
+  - {fileID: 8256674010565401400}
   - {fileID: 14050338541186410}
   - {fileID: 7637027231050098352}
   - {fileID: 5981382475257639467}
@@ -2024,21 +2024,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerDeckCount: {fileID: 4939662777879288421}
   PlayerScore: {fileID: 5763253195758455561}
-  PlayerRoundsWon: {fileID: 8131539681872668080}
   EnemyScore: {fileID: 6488600513117382350}
   MatchVictoryText: {fileID: 3287477208790089625}
   HandStartingPoint: {fileID: 7637027231050098352}
   CardPrefab: {fileID: 8240971024743366444, guid: 7a5b73105bd4a6f4e94933e8a29ccfba,
     type: 3}
-  BestOfIndicators:
-  - {fileID: 7670809745433640142}
-  - {fileID: 9058677944119791360}
-  - {fileID: 326750477431098242}
-  bestOfIndicatorLayoutGroup: {fileID: 8292226965273662240}
   ScoreBounceHeight: 30
   ScoreBounceDuration: 0.3
-  rivalVanquishedSound: {fileID: 11400000, guid: 4a6b1a3fc1da14cd5a9101d485a95238,
-    type: 2}
   winRoundSound: {fileID: 11400000, guid: b9c49105a1b51458a8e8ac791f74cb6e, type: 2}
   loseRoundSound: {fileID: 11400000, guid: 62d570eaaf4834db2a21f1bfdf6fce1e, type: 2}
 --- !u!1 &7395006179926995648

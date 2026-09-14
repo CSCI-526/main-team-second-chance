@@ -31,8 +31,8 @@ public class MainUI : MonoBehaviour
 
         TurnStateEvents.OnTurnProgress += OnTurnStateProgress;
 
-        DeckEvents.OnDeckGenerated += UpdateDeckCount;
-        DeckEvents.OnMarbleUsed += UpdateDeckCount;
+        DeckEvents.OnDeckInitialize += UpdateDeckCount;
+        DeckEvents.OnMarbleDraw += UpdateDeckCount;
         DeckEvents.OnHandUpdated += UpdateHand;
     }
 
@@ -43,8 +43,8 @@ public class MainUI : MonoBehaviour
         
         TurnStateEvents.OnTurnProgress -= OnTurnStateProgress;
 
-        DeckEvents.OnDeckGenerated -= UpdateDeckCount;
-        DeckEvents.OnMarbleUsed -= UpdateDeckCount;
+        DeckEvents.OnDeckInitialize -= UpdateDeckCount;
+        DeckEvents.OnMarbleDraw -= UpdateDeckCount;
         DeckEvents.OnHandUpdated -= UpdateHand;
     }
 

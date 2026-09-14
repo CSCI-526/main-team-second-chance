@@ -142,30 +142,11 @@ public class GameManager : MonoBehaviour
             turnState++;
         }
 
-        if (turnState == TurnState.PlayerTurn)
-        {
-            if (TutorialManager.Instance.ShouldDisplayAnymore)
-            {
-                TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
-            }
-
-            numPlayerTurns++;
-        }
-        else if (turnState == TurnState.WaitingOnPlayerTurn)
-        {
-            if (TutorialManager.Instance.ShouldDisplayAnymore)
-            {
-                if (TutorialManager.Instance.CurrentTutorialPhase >= TutorialPhases.LAUNCH_MARBLE)
-                {
-                    TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
-                }
-            }
-        }
-
         // At the start of the enemy turn, we want to check whether or not if we use another player marble, if it will be greater. if so we should override and move to card select
         // We go to card select since we assume that we have not yet finished all matches yet
         if (turnState == TurnState.EnemyTurn)
         {
+            numPlayerTurns++;
             if (HasGameEnded() ||
                 bInSuddenDeath)
             {
@@ -177,7 +158,7 @@ public class GameManager : MonoBehaviour
                         PlayerManager.InitializePlayerDeck();
                         SuddenDeathRoutine().OnComplete(() => {
                             CleanupMarbles();
-                            TurnStateEvents.OnTurnProgressed(TurnState.EnemyTurn); });
+                            TurnStateEvents.OnTurnProgressed(turnState); });
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
                         // now we notify from the completion delegate of shrinking the scoring zones
                         return;
@@ -201,10 +182,46 @@ public class GameManager : MonoBehaviour
         Debug.Log(turnState);
         TurnStateEvents.OnTurnProgressed(turnState);
     }
+    
+    private void OnTurnProgress(TurnState turn)
+    {
+        // tutorial stuff (move elsewhere later)
+        if (turnState == TurnState.PlayerTurn)
+        {
+            if (TutorialManager.Instance.ShouldDisplayAnymore)
+            {
+                TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
+            }
+        }
+        else if (turnState == TurnState.WaitingOnPlayerTurn)
+        {
+            if (TutorialManager.Instance.ShouldDisplayAnymore)
+            {
+                if (TutorialManager.Instance.CurrentTutorialPhase >= TutorialPhases.LAUNCH_MARBLE)
+                {
+                    TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
+                }
+            }
+        }
+
+        if (turnState == TurnState.WaitingOnEnemyTurn || turnState == TurnState.WaitingOnPlayerTurn)
+        {
+            SettleAfterRoundEnd();
+        }
+    }
+    
+    private void OnEndTurnPress(TurnState turnOwner)
+    {
+        if (turnState == turnOwner)
+        {
+            IncrementTurnState();
+        }
+    }
 
     private bool HasGameEnded()
     {
-        return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
+        return numPlayerTurns > gameLength;
+        //return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
     }
 
     Sequence SuddenDeathRoutine()
@@ -224,15 +241,15 @@ public class GameManager : MonoBehaviour
         return shrinkSequence;
     }
     
-    public void UpdateEntityScore(MarbleTeam Team, bool bIsInScoreZone)
+    public void UpdateEntityScore(MarbleTeam Team, int points, bool bIsInScoreZone)
     {
         if (Team == MarbleTeam.Player)
         {
-            playerScore += bIsInScoreZone ? 1 : -1;
+            playerScore += bIsInScoreZone ? points : -points;
         }
         else
         {
-            enemyScore += bIsInScoreZone ? 1 : -1;
+            enemyScore += bIsInScoreZone ? points : -points;
         }
 
         if (bIsInScoreZone)
@@ -268,17 +285,67 @@ public class GameManager : MonoBehaviour
         Destroy(MarbleObject.gameObject);
     }
 
-    private void BeginWaitForMarblesToSettle()
+    private void SettleAfterMarbleLaunch()
     {
-        StartCoroutine(Instance.WaitForMarblesToSettle());
+        StartCoroutine(WaitForSettleAfterLaunch());
+    }
+
+    private IEnumerator WaitForSettleAfterLaunch()
+    {
+        bAreMarblesMoving = true;
+        yield return new WaitForSeconds(1.0f);
+        
+        yield return StartCoroutine(WaitForMarblesToSettle());
+        
+        foreach (var marble in MarblesList)
+        {
+            Sequence settleSequence = marble.CastSettleAbility();
+            if (settleSequence != null)
+            {
+                MarbleEvents.OnMarbleAbilityCasted(marble);
+                yield return settleSequence.WaitForCompletion();
+                yield return StartCoroutine(WaitForMarblesToSettle());
+            }
+        }
+        
+        bAreMarblesMoving = false;
+        if (OneMarblePerTurn)
+        {
+            IncrementTurnState();
+        }
+        TurnStateEvents.OnMarblesSettled(turnState);
+    }
+
+    private void SettleAfterRoundEnd()
+    {
+        StartCoroutine(WaitForSettleAfterRoundEnd());
+    }
+
+    private IEnumerator WaitForSettleAfterRoundEnd()
+    {
+        bAreMarblesMoving = true;
+        yield return new WaitForSeconds(1.0f);
+        
+        yield return StartCoroutine(WaitForMarblesToSettle());
+        
+        foreach (var marble in MarblesList)
+        {
+            Sequence roundEndSequence = marble.CastRoundEndAbility();
+            if (roundEndSequence != null)
+            {
+                MarbleEvents.OnMarbleAbilityCasted(marble);
+                yield return roundEndSequence.WaitForCompletion();
+                yield return StartCoroutine(WaitForMarblesToSettle());
+            }
+        }
+        
+        bAreMarblesMoving = false;
+        TurnStateEvents.OnMarblesSettled(turnState);
+        IncrementTurnState();
     }
 
     private IEnumerator WaitForMarblesToSettle()
     {
-        IncrementTurnState();
-        bAreMarblesMoving = true;
-        yield return new WaitForSeconds(1.0f);
-
         int timeWaited = 0;
         while (true)
         {
@@ -319,22 +386,12 @@ public class GameManager : MonoBehaviour
             timeWaited += 2;
         }
 
-        yield return new WaitForSeconds(1.5f);
-
-        CleanupMarbles();
-
-        foreach (var marble in MarblesList)
+        if (timeWaited > 0)
         {
-            Sequence settleSequence = marble.CastSettleAbility();
-            if (settleSequence != null)
-            {
-                MarbleEvents.OnMarbleAbilityCasted(marble);
-                yield return settleSequence.WaitForCompletion();
-            }
+            yield return new WaitForSeconds(1.5f);
         }
 
-        bAreMarblesMoving = false;
-        IncrementTurnState();
+        CleanupMarbles();
     }
 
     [SerializeField]
@@ -351,6 +408,7 @@ public class GameManager : MonoBehaviour
     private GameObject MainUIButtons;
 
     [SerializeField] private ColorInfo colorInfo;
+    [SerializeField] private int gameLength = 3;
 
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
@@ -364,6 +422,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
 
+    public static bool DrawnNewHandEachTurn;
+    public static bool UseEnergy;
+    public static bool OneMarblePerTurn;
+    public static bool UseCombatSystem;
+    [SerializeField] private GameFlowSettings gameFlowSettings;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -371,6 +435,10 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+            DrawnNewHandEachTurn = gameFlowSettings.DrawnNewHandEachTurn;
+            UseEnergy = gameFlowSettings.UseEnergy;
+            OneMarblePerTurn = gameFlowSettings.OneMarblePerTurn;
+            UseCombatSystem = gameFlowSettings.UseCombatSystem;
         }
     }
     private void Start()
@@ -399,7 +467,7 @@ public class GameManager : MonoBehaviour
                 {
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
-                    ForceUpdateEvents(TurnState.EnemyTurn);
+                    ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
                 }
             }
         }
@@ -408,15 +476,19 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         DeckEvents.OnAddNewMarbleToDeck += OnMarbleAddedToDeck;
-        MarbleEvents.OnMarbleLaunched += BeginWaitForMarblesToSettle;
+        MarbleEvents.OnMarbleLaunched += SettleAfterMarbleLaunch;
         MarbleEvents.OnMarbleSpawned += RegisterMarble;
+        TurnStateEvents.OnEndTurnPress += OnEndTurnPress;
+        TurnStateEvents.OnTurnProgress += OnTurnProgress;
     }
 
     private void OnDisable()
     {
         DeckEvents.OnAddNewMarbleToDeck -= OnMarbleAddedToDeck;
-        MarbleEvents.OnMarbleLaunched -= BeginWaitForMarblesToSettle;
+        MarbleEvents.OnMarbleLaunched -= SettleAfterMarbleLaunch;
         MarbleEvents.OnMarbleSpawned -= RegisterMarble;
+        TurnStateEvents.OnEndTurnPress -= OnEndTurnPress;
+        TurnStateEvents.OnTurnProgress -= OnTurnProgress;
     }
 
     // removes all marbles not within scoring zone

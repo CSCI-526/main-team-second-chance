@@ -39,10 +39,16 @@ public static class DeckEvents
     {
         OnAddNewMarbleToDeck?.Invoke(MarbleObject);
     }
-
-    public static event Action OnPlayerDeckInitialize;
-    public static void OnPlayerDeckInitialized()
+    
+    public static event Action<MarbleTeam, int> OnMarbleDraw;
+    public static void OnMarbleDrawn(MarbleTeam team, int DrawPileSize)
     {
-        OnPlayerDeckInitialize?.Invoke();
+        OnMarbleDraw?.Invoke(team, DrawPileSize);
+    }
+
+    public static event Action<MarbleTeam, int> OnDeckInitialize;
+    public static void OnDeckInitialized(MarbleTeam Team, int Count)
+    {
+        OnDeckInitialize?.Invoke(Team, Count);
     }
 }

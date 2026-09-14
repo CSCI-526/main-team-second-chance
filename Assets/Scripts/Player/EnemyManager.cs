@@ -9,10 +9,13 @@ public class EnemyManager : MonoBehaviour
     public MarbleTeam GetTeam() { return Team; }
     [SerializeField]
     private int DeckSize = 12;
+    [SerializeField] 
+    private int marblesPerRound = 2;
     [SerializeField]
     private MarbleTeam Team = MarbleTeam.Enemy;
     private Deck EnemyDeck;
     private EnemyController EnemyController;
+    private int _marblesPlayed = 0;
 
     void Start()
     {
@@ -25,15 +28,19 @@ public class EnemyManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        TurnStateEvents.OnTurnProgress += EnemyShootMarble;
+        TurnStateEvents.OnTurnProgress += OnTurnStart;
+        TurnStateEvents.OnMarblesSettle += OnMarblesSettle;
     }
+
     private void OnDisable()
     {
-        TurnStateEvents.OnTurnProgress -= EnemyShootMarble;
+        TurnStateEvents.OnTurnProgress -= OnTurnStart;
+        TurnStateEvents.OnMarblesSettle -= OnMarblesSettle;
     }
     public void InitializeEnemyDeck()
     {
         EnemyDeck.InitializeDeck(Team, DeckSize);
+        DeckEvents.OnDeckInitialized(Team,EnemyDeck.GetDeckSize());
     }
     public void InitializeLevelData(AggressionLevel newLevel, float newSkill)
     {
@@ -47,13 +54,37 @@ public class EnemyManager : MonoBehaviour
 
         EnemyController.SetAggression(newLevel, newSkill);
     }
-    private void EnemyShootMarble(TurnState turnState)
+    private void OnTurnStart(TurnState turnState)
     {
         if (turnState != TurnState.EnemyTurn)
         {
             return;
         }
 
+        _marblesPlayed = 0;
+        PlayMarble();
+    }
+    
+    private void OnMarblesSettle(TurnState turn)
+    {
+        if (turn != TurnState.EnemyTurn)
+        {
+            return;
+        }
+
+        if (_marblesPlayed < marblesPerRound)
+        {
+            PlayMarble();
+        }
+        else
+        {
+            TurnStateEvents.OnEndTurnPressed(TurnState.EnemyTurn);
+        }
+    }
+
+    private void PlayMarble()
+    {
+        _marblesPlayed++;
         if (!EnemyDeck)
         {
             EnemyDeck = GetComponent<Deck>();
@@ -71,6 +102,12 @@ public class EnemyManager : MonoBehaviour
         }
         EnemyController.ShootMarble(MarbleObject);
     }
+
+    public int GetMarblesPerRound()
+    {
+        return marblesPerRound;
+    }
+    
     // LEGACY
     IEnumerator MarbleRepeater()
     {
