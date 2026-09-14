@@ -102,6 +102,11 @@ public class EnemyManager : MonoBehaviour
         }
         EnemyController.ShootMarble(MarbleObject);
     }
+
+    public int GetMarblesPerRound()
+    {
+        return marblesPerRound;
+    }
     
     // LEGACY
     IEnumerator MarbleRepeater()

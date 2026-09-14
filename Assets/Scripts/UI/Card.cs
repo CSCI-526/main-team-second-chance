@@ -93,11 +93,15 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
         descriptionText.SetText(MarbleObject.MarbleDescription);
         string points = MarbleObject.Points + " PT" + (MarbleObject.Points > 1 ? "S" : "");
         pointsText.SetText(points);
-
-        if (addNewMarble)
+        if (GameManager.UseEnergy)
         {
-            NewMarbleToAdd = MarbleObject;
+            energyText.SetText(MarbleObject.EnergyCost + "");
         }
+        else
+        {
+            energyText.SetText("");
+        }
+        NewMarbleToAdd = MarbleObject;
     }
 
     public void UpdateCardColors(bool isHovered)
@@ -108,6 +112,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             titleText.color = Color.black;
             descriptionText.color = Color.black;
             pointsText.color = Color.black;
+            energyText.color = Color.black;
         }
         else
         {
@@ -115,6 +120,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             titleText.color = defaultTitleTextColor;
             descriptionText.color = defaultDescriptionTextColor;
             pointsText.color = defaultTitleTextColor;
+            energyText.color = defaultTitleTextColor;
         }
     }
 
@@ -177,9 +183,13 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
                             {
                                 playerDeck.SelectedMarbleRef.material = null;
                             }
-                            playerDeck.SelectedMarbleRef = cardPanel;
-                            playerDeck.SelectedMarbleRef.material = SelectedMaterial;
-                            DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
+                            
+                            if (!GameManager.UseEnergy || EnergyEvents.CheckValidEnergy(NewMarbleToAdd.EnergyCost).GetValueOrDefault())
+                            {
+                                playerDeck.SelectedMarbleRef = cardPanel;
+                                playerDeck.SelectedMarbleRef.material = SelectedMaterial;
+                                DeckEvents.MarbleSelectedFromHand(MarbleTeam.Player, HandIndex);
+                            }
                         }
                         break;
                     }
@@ -210,6 +220,8 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private TextMeshProUGUI descriptionText;
     [SerializeField]
     private TextMeshProUGUI pointsText;
+    [SerializeField]
+    private TextMeshProUGUI energyText;
     [SerializeField]
     private Image cardPanel;
     [SerializeField]

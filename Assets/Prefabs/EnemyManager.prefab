@@ -48,10 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ForceRandomness: 0.1
   DirectionRandomness: 0.1
-  CenterForce: 0.5
-  KnockoutForce: 5
+  CenterForce: 1.2
+  KnockoutForce: 6
   KnockoutTargetRatio: 0.3
-  SkillLevel: 1
+  DeckSize: 20
 --- !u!114 &3797704203141291860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,9 +65,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MarbleDeck: []
-  Hand: 
-  MAX_HAND_SIZE: 5
-  INIT_HAND_SIZE: 4
+  DiscardPile: []
+  Hand: []
+  MAX_HAND_SIZE: 7
+  INIT_HAND_SIZE: 5
 --- !u!114 &8379333905397335880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,5 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7b859f32244b54cb8d7280f307b44f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeckSize: 12
+  DeckSize: 20
+  marblesPerRound: 3
   Team: 1

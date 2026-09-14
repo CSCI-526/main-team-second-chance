@@ -58,12 +58,18 @@ public class Deck : MonoBehaviour
         }
 
         marbleData = Hand[IndexOfHand];
-        NumMarblesUsed++;
+        
         if (marbleData == null)
         {
             Debug.LogWarning("Marble data of card is null.");
             return null;
         }
+
+        if (GameManager.UseEnergy && Team == MarbleTeam.Player && !EnergyEvents.SpendEnergy(marbleData.EnergyCost).GetValueOrDefault())
+        {
+            Debug.LogWarning("Trying to play marble with too high energy cost");
+        }
+        
         // Remove the selected card
         DiscardPile.Add(marbleData);
         Hand.RemoveAt(IndexOfHand);
@@ -71,7 +77,7 @@ public class Deck : MonoBehaviour
 
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
 
-
+        NumMarblesUsed++;
         return marbleData;
     }
 
@@ -210,6 +216,11 @@ public class Deck : MonoBehaviour
                 {
                     DrawCard();
                     DrawCard();
+                    if (GameManager.UseEnergy)
+                    {
+                        DrawCard();
+                        DrawCard();
+                    }
                 }
             }
             else if (turn == TurnState.WaitingOnEnemyTurn && GameManager.DrawnNewHandEachTurn)
@@ -221,8 +232,10 @@ public class Deck : MonoBehaviour
         }
         else if(_marbleTeam == MarbleTeam.Enemy && turn == TurnState.EnemyTurn)
         {
-            DrawCard();
-            DrawCard();
+            for (int i = 0; i < GameManager.Instance.GetEnemyManager().GetMarblesPerRound(); ++i)
+            {
+                DrawCard();
+            }
         }
     }
     

@@ -422,10 +422,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
 
-    public static bool DrawnNewHandEachTurn = true; // implemented
-    public static bool UseEnergy = true; // not implemented
-    public static bool OneMarblePerTurn = false; // implemented
-    public static bool UseCombatSystem = false; // not implemented
+    public static bool DrawnNewHandEachTurn;
+    public static bool UseEnergy;
+    public static bool OneMarblePerTurn;
+    public static bool UseCombatSystem;
+    [SerializeField] private GameFlowSettings gameFlowSettings;
 
     private void Awake()
     {
@@ -434,6 +435,10 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+            DrawnNewHandEachTurn = gameFlowSettings.DrawnNewHandEachTurn;
+            UseEnergy = gameFlowSettings.UseEnergy;
+            OneMarblePerTurn = gameFlowSettings.OneMarblePerTurn;
+            UseCombatSystem = gameFlowSettings.UseCombatSystem;
         }
     }
     private void Start()
