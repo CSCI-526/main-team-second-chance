@@ -422,7 +422,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
 
-    public static bool DrawnNewHandEachTurn = false; // not implemented
+    public static bool DrawnNewHandEachTurn = true; // implemented
     public static bool UseEnergy = true; // not implemented
     public static bool OneMarblePerTurn = false; // implemented
     public static bool UseCombatSystem = false; // not implemented

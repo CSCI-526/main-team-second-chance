@@ -16,7 +16,7 @@ public class Deck : MonoBehaviour
     {
         return NumMarblesUsed;
     }
-    public List<int> GetHand() { return Hand; }
+    public List<MarbleData> GetHand() { return Hand; }
     public int GetMaxHandSize() { return MAX_HAND_SIZE; }
     public int GetSelectedMarbleIndex() { return IndexOfHand; }
     public void ResetSelectedMarbleIndex() { IndexOfHand = -1; }
@@ -52,26 +52,20 @@ public class Deck : MonoBehaviour
             Debug.LogWarning("Deck.UseMarble(): The IndexOfHand is not valid. Something Wrong has happened");
             return null;
         }
-        int DeckIndex = Hand[IndexOfHand];
         if (Team == MarbleTeam.Enemy)
         {
-            Debug.Log("Enemy Index of Hand: " + IndexOfHand + " \nEnemy DeckIndex: " + DeckIndex);
+            Debug.Log("Enemy Index of Hand: " + IndexOfHand);
         }
 
-        if (DeckIndex < 0 || DeckIndex >= MarbleDeck.Count)
-        {
-            Debug.LogWarning("Deck.UseMarble(): The DeckIndex is not valid. Something Wrong has happened");
-            return null;
-        }
-
-        marbleData = MarbleDeck[DeckIndex];
+        marbleData = Hand[IndexOfHand];
         NumMarblesUsed++;
-        if (NumMarblesUsed > MarbleDeck.Count)
+        if (marbleData == null)
         {
-            Debug.LogWarning("We have used up all our marbles.");
+            Debug.LogWarning("Marble data of card is null.");
             return null;
         }
         // Remove the selected card
+        DiscardPile.Add(marbleData);
         Hand.RemoveAt(IndexOfHand);
         UpdateHand(Team);
 
@@ -83,6 +77,7 @@ public class Deck : MonoBehaviour
 
     public void InitializeDeck(MarbleTeam Team, int DeckSize)
     {
+        _marbleTeam = Team;
         // Clear the hand, make sure that we do not have anything in the hand at the moment
         Hand.Clear();
         NextIndexToDrawToHand = 0;
@@ -97,16 +92,24 @@ public class Deck : MonoBehaviour
             SelectedMarbleRef = null;
             bIsHoveringDeck = false;
         }
-
-        _marbleTeam = Team;
     }
 
     public void DrawCard()
     {
-        if (NextIndexToDrawToHand < MarbleDeck.Count && Hand.Count < MAX_HAND_SIZE)
+        if (MarbleDeck.Count <= 0)
+        {
+            MarbleDeck = DiscardPile;
+            DiscardPile = new List<MarbleData>();
+            ShuffleDeck();
+        }
+        
+        if (0 < MarbleDeck.Count && Hand.Count < MAX_HAND_SIZE)
         {
             // Draw a new card from the Marble Deck
-            Hand.Add(NextIndexToDrawToHand++);
+            MarbleData marble = MarbleDeck[0];
+            Hand.Add(marble);
+            MarbleDeck.RemoveAt(0);
+            DeckEvents.OnMarbleDrawn(_marbleTeam,MarbleDeck.Count);
         }
         UpdateHand(_marbleTeam);
     }
@@ -118,15 +121,16 @@ public class Deck : MonoBehaviour
         IndexOfHand = -1;
         for (int i = 0; i < Hand.Count; ++i)
         {
-            data.Add(MarbleDeck[Hand[i]]);
+            data.Add(Hand[i]);
         }
         // HandUpdated signal
         DeckEvents.HandUpdated(Team, data);
     }
 
     public List<MarbleData> MarbleDeck = new List<MarbleData>();
+    public List<MarbleData> DiscardPile = new List<MarbleData>();
     // Contains Indices of cards in the hand
-    public List<int> Hand = new List<int>();
+    public List<MarbleData> Hand = new List<MarbleData>();
     // Index that keeps track of the next card to draw to the hand
     private int NextIndexToDrawToHand = 0;
     // The selected marble from your hand
@@ -160,10 +164,14 @@ public class Deck : MonoBehaviour
             HandSizeModified = MarbleDeck.Count;
         }
 
-        for (int i = 0; i < HandSizeModified; ++i)
+        if (!GameManager.DrawnNewHandEachTurn)
         {
-            Hand.Add(i);
+            for (int i = 0; i < HandSizeModified; ++i)
+            {
+                DrawCard();
+            }
         }
+        /*
         NextIndexToDrawToHand = HandSizeModified;
         NumMarblesUsed = 0;
 
@@ -175,6 +183,7 @@ public class Deck : MonoBehaviour
 
         DeckEvents.HandUpdated(Team, data);
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
+        */
     }
     private void OnEnable()
     {
@@ -192,12 +201,27 @@ public class Deck : MonoBehaviour
     
     private void OnTurnProgress(TurnState turn)
     {
-        if (_marbleTeam == MarbleTeam.Player && turn == TurnState.PlayerTurn)
+        if (_marbleTeam == MarbleTeam.Player)
         {
-            DrawCard();
+            if (turn == TurnState.PlayerTurn)
+            {
+                DrawCard();
+                if (GameManager.DrawnNewHandEachTurn)
+                {
+                    DrawCard();
+                    DrawCard();
+                }
+            }
+            else if (turn == TurnState.WaitingOnEnemyTurn && GameManager.DrawnNewHandEachTurn)
+            {
+                DiscardPile.AddRange(Hand);
+                Hand.Clear();
+                UpdateHand(_marbleTeam);
+            }
         }
         else if(_marbleTeam == MarbleTeam.Enemy && turn == TurnState.EnemyTurn)
         {
+            DrawCard();
             DrawCard();
         }
     }

@@ -40,6 +40,7 @@ public class EnemyManager : MonoBehaviour
     public void InitializeEnemyDeck()
     {
         EnemyDeck.InitializeDeck(Team, DeckSize);
+        DeckEvents.OnDeckInitialized(Team,EnemyDeck.GetDeckSize());
     }
     public void InitializeLevelData(AggressionLevel newLevel, float newSkill)
     {
