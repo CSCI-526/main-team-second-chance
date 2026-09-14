@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
                         PlayerManager.InitializePlayerDeck();
                         SuddenDeathRoutine().OnComplete(() => {
                             CleanupMarbles();
-                            TurnStateEvents.OnTurnProgressed(TurnState.EnemyTurn); });
+                            TurnStateEvents.OnTurnProgressed(turnState); });
                         // we'll notify the next turn from the scoring cirlce because I hate code quality :))
                         // now we notify from the completion delegate of shrinking the scoring zones
                         return;
@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour
 
     private bool HasGameEnded()
     {
-        return numPlayerTurns >= gameLength;
+        return numPlayerTurns > gameLength;
         //return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
     }
 
@@ -309,6 +309,10 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
+        if (OneMarblePerTurn)
+        {
+            IncrementTurnState();
+        }
         TurnStateEvents.OnMarblesSettled(turnState);
     }
 
@@ -336,8 +340,8 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
-        IncrementTurnState();
         TurnStateEvents.OnMarblesSettled(turnState);
+        IncrementTurnState();
     }
 
     private IEnumerator WaitForMarblesToSettle()
@@ -417,6 +421,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
+
+    public static bool DrawnNewHandEachTurn = false; // not implemented
+    public static bool UseEnergy = true; // not implemented
+    public static bool OneMarblePerTurn = false; // implemented
+    public static bool UseCombatSystem = false; // not implemented
 
     private void Awake()
     {

@@ -2094,7 +2094,7 @@ PrefabInstance:
     - target: {fileID: 7097381210181642104, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
       propertyPath: MAX_HAND_SIZE
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7097381210181642104, guid: e96beefb821ae7f489adda0abf44eb0b,
         type: 3}
@@ -2810,7 +2810,7 @@ PrefabInstance:
     - target: {fileID: 3797704203141291860, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}
       propertyPath: MAX_HAND_SIZE
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3797704203141291860, guid: 22ee2e29b5f1e4ba5a50ff45ddfd047f,
         type: 3}

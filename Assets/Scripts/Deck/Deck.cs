@@ -71,7 +71,8 @@ public class Deck : MonoBehaviour
             Debug.LogWarning("We have used up all our marbles.");
             return null;
         }
-
+        // Remove the selected card
+        Hand.RemoveAt(IndexOfHand);
         UpdateHand(Team);
 
         DeckEvents.MarbleUsed(Team, GetTotalRemainingMarbles());
@@ -96,31 +97,23 @@ public class Deck : MonoBehaviour
             SelectedMarbleRef = null;
             bIsHoveringDeck = false;
         }
+
+        _marbleTeam = Team;
     }
-    public void UpdateHand(MarbleTeam Team)
+
+    public void DrawCard()
     {
-        // Remove the selected card
-        Hand.RemoveAt(IndexOfHand);
-
-        List<MarbleData> data = new List<MarbleData>();
-        if (NextIndexToDrawToHand >= MarbleDeck.Count)
+        if (NextIndexToDrawToHand < MarbleDeck.Count && Hand.Count < MAX_HAND_SIZE)
         {
-            Debug.LogWarning("Deck.UpdateHand():" + Team + " We are out of marbles that we can add to hand.");
-            // Set the selected marble index to -1 again
-            IndexOfHand = -1;
-            // HandUpdated signal
-            for (int i = 0; i < Hand.Count; ++i)
-            {
-                data.Add(MarbleDeck[Hand[i]]);
-            }
-            DeckEvents.HandUpdated(Team, data);
-            return;
+            // Draw a new card from the Marble Deck
+            Hand.Add(NextIndexToDrawToHand++);
         }
-
-        // Draw a new card from the Marble Deck
-        Hand.Add(NextIndexToDrawToHand++);
-
-
+        UpdateHand(_marbleTeam);
+    }
+    
+    private void UpdateHand(MarbleTeam Team)
+    {
+        List<MarbleData> data = new List<MarbleData>();
         // Reset the selected marble index
         IndexOfHand = -1;
         for (int i = 0; i < Hand.Count; ++i)
@@ -141,9 +134,11 @@ public class Deck : MonoBehaviour
     // Number of marbles used so far
     private int NumMarblesUsed = 0;
     [SerializeField]
-    private int MAX_HAND_SIZE = 5;
+    private int MAX_HAND_SIZE = 7;
     [SerializeField]
     private int INIT_HAND_SIZE = 3;
+
+    private MarbleTeam _marbleTeam;
     public void GenerateInitialHand(MarbleTeam Team)
     {
         if (MarbleDeck.Count == 0)
@@ -185,12 +180,28 @@ public class Deck : MonoBehaviour
     {
         DeckEvents.OnMarbleSelectedFromHand += GrabSelectedID;
         DeckEvents.OnMarbleUsed += Reset;
+        TurnStateEvents.OnTurnProgress += OnTurnProgress;
     }
+
     private void OnDisable()
     {
         DeckEvents.OnMarbleSelectedFromHand -= GrabSelectedID;
         DeckEvents.OnMarbleUsed -= Reset;
+        TurnStateEvents.OnTurnProgress -= OnTurnProgress;
     }
+    
+    private void OnTurnProgress(TurnState turn)
+    {
+        if (_marbleTeam == MarbleTeam.Player && turn == TurnState.PlayerTurn)
+        {
+            DrawCard();
+        }
+        else if(_marbleTeam == MarbleTeam.Enemy && turn == TurnState.EnemyTurn)
+        {
+            DrawCard();
+        }
+    }
+    
     private void GrabSelectedID(MarbleTeam Team, int ID)
     {
         if (this == GameManager.Instance.GetPlayerManager().GetPlayerDeck())

@@ -61,6 +61,7 @@ public class EnemyManager : MonoBehaviour
         }
 
         _marblesPlayed = 0;
+        PlayMarble();
     }
     
     private void OnMarblesSettle(TurnState turn)
@@ -72,7 +73,6 @@ public class EnemyManager : MonoBehaviour
 
         if (_marblesPlayed < marblesPerRound)
         {
-            _marblesPlayed++;
             PlayMarble();
         }
         else
@@ -83,6 +83,7 @@ public class EnemyManager : MonoBehaviour
 
     private void PlayMarble()
     {
+        _marblesPlayed++;
         if (!EnemyDeck)
         {
             EnemyDeck = GetComponent<Deck>();
