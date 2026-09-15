@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80178febaf84958449b4bb95a240b58e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeckSize: 4
+  DeckSize: 10
   Team: 0
   PlayerDeck: {fileID: 0}
 --- !u!114 &8273409449394312092

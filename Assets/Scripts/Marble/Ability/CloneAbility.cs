@@ -5,8 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewCloneAbility", menuName = "ScriptableObjects/Abilities/Clone")]
 public class CloneAbility : Ability
 {
-
-    public int clones = 0;
+    [SerializeField] private int maxClonesPerTurn = 200;
+    private int _clones = 0;
     public override void CollisionCast(Marble marble, Marble other)
     {
         Debug.Log("Ability Casted: Clone");
@@ -14,24 +14,23 @@ public class CloneAbility : Ability
             return;
 
         marble.timesCasted++;
-        //AudioManager.TriggerSound(AbilitySound, marble.transform.position);
 
         Rigidbody rb = marble.GetMarbleRigidbody();
         Quaternion rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         Vector3 Offset = rotation * rb.velocity;
         Vector3 Position = marble.transform.position + 0.1f * Offset.normalized;
 
-        if (clones < 50)
+        if (_clones < maxClonesPerTurn)
         {
             MarbleEvents.MarbleReadyToLaunch(other.Team, other.GetMarbleData(), Offset.normalized, Offset.magnitude, Position, true);
             AudioManager.TriggerSound(AbilitySound, marble.transform.position);
-            ++clones;
+            ++_clones;
         }
     }
 
     public override Sequence SettledCast(Marble marble)
     {
-        clones = 0;
+        _clones = 0;
         return null;
     }
 }

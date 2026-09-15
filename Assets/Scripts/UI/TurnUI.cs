@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -14,8 +15,11 @@ public class TurnUI : MonoBehaviour
     private TextMeshProUGUI TurnText;
     [SerializeField]
     private float HideTime = 2.0f;
+    [SerializeField]
+    private TextMeshProUGUI RoundText;
     private Color color;
-    private Coroutine timerCoroutine;
+    private Tween hideUI;
+
     private void OnEnable()
     {
         TurnStateEvents.OnTurnProgress += UpdateTurnPanel;
@@ -35,9 +39,25 @@ public class TurnUI : MonoBehaviour
 
     private void UpdateTurnPanel(TurnState turn)
     {
-        if(timerCoroutine != null)
+        if(hideUI != null)
+            hideUI.Kill();
+
+        if (turn == TurnState.EnemyTurn)
         {
-            StopCoroutine(timerCoroutine);
+            if (!GameManager.UseCombatSystem &&
+                GameManager.Instance.GetTurnCount() == GameManager.Instance.GetGameLengthInTurns())
+            {
+                RoundText.text =  "Final Round";
+            }
+            else
+            {
+                RoundText.text =  "Round " + GameManager.Instance.GetTurnCount();
+            }
+
+            Sequence jump = RoundText.transform.DOJump(RoundText.transform.position, 30.0f, 1, 1.0f * Time.timeScale);
+            jump.AppendInterval(2.0f * Time.timeScale);
+            jump.OnComplete(() => { RoundText.enabled = false; });
+            RoundText.enabled = true;
         }
 
         switch (turn)
@@ -79,7 +99,13 @@ public class TurnUI : MonoBehaviour
                 EnemyTurnArrow.enabled = false;
                 break;
         }
-        timerCoroutine = StartCoroutine(TimeUntilHide(HideTime));
+
+        hideUI = DOVirtual.DelayedCall(HideTime * Time.timeScale, () =>
+        {
+            TurnText.text = "";
+            PlayerTurnArrow.enabled = false;
+            EnemyTurnArrow.enabled = false;
+        }, false);
     }
 
     private void UpdateTurnTextForPlayer() {
@@ -102,14 +128,5 @@ public class TurnUI : MonoBehaviour
 
         color = EnemyTurnArrow.color;
         TurnText.color = color;
-    }
-
-    private IEnumerator TimeUntilHide(float Duration)
-    {
-        yield return new WaitForSecondsRealtime(Duration);
-
-        TurnText.text = "";
-        PlayerTurnArrow.enabled = false;
-        EnemyTurnArrow.enabled = false;
     }
 }

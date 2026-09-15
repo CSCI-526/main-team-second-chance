@@ -130,7 +130,10 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
         {
             GameManager.Instance.GetPlayerManager().GetPlayerDeck().bIsHoveringDeck = true;
-            UpdateCardColors(true);
+            if (!GameManager.UseEnergy || EnergyEvents.CheckValidEnergy(NewMarbleToAdd.EnergyCost).GetValueOrDefault())
+            {
+                UpdateCardColors(true);
+            }
         }
         else if (GameManager.Instance.GetTurnState() == TurnState.CardSelect)
         {
