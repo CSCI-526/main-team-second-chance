@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -64,7 +65,8 @@ public class MainUI : MonoBehaviour
         }
         
         MatchVictoryText.gameObject.SetActive(true);
-        StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+        //StartCoroutine(BounceScoreGO(MatchVictoryText.rectTransform));
+        BounceRect(MatchVictoryText.transform);
     }
 
 
@@ -73,14 +75,27 @@ public class MainUI : MonoBehaviour
         if (Team == MarbleTeam.Player)
         {
             PlayerScore.text = $"You\n<color=#49A9DB>🔴</color> {GameManager.Instance.GetPlayerScore()}";
-            StartCoroutine(BounceScoreGO(PlayerScore.rectTransform));
+            //StartCoroutine(BounceScoreGO(PlayerScore.rectTransform));
+            BounceRect(PlayerScore.transform);
         }
         else
         {
             EnemyScore.text =
                 $"{NodeManager.Instance.GetLevelData().GetEnemyName()}\n<color=#FF0000>🔴</color> {GameManager.Instance.GetEnemyScore()}";
-            StartCoroutine(BounceScoreGO(EnemyScore.rectTransform));
+            //StartCoroutine(BounceScoreGO(EnemyScore.rectTransform));
+            BounceRect(EnemyScore.transform);
         }
+    }
+
+    private void BounceRect(Transform uiTransform)
+    {
+        uiTransform.DOKill();
+        Vector3 startPos = uiTransform.position;
+        Sequence jump = uiTransform.DOJump(startPos, ScoreBounceHeight, 1, ScoreBounceDuration * Time.timeScale).OnKill(
+            () =>
+            {
+                uiTransform.position = startPos;
+            });
     }
 
     private IEnumerator BounceScoreGO(RectTransform scoreGO)

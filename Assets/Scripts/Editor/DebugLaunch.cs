@@ -16,6 +16,10 @@ namespace Editor
         
         private Vector2 scrollPosition;
         private SerializedObject serializedTarget;
+        private bool energyToggle;
+        private bool marbleToggle;
+        private bool drawHandToggle;
+        private bool combatToggle;
         
         private void Play()
         {
@@ -70,6 +74,10 @@ namespace Editor
         {
             _debugLevelData = GetOrCreateDebugLevelData();
             serializedTarget = new SerializedObject(_debugLevelData);
+            energyToggle = PlayerPrefs.GetInt("UseEnergy") == 1;
+            marbleToggle = PlayerPrefs.GetInt("OneMarble") == 1;
+            drawHandToggle = PlayerPrefs.GetInt("DrawNewHand") == 1;
+            combatToggle = PlayerPrefs.GetInt("UseCombat") == 1;
         }
 
         private void OnGUI()
@@ -81,21 +89,6 @@ namespace Editor
             if(serializedTarget != null)
                 EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.playerDeck)), new GUIContent("Debug Deck"), true);
             EditorGUILayout.EndScrollView();
-            
-        
-            /*
-            _marbleData = (MarbleData)EditorGUILayout.ObjectField(
-                "Marble:", 
-                _marbleData, 
-                typeof(MarbleData), 
-                false
-            );
-            
-            if (GUILayout.Button("Add Marble To Deck"))
-            {
-                AddMarbleToDeck();
-            }
-            */
         
             GUILayout.Label("Debug Level Settings", EditorStyles.boldLabel);
             if (serializedTarget != null)
@@ -120,6 +113,32 @@ namespace Editor
             if (GUILayout.Button("Load level from data"))
             {
                 LoadDebugLevelDataFromAsset();
+            }
+            
+            GUILayout.Label("Game Settings", EditorStyles.boldLabel);
+            bool newMarbleToggle = EditorGUILayout.Toggle("One Marble Per Turn", marbleToggle);
+            if (newMarbleToggle != marbleToggle)
+            {
+                marbleToggle = newMarbleToggle;
+                PlayerPrefs.SetInt("OneMarble",marbleToggle ? 1 : 0);
+            }
+            bool newDrawHandToggle = EditorGUILayout.Toggle("Draw Hand Each Turn", drawHandToggle);
+            if (newDrawHandToggle != drawHandToggle)
+            {
+                drawHandToggle = newDrawHandToggle;
+                PlayerPrefs.SetInt("DrawNewHand",drawHandToggle ? 1 : 0);
+            }
+            bool newEnergyToggle = EditorGUILayout.Toggle("Use Energy", energyToggle);
+            if (newEnergyToggle != energyToggle)
+            {
+                energyToggle = newEnergyToggle;
+                PlayerPrefs.SetInt("UseEnergy",energyToggle ? 1 : 0);
+            }
+            bool newCombatToggle = EditorGUILayout.Toggle("Use Combat System", combatToggle);
+            if (newCombatToggle != combatToggle)
+            {
+                combatToggle = newCombatToggle;
+                PlayerPrefs.SetInt("UseCombat",combatToggle ? 1 : 0);
             }
         
             GUILayout.FlexibleSpace();

@@ -107,26 +107,4 @@ public class EnemyManager : MonoBehaviour
     {
         return marblesPerRound;
     }
-    
-    // LEGACY
-    IEnumerator MarbleRepeater()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            if (!EnemyDeck)
-            {
-                InitializeEnemyDeck();
-            }
-
-            MarbleData MarbleObject = EnemyDeck.UseMarble(Team);
-            if (!MarbleObject)
-            {
-                yield return null;
-            }
-
-            EnemyController.ShootMarble(MarbleObject);
-            yield return new WaitForSeconds(2.0f);
-        }
-    }
 }

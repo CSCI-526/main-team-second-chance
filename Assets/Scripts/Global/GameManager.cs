@@ -86,9 +86,14 @@ public class GameManager : MonoBehaviour
         return enemyScore;
     }
     
-    public int NumPlayerTurns
+    public int GetTurnCount()
     {
-        get { return numPlayerTurns; }
+        return numPlayerTurns;
+    }
+
+    public int GetGameLengthInTurns()
+    {
+        return gameLength;
     }
 
     public TurnState GetTurnState()
@@ -293,7 +298,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForSettleAfterLaunch()
     {
         bAreMarblesMoving = true;
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f * Time.timeScale);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
         
@@ -324,7 +329,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForSettleAfterRoundEnd()
     {
         bAreMarblesMoving = true;
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f * Time.timeScale);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
         
@@ -376,19 +381,19 @@ public class GameManager : MonoBehaviour
                 break;
             }
 
-            if (timeWaited > 30)
+            if (timeWaited > 10)
             {
                 Debug.LogError("Detected a likely softlock and moved on to the next turn state");
                 break;
             }
 
-            yield return new WaitForSeconds(2.0f);
-            timeWaited += 2;
+            yield return new WaitForSeconds(1.0f * Time.timeScale);
+            timeWaited += 1;
         }
 
         if (timeWaited > 0)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.75f * Time.timeScale);
         }
 
         CleanupMarbles();
@@ -552,7 +557,7 @@ public class GameManager : MonoBehaviour
 
         TurnStateEvents.OnMatchEnded(result);
         
-        yield return new WaitForSeconds(8.0f);
+        yield return new WaitForSeconds(4.0f * Time.timeScale);
         ClearMarbles();
 
         OverrideTurnState(result == TurnStateEvents.MatchResult.PlayerWin ? TurnState.CardSelect : TurnState.GameOver);
