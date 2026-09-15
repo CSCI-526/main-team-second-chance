@@ -162,6 +162,8 @@ public class Deck : MonoBehaviour
         {
             Hand.Clear();
         }
+        
+        ShuffleDeck();
 
         int HandSizeModified = INIT_HAND_SIZE;
         // If the deck's total size is actually smaller than the smallest hand size

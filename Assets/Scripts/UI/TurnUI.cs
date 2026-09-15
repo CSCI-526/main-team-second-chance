@@ -27,6 +27,7 @@ public class TurnUI : MonoBehaviour
     private void OnDisable()
     {
         TurnStateEvents.OnTurnProgress -= UpdateTurnPanel;
+        hideUI.Kill();
     }
 
     private void Start()

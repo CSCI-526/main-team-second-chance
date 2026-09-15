@@ -44,7 +44,11 @@ public class NodeManagerSO : ScriptableObject
     public LevelDataSO GetActiveLevel() { return Levels[ActiveLevel]; }
     public List<LevelDataSO> GetLevels() { return Levels; }
     public List<MarbleData> GetPlayerDeck() { return PlayerDeck; }
-    public void UpdatePlayerDeck(List<MarbleData> playerDeck) { PlayerDeck = playerDeck; }
+
+    public void UpdatePlayerDeck(List<MarbleData> playerDeck)
+    {
+        PlayerDeck = new List<MarbleData>(playerDeck); 
+    }
     public void ClearPlayerDeck()
     {
         PlayerDeck.Clear();
