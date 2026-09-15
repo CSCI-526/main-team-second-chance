@@ -9,7 +9,7 @@ public class EnergyUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI energyText;
     
-    private void Awake()
+    private void Start()
     {
         gameObject.SetActive(GameManager.UseEnergy);
     }

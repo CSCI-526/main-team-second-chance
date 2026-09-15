@@ -426,7 +426,6 @@ public class GameManager : MonoBehaviour
     public static bool UseEnergy;
     public static bool OneMarblePerTurn;
     public static bool UseCombatSystem;
-    [SerializeField] private GameFlowSettings gameFlowSettings;
 
     private void Awake()
     {
@@ -435,10 +434,11 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
-            DrawnNewHandEachTurn = gameFlowSettings.DrawnNewHandEachTurn;
-            UseEnergy = gameFlowSettings.UseEnergy;
-            OneMarblePerTurn = gameFlowSettings.OneMarblePerTurn;
-            UseCombatSystem = gameFlowSettings.UseCombatSystem;
+            
+            UseEnergy = PlayerPrefs.GetInt("UseEnergy") == 1;
+            OneMarblePerTurn = PlayerPrefs.GetInt("OneMarble") == 1;
+            DrawnNewHandEachTurn = PlayerPrefs.GetInt("DrawNewHand") == 1;
+            UseCombatSystem = PlayerPrefs.GetInt("UseCombat") == 1;
         }
     }
     private void Start()
