@@ -42,8 +42,9 @@ public class DeckManager : MonoBehaviour
     {
         List<MarbleData> marbles = new List<MarbleData>();
 
-        int firstHalf = DeckSize / 2;
-        int secondHalf = DeckSize - firstHalf;
+        int secondHalf = DeckSize / 3;
+        int firstHalf =DeckSize - secondHalf;
+        
         // first half is basic
         for (int i = 0; i < firstHalf; ++i)
         {
