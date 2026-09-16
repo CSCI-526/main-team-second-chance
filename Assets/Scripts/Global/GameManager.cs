@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
     
     private void OnEndTurnPress(TurnState turnOwner)
     {
-        if (turnState == turnOwner)
+        if (turnState == turnOwner && !bAreMarblesMoving)
         {
             IncrementTurnState();
         }
@@ -241,8 +241,8 @@ public class GameManager : MonoBehaviour
         {
             t = x;
             scoringZoneManager.SetScoringCircleScales(t);
-        }, 0.0f, 2.0f * Time.timeScale));
-        shrinkSequence.AppendInterval(2.0f * Time.timeScale);
+        }, 0.0f, 2.0f * Time.timeScale * turnSpeed));
+        shrinkSequence.AppendInterval(2.0f * Time.timeScale * turnSpeed);
         return shrinkSequence;
     }
     
@@ -298,7 +298,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForSettleAfterLaunch()
     {
         bAreMarblesMoving = true;
-        yield return new WaitForSeconds(0.5f * Time.timeScale);
+        yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
         
@@ -329,7 +329,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForSettleAfterRoundEnd()
     {
         bAreMarblesMoving = true;
-        yield return new WaitForSeconds(0.5f * Time.timeScale);
+        yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
         
@@ -393,7 +393,7 @@ public class GameManager : MonoBehaviour
 
         if (timeWaited > 0)
         {
-            yield return new WaitForSeconds(0.75f * Time.timeScale);
+            yield return new WaitForSeconds(0.75f * Time.timeScale * turnSpeed);
         }
 
         CleanupMarbles();
@@ -414,6 +414,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private ColorInfo colorInfo;
     [SerializeField] private int gameLength = 3;
+    [SerializeField] private float gameSpeed = 2.0f;
+    [SerializeField] private float turnSpeed = 1.5f;
 
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
@@ -448,7 +450,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        Time.timeScale = 2.0f;
+        Time.timeScale = gameSpeed;
         
         if (!scoringZoneManager)
         {
@@ -557,7 +559,7 @@ public class GameManager : MonoBehaviour
 
         TurnStateEvents.OnMatchEnded(result);
         
-        yield return new WaitForSeconds(4.0f * Time.timeScale);
+        yield return new WaitForSeconds(4.0f * Time.timeScale * turnSpeed);
         ClearMarbles();
 
         OverrideTurnState(result == TurnStateEvents.MatchResult.PlayerWin ? TurnState.CardSelect : TurnState.GameOver);

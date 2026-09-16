@@ -32,7 +32,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (NodeManager.Instance.GetPlayerDeck().Count != 0)
         {
-            PlayerDeck.MarbleDeck = NodeManager.Instance.GetPlayerDeck();
+            PlayerDeck.MarbleDeck = new List<MarbleData>(NodeManager.Instance.GetPlayerDeck());
             PlayerDeck.GenerateInitialHand(Team);
         }
         else
@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
         {
             return;
         }
-        PlayerDeck.AddMarbleToDeck(Team, gameObject);
+        //PlayerDeck.AddMarbleToDeck(Team, gameObject);
         NodeManager.Instance.GetPlayerDeck().Add(gameObject);
 
         AnalyticsManager.SendMetric("new_marble_choice", new AnalyticsManager.StringMetric(
