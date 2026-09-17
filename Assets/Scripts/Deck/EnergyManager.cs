@@ -27,7 +27,7 @@ public class EnergyManager : MonoBehaviour
     {
         if (turn == TurnState.PlayerTurn)
         {
-            _currentEnergy = 3;
+            _currentEnergy = startingEnergy;
             EnergyEvents.OnEnergyUpdated(_currentEnergy);
         }
     }

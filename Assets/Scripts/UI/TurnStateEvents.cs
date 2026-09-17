@@ -43,4 +43,11 @@ public static class TurnStateEvents
     {
         OnMarblesSettle?.Invoke(currentTurn);
     }
+
+    public static event Action<int, int, MarbleTeam> OnHealthUpdate;
+
+    public static void OnHealthUpdated(int curHealth, int maxHealth, MarbleTeam team)
+    {
+        OnHealthUpdate?.Invoke(curHealth,maxHealth,team);
+    }
 }

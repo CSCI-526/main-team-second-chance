@@ -14,6 +14,8 @@ public class NewCardSelectPanel : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI NewCardSelectText;
 
+    [SerializeField] private GameObject cardSelectBackground;
+
     private void OnEnable()
     {
         DeckEvents.OnSelectNewMarbleToAdd += RevealCards;
@@ -74,12 +76,14 @@ public class NewCardSelectPanel : MonoBehaviour
         {
             Cards[i].SetActive(false);
         }
+        cardSelectBackground.SetActive(false);
     }
 
     private void ShowPanel()
     {
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         NewCardSelectText.canvasRenderer.SetAlpha(1);
+        cardSelectBackground.SetActive(true);
     }
 
 }

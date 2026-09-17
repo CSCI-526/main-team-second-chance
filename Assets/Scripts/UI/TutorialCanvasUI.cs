@@ -33,13 +33,13 @@ public class TutorialCanvasUI : MonoBehaviour
     }
     private void OnEnable()
     {
-        TutorialEvents.OnTutorialItemDisplayed += DisplayedTutorialItem;
-        TutorialEvents.OnTryDisplayTutorialItem += TryDisplayTutorialItem;
+        //TutorialEvents.OnTutorialItemDisplayed += DisplayedTutorialItem;
+        //TutorialEvents.OnTryDisplayTutorialItem += TryDisplayTutorialItem;
     }
     private void OnDisable()
     {
-        TutorialEvents.OnTutorialItemDisplayed -= DisplayedTutorialItem;
-        TutorialEvents.OnTryDisplayTutorialItem -= TryDisplayTutorialItem;
+        //TutorialEvents.OnTutorialItemDisplayed -= DisplayedTutorialItem;
+        //TutorialEvents.OnTryDisplayTutorialItem -= TryDisplayTutorialItem;
     }
 
     void Update()
