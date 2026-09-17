@@ -15,4 +15,7 @@ MonoBehaviour:
   EnemyDifficulty: 5
   EnemyAggressionLevel: 1
   EnemyDeckType: 0
+  EnemyName: The Defaulter
+  EnemyHealth: 20
+  Arena: 2
   LevelDifficulty: 3

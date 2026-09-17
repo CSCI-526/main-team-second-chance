@@ -16,4 +16,6 @@ MonoBehaviour:
   EnemyAggressionLevel: 0
   EnemyDeckType: 4
   EnemyName: The Grower
+  EnemyHealth: 30
+  Arena: 0
   LevelDifficulty: 5
