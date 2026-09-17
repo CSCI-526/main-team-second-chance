@@ -217,9 +217,16 @@ public class GameManager : MonoBehaviour
     
     private void OnEndTurnPress(TurnState turnOwner)
     {
-        if (turnState == turnOwner && !bAreMarblesMoving)
+        if (turnState == turnOwner && !_advanceToNextTurn)
         {
-            IncrementTurnState();
+            if (bAreMarblesMoving)
+            {
+                _advanceToNextTurn = true;
+            }
+            else
+            {
+                IncrementTurnState();
+            }
         }
     }
 
@@ -227,7 +234,7 @@ public class GameManager : MonoBehaviour
     {
         if (UseCombatSystem)
         {
-            return enemyHealth <= 0 || playerHealth <= 0;
+            return _enemyHealth <= 0 || _playerHealth <= 0;
         }
         return numPlayerTurns > gameLength;
         //return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
@@ -323,6 +330,11 @@ public class GameManager : MonoBehaviour
             IncrementTurnState();
         }
         TurnStateEvents.OnMarblesSettled(turnState);
+        if (_advanceToNextTurn)
+        {
+            _advanceToNextTurn = false;
+            IncrementTurnState();
+        }
     }
 
     private void SettleAfterRoundEnd()
@@ -349,14 +361,15 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
-        TurnStateEvents.OnMarblesSettled(turnState);
         if (TurnState.WaitingOnEnemyTurn == turnState)
         {
-            playerHealth -= enemyScore;
-            enemyHealth -= playerScore;
-            TurnStateEvents.OnHealthUpdated(playerHealth,30,MarbleTeam.Player);
-            TurnStateEvents.OnHealthUpdated(enemyHealth,20,MarbleTeam.Enemy);
+            _playerHealth -= enemyScore;
+            _enemyHealth -= playerScore;
+            TurnStateEvents.OnHealthUpdated(_playerHealth, _playerMaxHealth,MarbleTeam.Player);
+            TurnStateEvents.OnHealthUpdated(_enemyHealth, _enemyMaxHealth,MarbleTeam.Enemy);
+            NodeManager.Instance.SetPlayerHealth(_playerHealth);
         }
+        TurnStateEvents.OnMarblesSettled(turnState);
         IncrementTurnState();
     }
 
@@ -432,11 +445,14 @@ public class GameManager : MonoBehaviour
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
     private int enemyScore = 0;
-    private int playerHealth = 30;
-    private int enemyHealth = 20;
+    private int _playerHealth = 30;
+    private int _playerMaxHealth = 30;
+    private int _enemyHealth = 20;
+    private int _enemyMaxHealth = 20;
     private bool bAreMarblesMoving = false;
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
+    private bool _advanceToNextTurn = false;
 
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
@@ -481,12 +497,20 @@ public class GameManager : MonoBehaviour
                 if (PlayerManager)
                 {
                     PlayerManager.InitializePlayerDeck();
-                    TurnStateEvents.OnHealthUpdated(30,30, MarbleTeam.Player);
+                    _playerHealth = PlayerManager.GetStoredPlayerHealth();
+                    if (_playerHealth < 0)
+                    {
+                        _playerHealth = _playerMaxHealth;
+                        NodeManager.Instance.SetPlayerHealth(_playerHealth);
+                    }
+                    
+                    TurnStateEvents.OnHealthUpdated(_playerHealth, _playerMaxHealth, MarbleTeam.Player);
                 }
 
                 if (EnemyManager)
                 {
-                    TurnStateEvents.OnHealthUpdated(20,20, MarbleTeam.Player);
+                    _enemyMaxHealth = _enemyHealth = LevelData.GetEnemyHealth();
+                    TurnStateEvents.OnHealthUpdated(_enemyHealth,_enemyMaxHealth, MarbleTeam.Enemy);
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
                     ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
@@ -569,7 +593,7 @@ public class GameManager : MonoBehaviour
             .EnemyWin;
         if (UseCombatSystem)
         {
-            result = playerHealth > 0
+            result = _playerHealth > 0
                 ? TurnStateEvents.MatchResult.PlayerWin
                 : TurnStateEvents.MatchResult.EnemyWin;
         }

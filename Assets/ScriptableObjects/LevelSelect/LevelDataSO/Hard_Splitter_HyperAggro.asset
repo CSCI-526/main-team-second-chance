@@ -16,4 +16,6 @@ MonoBehaviour:
   EnemyAggressionLevel: 2
   EnemyDeckType: 10
   EnemyName: The Splitterer
+  EnemyHealth: 35
+  Arena: 0
   LevelDifficulty: 5

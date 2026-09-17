@@ -16,4 +16,6 @@ MonoBehaviour:
   EnemyAggressionLevel: 2
   EnemyDeckType: 2
   EnemyName: The Exploder
+  EnemyHealth: 30
+  Arena: 0
   LevelDifficulty: 5

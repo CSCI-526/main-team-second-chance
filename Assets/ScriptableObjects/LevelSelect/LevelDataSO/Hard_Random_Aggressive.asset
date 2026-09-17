@@ -16,4 +16,6 @@ MonoBehaviour:
   EnemyAggressionLevel: 1
   EnemyDeckType: 1
   EnemyName: The Randomer
+  EnemyHealth: 30
+  Arena: 0
   LevelDifficulty: 5
