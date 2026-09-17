@@ -42,6 +42,12 @@ public class PlayerManager : MonoBehaviour
         }
         DeckEvents.OnDeckInitialized(Team,PlayerDeck.GetDeckSize());
     }
+
+    public int GetStoredPlayerHealth()
+    {
+        return NodeManager.Instance.GetPlayerHealth();
+    }
+    
     private void AddMarbleToDeck(MarbleData gameObject)
     {
         if (!gameObject)

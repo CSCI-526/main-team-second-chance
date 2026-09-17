@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewLevelData", menuName = "ScriptableObjects/LevelData")]
 public class LevelDataSO : ScriptableObject
@@ -37,12 +38,17 @@ public class LevelDataSO : ScriptableObject
 
     public int GetArena()
     {
-        return arena;
+        return Arena;
     }
 
     public string GetEnemyName()
     {
         return EnemyName;
+    }
+
+    public int GetEnemyHealth()
+    {
+        return EnemyHealth;
     }
 
     [SerializeField, Range(0.0f, 10.0f), Tooltip("How accurate the enemy will shoot")]
@@ -52,9 +58,10 @@ public class LevelDataSO : ScriptableObject
     [SerializeField] private EnemyDeckType EnemyDeckType = EnemyDeckType.DEFAULT;
 
     [SerializeField] private string EnemyName = "The Defaulter";
+    [SerializeField] private int EnemyHealth = 20;
 
     // maybe we might want to modify how many like marbles also in here which could b cool 
-    [SerializeField] private int arena = 0;
+    [FormerlySerializedAs("arena")] [SerializeField] private int Arena = 0;
 
     // Overall Rating of the level, 1 being easiest, 5 being hardest
     [SerializeField, Range(1, 5), Tooltip("Overall rating of the level, 1 being the easiest, 5 being the hardest")]
@@ -62,19 +69,15 @@ public class LevelDataSO : ScriptableObject
 
     private bool bIsLevelVisited = false;
 
-    public LevelDataSO()
-    {
-
-    }
-
     public void SetLevelInfo(float enemyDifficulty, AggressionLevel enemyAggressionLevel, EnemyDeckType enemyDeckType,
-        string enemyName, int arena, int levelDifficulty)
+        string enemyName, int enemyHealth , int arena, int levelDifficulty)
     {
         EnemyDifficulty = enemyDifficulty;
         EnemyAggressionLevel = enemyAggressionLevel;
         EnemyDeckType = enemyDeckType;
         EnemyName = enemyName;
-        this.arena = arena;
+        EnemyHealth = enemyHealth;
+        this.Arena = arena;
         LevelDifficulty = levelDifficulty;
     }
 }

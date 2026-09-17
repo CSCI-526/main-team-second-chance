@@ -45,6 +45,10 @@ public class NodeManagerSO : ScriptableObject
     public List<LevelDataSO> GetLevels() { return Levels; }
     public List<MarbleData> GetPlayerDeck() { return PlayerDeck; }
 
+    public int GetPlayerHealth() { return _playerHealth; }
+
+    public void SetPlayerHealth(int newHealth) { _playerHealth = newHealth; }
+    
     public void UpdatePlayerDeck(List<MarbleData> playerDeck)
     {
         PlayerDeck = new List<MarbleData>(playerDeck); 
@@ -70,4 +74,5 @@ public class NodeManagerSO : ScriptableObject
     private List<LevelDataSO> Levels = new List<LevelDataSO>();
     private int ActiveLevel = 0;
     private List<MarbleData> PlayerDeck = new List<MarbleData>();
+    private int _playerHealth = -1;
 }

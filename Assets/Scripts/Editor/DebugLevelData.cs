@@ -16,6 +16,7 @@ namespace Editor
         public EnemyDeckType enemyDeckType = EnemyDeckType.DEFAULT;
         [FormerlySerializedAs("EnemyName")] [SerializeField]
         public string enemyName = "The Defaulter";
+        public int enemyHealth = 20;
         // maybe we might want to modify how many like marbles also in here which could b cool 
         [SerializeField] public int arena = 0;
 

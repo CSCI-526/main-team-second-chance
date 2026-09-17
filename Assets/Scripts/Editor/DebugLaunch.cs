@@ -54,7 +54,7 @@ namespace Editor
             
             LevelDataSO debugLevelInfo = CreateInstance<LevelDataSO>();
             debugLevelInfo.SetLevelInfo(levelData.enemyDifficulty, levelData.enemyAggressionLevel,
-                    levelData.enemyDeckType, levelData.enemyName, levelData.arena, levelData.levelDifficulty);
+                    levelData.enemyDeckType, levelData.enemyName,levelData.enemyHealth, levelData.arena, levelData.levelDifficulty);
             debugSaveData.GetLevels().Add(debugLevelInfo);
             
             List<MarbleData> debugPlayerDeck = new List<MarbleData>(levelData.playerDeck);
@@ -98,6 +98,7 @@ namespace Editor
                     serializedTarget.FindProperty(nameof(_debugLevelData.enemyAggressionLevel)));
                 EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyDeckType)));
                 EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyName)));
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.enemyHealth)));
                 EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.arena)));
                 EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.levelDifficulty)));
                 serializedTarget.ApplyModifiedProperties();
@@ -156,6 +157,7 @@ namespace Editor
             _debugLevelData.enemyAggressionLevel = _levelDataSo.GetAggressionLevel();
             _debugLevelData.enemyDeckType = _levelDataSo.GetEnemyDeckType();
             _debugLevelData.enemyName = _levelDataSo.GetEnemyName();
+            _debugLevelData.enemyHealth = _levelDataSo.GetEnemyHealth();
             _debugLevelData.arena = _levelDataSo.GetArena();
             _debugLevelData.levelDifficulty = _levelDataSo.GetLevelDifficulty();
             

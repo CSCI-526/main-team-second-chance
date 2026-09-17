@@ -53,6 +53,16 @@ public class NodeManager : MonoBehaviour
         NodeManagerData.UpdatePlayerDeck(playerDeck);
     }
 
+    public int GetPlayerHealth()
+    {
+        return NodeManagerData.GetPlayerHealth();
+    }
+
+    public void SetPlayerHealth(int newHealth)
+    {
+        NodeManagerData.SetPlayerHealth(newHealth);
+    }
+
     public void SetSaveData(NodeManagerSO newSaveData)
     {
         NodeManagerData = newSaveData;
