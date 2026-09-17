@@ -217,9 +217,16 @@ public class GameManager : MonoBehaviour
     
     private void OnEndTurnPress(TurnState turnOwner)
     {
-        if (turnState == turnOwner && !bAreMarblesMoving)
+        if (turnState == turnOwner && !_advanceToNextTurn)
         {
-            IncrementTurnState();
+            if (bAreMarblesMoving)
+            {
+                _advanceToNextTurn = true;
+            }
+            else
+            {
+                IncrementTurnState();
+            }
         }
     }
 
@@ -323,6 +330,11 @@ public class GameManager : MonoBehaviour
             IncrementTurnState();
         }
         TurnStateEvents.OnMarblesSettled(turnState);
+        if (_advanceToNextTurn)
+        {
+            _advanceToNextTurn = false;
+            IncrementTurnState();
+        }
     }
 
     private void SettleAfterRoundEnd()
@@ -349,7 +361,6 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
-        TurnStateEvents.OnMarblesSettled(turnState);
         if (TurnState.WaitingOnEnemyTurn == turnState)
         {
             _playerHealth -= enemyScore;
@@ -358,6 +369,7 @@ public class GameManager : MonoBehaviour
             TurnStateEvents.OnHealthUpdated(_enemyHealth, _enemyMaxHealth,MarbleTeam.Enemy);
             NodeManager.Instance.SetPlayerHealth(_playerHealth);
         }
+        TurnStateEvents.OnMarblesSettled(turnState);
         IncrementTurnState();
     }
 
@@ -440,6 +452,7 @@ public class GameManager : MonoBehaviour
     private bool bAreMarblesMoving = false;
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
+    private bool _advanceToNextTurn = false;
 
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
