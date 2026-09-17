@@ -225,6 +225,10 @@ public class GameManager : MonoBehaviour
 
     private bool HasGameEnded()
     {
+        if (UseCombatSystem)
+        {
+            return enemyHealth <= 0 || playerHealth <= 0;
+        }
         return numPlayerTurns > gameLength;
         //return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
     }
@@ -346,6 +350,13 @@ public class GameManager : MonoBehaviour
         
         bAreMarblesMoving = false;
         TurnStateEvents.OnMarblesSettled(turnState);
+        if (TurnState.WaitingOnEnemyTurn == turnState)
+        {
+            playerHealth -= enemyScore;
+            enemyHealth -= playerScore;
+            TurnStateEvents.OnHealthUpdated(playerHealth,30,MarbleTeam.Player);
+            TurnStateEvents.OnHealthUpdated(enemyHealth,20,MarbleTeam.Enemy);
+        }
         IncrementTurnState();
     }
 
@@ -421,6 +432,8 @@ public class GameManager : MonoBehaviour
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
     private int enemyScore = 0;
+    private int playerHealth = 30;
+    private int enemyHealth = 20;
     private bool bAreMarblesMoving = false;
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
@@ -468,10 +481,12 @@ public class GameManager : MonoBehaviour
                 if (PlayerManager)
                 {
                     PlayerManager.InitializePlayerDeck();
+                    TurnStateEvents.OnHealthUpdated(30,30, MarbleTeam.Player);
                 }
 
                 if (EnemyManager)
                 {
+                    TurnStateEvents.OnHealthUpdated(20,20, MarbleTeam.Player);
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
                     ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
@@ -552,6 +567,12 @@ public class GameManager : MonoBehaviour
     {
         TurnStateEvents.MatchResult result = playerScore > enemyScore ? TurnStateEvents.MatchResult.PlayerWin : TurnStateEvents.MatchResult
             .EnemyWin;
+        if (UseCombatSystem)
+        {
+            result = playerHealth > 0
+                ? TurnStateEvents.MatchResult.PlayerWin
+                : TurnStateEvents.MatchResult.EnemyWin;
+        }
 
         AnalyticsManager.SendMetric("round_result", new AnalyticsManager.IntMetric(
             playerScore - enemyScore

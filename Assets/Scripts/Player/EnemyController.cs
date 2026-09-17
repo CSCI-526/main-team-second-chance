@@ -23,7 +23,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float CenterForce = 1.2f;
     [SerializeField] private float KnockoutForce = 5.0f;
     [SerializeField] private float KnockoutTargetRatio = 0.3f;
-    [SerializeField] private int DeckSize = 10;
     private float SkillLevel = 1.0f;
     private AggressionLevel Aggression = AggressionLevel.HyperAggressive;
 

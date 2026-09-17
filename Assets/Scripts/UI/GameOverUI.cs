@@ -13,6 +13,7 @@ public class GameOverUI : MonoBehaviour
     private TextMeshProUGUI PlayAgainText;
     //[SerializeField]
     //private Button LevelSelectButton;
+    [SerializeField] private GameObject backgroundHolder;
 
     public string titleScene;
     public string gameScene;
@@ -75,6 +76,7 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(0);
         GameOverText.gameObject.SetActive(false);
         PlayAgainButton.gameObject.SetActive(false);
+        backgroundHolder.gameObject.SetActive(false);
         //LevelSelectButton.gameObject.SetActive(false);
     }
 
@@ -83,6 +85,7 @@ public class GameOverUI : MonoBehaviour
         gameObject.GetComponent<CanvasRenderer>().SetAlpha(1);
         GameOverText.gameObject.SetActive(true);
         PlayAgainButton.gameObject.SetActive(true);
+        backgroundHolder.gameObject.SetActive(true);
         //LevelSelectButton.gameObject.SetActive(true);
 
         if (!PlayAgainText)
