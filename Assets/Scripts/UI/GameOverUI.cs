@@ -52,6 +52,7 @@ public class GameOverUI : MonoBehaviour
 
     private void UpdateGameOverPanel()
     {
+        /*
         if (GameManager.Instance.GetPlayerScore() == GameManager.Instance.GetEnemyScore())
         {
             GameOverText.text = "Draw!".ToUpper();
@@ -64,6 +65,7 @@ public class GameOverUI : MonoBehaviour
             GameOverText.color = GameManager.Instance.GetColorInfo().playerUIColor;
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
+        */
         {
             GameOverText.text = "Game over. You lose...".ToUpper();
             GameOverText.color = GameManager.Instance.GetColorInfo().enemyUIColor;
@@ -87,16 +89,18 @@ public class GameOverUI : MonoBehaviour
         PlayAgainButton.gameObject.SetActive(true);
         backgroundHolder.gameObject.SetActive(true);
         //LevelSelectButton.gameObject.SetActive(true);
-
+        
         if (!PlayAgainText)
         {
             Debug.LogError("PlayAgainText SerializedField is null. Please Set it to the text under PlayAgainButton");
         }
+        /*
         if (GameManager.Instance.GetPlayerScore() == GameManager.Instance.GetEnemyScore() || GameManager.Instance.GetPlayerScore() > GameManager.Instance.GetEnemyScore())
         {
             PlayAgainText.text = "CONTINUE";
         }
         else if (GameManager.Instance.GetPlayerScore() < GameManager.Instance.GetEnemyScore())
+        */
         {
             PlayAgainText.text = "TRY AGAIN";
             bDidPlayerLose = true;

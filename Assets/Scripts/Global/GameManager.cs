@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
             if (HasGameEnded() ||
                 bInSuddenDeath)
             {
-                if (enemyScore == playerScore)
+                if (enemyScore == playerScore && !UseCombatSystem)
                 {
                     if (!bInSuddenDeath)
                     {
