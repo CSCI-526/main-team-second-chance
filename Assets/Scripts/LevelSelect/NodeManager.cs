@@ -137,6 +137,7 @@ public class NodeManager : MonoBehaviour
                     {
                         NodeManagerData.InitializeLevelData();
                         CreateLevelGraph();
+                        SetPlayerHealth(-1);
                         bHasInitialized = true;
                     }
                     DrawLevelGraph();
