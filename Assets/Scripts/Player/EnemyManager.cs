@@ -6,6 +6,8 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     public Deck GetEnemyDeck() { return EnemyDeck; }
+
+    public HealthManager GetHealthManager() { return EnemyHealthManager;}
     public MarbleTeam GetTeam() { return Team; }
     [SerializeField]
     private int DeckSize = 12;
@@ -14,6 +16,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField]
     private MarbleTeam Team = MarbleTeam.Enemy;
     private Deck EnemyDeck;
+    [SerializeField] private HealthManager EnemyHealthManager;
     private EnemyController EnemyController;
     private int _marblesPlayed = 0;
 

@@ -21,12 +21,12 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnEnable()
     {
-        TurnStateEvents.OnHealthUpdate += UpdateHealth;
+        HealthEvents.OnHealthUpdate += UpdateHealth;
     }
 
     private void OnDisable()
     {
-        TurnStateEvents.OnHealthUpdate -= UpdateHealth;
+        HealthEvents.OnHealthUpdate -= UpdateHealth;
     }
 
     private void UpdateHealth(int curHealth, int maxHealth, MarbleTeam team)

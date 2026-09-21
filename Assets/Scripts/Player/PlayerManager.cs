@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public Deck GetPlayerDeck() { return PlayerDeck; }
+
+    public HealthManager GetHealthManager() { return PlayerHealthManager; }
     public bool isLaunchingMarble { get; set; }
 
     public MarbleTeam GetTeam() { return Team; }
@@ -15,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     private MarbleTeam Team = MarbleTeam.Player;
     [SerializeField]
     private Deck PlayerDeck;
+    [SerializeField] private HealthManager PlayerHealthManager;
     // Start is called before the first frame update
     void Awake()
     {
@@ -45,7 +48,15 @@ public class PlayerManager : MonoBehaviour
 
     public int GetStoredPlayerHealth()
     {
-        return NodeManager.Instance.GetPlayerHealth();
+        int health = NodeManager.Instance.GetPlayerCurHealth();
+        if (health < 0)
+            return NodeManager.Instance.GetPlayerMaxHealth();
+        return health;
+    }
+    
+    public int GetStoredPlayerMaxHealth()
+    {
+        return NodeManager.Instance.GetPlayerMaxHealth();
     }
     
     private void AddMarbleToDeck(MarbleData gameObject)
