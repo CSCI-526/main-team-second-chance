@@ -119,6 +119,13 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+        if (HitOut != null && bTryToHitOut)
+        {
+            Vector3 origin = HitOut.transform.position;
+            Debug.DrawLine(origin + new Vector3(-1.0f, 0.0f, -1.0f), origin + new Vector3(1.0f, 0.0f, 1.0f), Color.green,5.0f, false);
+            Debug.DrawLine(origin + new Vector3(-1.0f, 0.0f, 1.0f), origin + new Vector3(1.0f, 0.0f, -1.0f), Color.green,5.0f, false);
+        }
+
         if (!bTryToHitOut)
         {
             float angle = Random.Range(0.0f, 360.0f);
@@ -127,6 +134,9 @@ public class EnemyController : MonoBehaviour
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness * SkillLevel);
             Force = scale * CenterForce;
         }
+
+        Debug.DrawRay(Location, Direction,Color.red,5.0f,false);
+        
         MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location, false);
     }
 
