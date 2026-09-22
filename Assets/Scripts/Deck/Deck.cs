@@ -225,7 +225,7 @@ public class Deck : MonoBehaviour
                     }
                 }
             }
-            else if (turn == TurnState.WaitingOnEnemyTurn && GameManager.DrawnNewHandEachTurn)
+            else if (turn == TurnState.PlayerEndOfTurn && GameManager.DrawnNewHandEachTurn)
             {
                 DiscardPile.AddRange(Hand);
                 Hand.Clear();

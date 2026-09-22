@@ -70,7 +70,7 @@ public class TurnUI : MonoBehaviour
                 EnemyTurnArrow.enabled = false;
                 break;
             
-            case TurnState.WaitingOnEnemyTurn:
+            case TurnState.PlayerEndOfTurn:
                 /*
                 UpdateTurnTextForEnemy();
                 TurnText.text = "WAITING";
@@ -85,7 +85,7 @@ public class TurnUI : MonoBehaviour
                 EnemyTurnArrow.enabled = true;
                 break;
             
-            case TurnState.WaitingOnPlayerTurn:
+            case TurnState.EnemyEndOfTurn:
                 /*
                 UpdateTurnTextForPlayer();
                 TurnText.text = "WAITING";

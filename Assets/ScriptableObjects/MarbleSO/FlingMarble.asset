@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
+  m_Name: FlingMarble
+  m_EditorClassIdentifier: 
+  MarblePrefabOverride: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 2a3a731c9bd354ef59603d2fd8ca3f70, type: 3}
+  EnergyCost: 1
+  Points: 0
+  Mass: 1
+  UniformScale: 0.5
+  Drag: 0.7
+  MarbleName: Flingle
+  MarbleDescription: Destroys the first marble hit and does damage equal to 3 times
+    its points to the enemy
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
+  ParticlePrefab: {fileID: 0}
+  AbilityObject: {fileID: 11400000, guid: 44250a3f0751a4c08a2587c2265a1b72, type: 2}

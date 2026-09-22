@@ -8,9 +8,10 @@ using Random = UnityEngine.Random;
 public enum TurnState
 {
     EnemyTurn,
-    WaitingOnPlayerTurn,
+    EnemyEndOfTurn,
     PlayerTurn,
-    WaitingOnEnemyTurn,
+    PlayerEndOfTurn,
+    RoundEnd,
     GameOver,
     CardSelect,
     MatchEnd
@@ -143,7 +144,7 @@ public class GameManager : MonoBehaviour
 
     private void IncrementTurnState()
     {
-        if (turnState == TurnState.WaitingOnEnemyTurn)
+        if (turnState == TurnState.RoundEnd)
         {
             turnState = TurnState.EnemyTurn;
         }
@@ -203,7 +204,7 @@ public class GameManager : MonoBehaviour
                 TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
             }
         }
-        else if (turnState == TurnState.WaitingOnPlayerTurn)
+        else if (turnState == TurnState.EnemyEndOfTurn)
         {
             if (TutorialManager.Instance.ShouldDisplayAnymore)
             {
@@ -214,7 +215,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (turnState == TurnState.WaitingOnEnemyTurn || turnState == TurnState.WaitingOnPlayerTurn)
+        if (turnState == TurnState.RoundEnd)
+        {
+            if (UseCombatSystem)
+            {
+                StartCoroutine(RoundEndDamagePhase());
+            }
+            else
+            {
+                DOVirtual.DelayedCall(0.5f * turnSpeed * Time.timeScale, () => { IncrementTurnState(); }, false);
+            }
+        }
+
+        if (turnState == TurnState.PlayerEndOfTurn || turnState == TurnState.EnemyEndOfTurn)
         {
             SettleAfterRoundEnd();
         }
@@ -233,6 +246,11 @@ public class GameManager : MonoBehaviour
                 IncrementTurnState();
             }
         }
+    }
+
+    private void OnPlayerDied(MarbleTeam team)
+    {
+        _someoneHasDied = true;
     }
 
     private bool HasGameEnded()
@@ -323,6 +341,10 @@ public class GameManager : MonoBehaviour
         {
             if (marble != null)
             {
+                if (!marble.isActiveAndEnabled)
+                {
+                    continue;
+                }
                 Sequence settleSequence = marble.CastSettleAbility();
                 if (settleSequence != null)
                 {
@@ -334,6 +356,12 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
+        
+        if (UseCombatSystem && HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
         if (OneMarblePerTurn)
         {
             IncrementTurnState();
@@ -360,6 +388,10 @@ public class GameManager : MonoBehaviour
         
         foreach (var marble in MarblesList)
         {
+            if (!marble.isActiveAndEnabled)
+            {
+                continue;
+            }
             Sequence roundEndSequence = marble.CastRoundEndAbility();
             if (roundEndSequence != null)
             {
@@ -370,11 +402,13 @@ public class GameManager : MonoBehaviour
         }
         
         bAreMarblesMoving = false;
-        if (TurnState.WaitingOnEnemyTurn == turnState)
+        
+        if (UseCombatSystem && HasGameEnded())
         {
-            EnemyManager.GetHealthManager().TakeDamage(playerScore);
-            PlayerManager.GetHealthManager().TakeDamage(enemyScore);
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
         }
+        
         TurnStateEvents.OnMarblesSettled(turnState);
         IncrementTurnState();
     }
@@ -429,6 +463,37 @@ public class GameManager : MonoBehaviour
         CleanupMarbles();
     }
 
+    private IEnumerator RoundEndDamagePhase()
+    {
+        if (playerScore > 0)
+        {
+            EnemyManager.GetHealthManager().TakeDamage(playerScore);
+            yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f * turnSpeed * Time.timeScale);
+        }
+
+        if (HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
+
+        if (enemyScore > 0)
+        {
+            PlayerManager.GetHealthManager().TakeDamage(enemyScore);
+            yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f * turnSpeed * Time.timeScale);
+        }
+
+        IncrementTurnState();
+    }
+
     [SerializeField]
     private ScoringZoneManager scoringZoneManager;
     [SerializeField]
@@ -456,6 +521,7 @@ public class GameManager : MonoBehaviour
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
     private bool _advanceToNextTurn = false;
+    private bool _someoneHasDied = false;
 
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
@@ -508,7 +574,7 @@ public class GameManager : MonoBehaviour
                     EnemyManager.GetHealthManager().SetHealth(LevelData.GetEnemyHealth(),LevelData.GetEnemyHealth());
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
-                    ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
+                    ForceUpdateEvents(TurnState.PlayerEndOfTurn);
                 }
             }
         }
@@ -521,6 +587,7 @@ public class GameManager : MonoBehaviour
         MarbleEvents.OnMarbleSpawned += RegisterMarble;
         TurnStateEvents.OnEndTurnPress += OnEndTurnPress;
         TurnStateEvents.OnTurnProgress += OnTurnProgress;
+        HealthEvents.OnKill += OnPlayerDied;
     }
 
     private void OnDisable()
@@ -530,6 +597,7 @@ public class GameManager : MonoBehaviour
         MarbleEvents.OnMarbleSpawned -= RegisterMarble;
         TurnStateEvents.OnEndTurnPress -= OnEndTurnPress;
         TurnStateEvents.OnTurnProgress -= OnTurnProgress;
+        HealthEvents.OnKill -= OnPlayerDied;
     }
 
     // removes all marbles not within scoring zone
