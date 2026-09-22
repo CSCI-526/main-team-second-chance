@@ -9,7 +9,8 @@ public class MarbleData : ScriptableObject
 {
     // Prefab & Type
     [Header("Marble Identification")]
-    public GameObject MarblePrefab; //Redundent under current implementation, might delete
+    //public GameObject MarblePrefab; //Redundent under current implementation, might delete
+    public GameObject MarblePrefabOverride;
     public Sprite sprite; // For later reference when we add UI/bag
 
     [Header("Marble Properties")] 
@@ -22,6 +23,7 @@ public class MarbleData : ScriptableObject
     public string MarbleDescription;
     //...and whatever properties we want to individually adjust
     public AudioInfo CollisionSounds;
+    public GameObject ParticlePrefab = null;
     [Header("Ability Properties")]
     public Ability AbilityObject;
 }

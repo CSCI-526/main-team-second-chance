@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2746a7e0507794f97bb78a3d90fe80eb, type: 3}
   m_Name: MarbleSpace
   m_EditorClassIdentifier: 
+  BaseMarblePrefab: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+    type: 3}
   MarblePrefabs:
   - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
   - {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b, type: 2}

@@ -28,20 +28,16 @@ public class MarbleLauncher : MonoBehaviour
         Location.y = 0.25f;
         Direction.y = 0.0f;
 
-        GameObject MarbleObject = Instantiate(Type.MarblePrefab);
-        MarbleObject.transform.SetPositionAndRotation(Location, Quaternion.identity);
-
-        Marble MarbleIns = MarbleObject.GetComponent<Marble>();
+        
+        Marble MarbleIns = Marble.CreateMarble(Type,Team);
+        MarbleIns.transform.SetPositionAndRotation(Location, Quaternion.identity);
         if (!MarbleIns)
         {
             Debug.LogError("MarbleLauncher.LaunchMarble(): Marble.cs is not attached to marble prefab");
             return;
         }
-        MarbleIns.SetMarbleTeam(Team);
 
-        MarbleIns.SetMarbleSprite(MarbleIns.GetMarbleData().sprite); // uhhh why here
-
-        Rigidbody MarbleRigidBody = MarbleObject.GetComponent<Rigidbody>();
+        Rigidbody MarbleRigidBody = MarbleIns.GetMarbleRigidbody();
         // Normalize Direction then apply launch
         Direction.Normalize();
         Direction *= LaunchForceScale * Force;

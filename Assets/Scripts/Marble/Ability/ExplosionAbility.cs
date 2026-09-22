@@ -28,7 +28,7 @@ public class ExplosionAbility : Ability
                 rb.AddExplosionForce(p, explosionPos, r, 0.0f, ForceMode.Impulse);
         }
 
-        marble.GetComponentInChildren<ParticleSystem>().Play();
+        marble.marbleParticleSystem.Play();
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         marble.timesCasted++;
     }

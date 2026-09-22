@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum MarbleTeam
 {
@@ -18,7 +19,7 @@ public class Marble : MonoBehaviour
     [SerializeField]
     private MarbleData marbleData;
 
-    public ParticleSystem particleSystem;
+    [FormerlySerializedAs("particleSystem")] public ParticleSystem marbleParticleSystem;
     [SerializeField] private Collider scoringCollider;
     [SerializeField] private Collider physicsCollider;
     [SerializeField] private SpriteRenderer marbleImage;
@@ -43,22 +44,14 @@ public class Marble : MonoBehaviour
     private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
-        if (marbleData != null)
-        {
-            rb = GetComponent<Rigidbody>();
-            var currentScale = this.gameObject.transform.localScale;
-
-            this.gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
-            rb.mass = marbleData.Mass;
-            rb.drag = marbleData.Drag;
-        }
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
     {
-        if (particleSystem != null)
+        if (marbleParticleSystem != null)
         {
-            particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+            marbleParticleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -133,7 +126,7 @@ public class Marble : MonoBehaviour
         MarbleRenderer.materials[1].SetColor(OutlineColor, team == MarbleTeam.Player ? colorInfo.playerOutlineColor : colorInfo.enemyOutlineColor);
     }
 
-    public void SetMarbleSprite(Sprite sprite)
+    private void SetMarbleSprite(Sprite sprite)
     {
         marbleImage.sprite = sprite;
         if (sprite != null)
@@ -141,5 +134,24 @@ public class Marble : MonoBehaviour
             float scale = 0.25f * 256.0f / sprite.rect.size.y;
             marbleImage.transform.localScale = new Vector3(scale, scale, scale);
         }
+    }
+
+    public static Marble CreateMarble(MarbleData marbleData, MarbleTeam team)
+    {
+        GameObject MarbleObject = Instantiate(marbleData.MarblePrefabOverride != null ? marbleData.MarblePrefabOverride : GameManager.Instance.GetDeckManager().GetBaseMarblePrefab());
+        Marble MarbleIns = MarbleObject.GetComponent<Marble>();
+        MarbleIns.marbleData = marbleData;
+        MarbleIns.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
+        MarbleIns.rb.mass = marbleData.Mass;
+        MarbleIns.rb.drag = marbleData.Drag;
+        MarbleIns.SetMarbleTeam(team);
+        MarbleIns.SetMarbleSprite(marbleData.sprite);
+        if (marbleData.ParticlePrefab != null)
+        {
+            GameObject particles = Instantiate(marbleData.ParticlePrefab, MarbleIns.transform);
+            MarbleIns.marbleParticleSystem = particles.GetComponent<ParticleSystem>();
+        }
+        
+        return MarbleIns;
     }
 }
