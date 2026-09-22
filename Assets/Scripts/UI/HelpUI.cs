@@ -14,14 +14,14 @@ public class HelpUI : MonoBehaviour
 
     public void OpenHelpPanel()
     {
-        Time.timeScale = 0.0f;
+        GameManager.SetGamePaused(true);
         helpPanel.SetActive(true);
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }
 
     public void CloseHelpPanel()
     {
-        Time.timeScale = 2.0f;
+        GameManager.SetGamePaused(false);
         helpPanel.SetActive(false);
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }

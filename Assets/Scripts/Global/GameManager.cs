@@ -116,6 +116,11 @@ public class GameManager : MonoBehaviour
         return colorInfo;
     }
 
+    public static void SetGamePaused(bool bPaused)
+    {
+        Time.timeScale = bPaused ? 0 : gameSpeed;
+    }
+
     private void OverrideTurnState(TurnState newTurnState)
     {
         turnState = newTurnState;
@@ -312,15 +317,19 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
-        
-        foreach (var marble in MarblesList)
+        // need to make a copy of the list to ensure we don't alter it during the settle routines
+        List<Marble> marblesToSettle = new List<Marble>(MarblesList);
+        foreach (var marble in marblesToSettle)
         {
-            Sequence settleSequence = marble.CastSettleAbility();
-            if (settleSequence != null)
+            if (marble != null)
             {
-                MarbleEvents.OnMarbleAbilityCasted(marble);
-                yield return settleSequence.WaitForCompletion();
-                yield return StartCoroutine(WaitForMarblesToSettle());
+                Sequence settleSequence = marble.CastSettleAbility();
+                if (settleSequence != null)
+                {
+                    MarbleEvents.OnMarbleAbilityCasted(marble);
+                    yield return settleSequence.WaitForCompletion();
+                    yield return StartCoroutine(WaitForMarblesToSettle());
+                }
             }
         }
         
@@ -435,8 +444,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private ColorInfo colorInfo;
     [SerializeField] private int gameLength = 3;
-    [SerializeField] private float gameSpeed = 2.0f;
-    [SerializeField] private float turnSpeed = 1.5f;
+    private static float gameSpeed = 3.0f;
+    private static float turnSpeed = 1.0f;
 
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
