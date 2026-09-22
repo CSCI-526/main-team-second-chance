@@ -123,7 +123,7 @@ public class EnemyController : MonoBehaviour
         {
             float angle = Random.Range(0.0f, 360.0f);
             Location = (new Vector3(Mathf.Cos(angle), 0.0f, Mathf.Sin(angle)) * colliderLength) + GenerateDirectionOffset();
-            Direction = capsuleCollider.center - Location + GenerateDirectionOffset();
+            Direction = capsuleCollider.transform.position - Location + GenerateDirectionOffset();
             float scale = Random.Range(1.0f, 1.0f + ForceRandomness * SkillLevel);
             Force = scale * CenterForce;
         }

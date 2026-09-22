@@ -2679,6 +2679,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScoringZoneManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4778927209566452213, guid: bf3a2cc5adbcf4dc2ac5db574edf17f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6003408811349094491, guid: bf3a2cc5adbcf4dc2ac5db574edf17f6,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -12,16 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ea8ea9a6c6e400e9ad4fc85929ea87, type: 3}
   m_Name: DebugLevelData
   m_EditorClassIdentifier: 
-  playerDeck:
-  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
-  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
-  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
-  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
-  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
+  playerDeck: []
   enemyDifficulty: 10
   enemyAggressionLevel: 0
-  enemyDeckType: 8
+  enemyDeckType: 0
   enemyName: The Defaulter
-  enemyHealth: 40
-  arena: 0
+  enemyHealth: 30
+  arena: 2
   levelDifficulty: 1
