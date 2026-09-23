@@ -18,7 +18,7 @@ public class EnemyController : MonoBehaviour
     public static EnemyController ins = null;
     private Deck EnemyDeck;
 
-    [SerializeField] private float ForceRandomness = 0.1f;
+    [SerializeField] private float ForceRandomness = 0.04f;
     [SerializeField] private float DirectionRandomness = 0.1f;
     [SerializeField] private float CenterForce = 1.2f;
     [SerializeField] private float KnockoutForce = 5.0f;
@@ -45,7 +45,18 @@ public class EnemyController : MonoBehaviour
 
         if (Aggression >= AggressionLevel.Aggressive)
         {
-            bTryToHitOut = CalculateKnockoutLaunch(ref Location, ref Direction, ref Force);
+            if (MarbleObject.AbilityObject is CloneAbility)
+            {
+                bTryToHitOut = CalculateTargetedShot(out Location, out Direction, out Force, MarbleTeam.Enemy);
+            }
+            else if (MarbleObject.AbilityObject is StealAbility or FlingAbility)
+            {
+                bTryToHitOut = CalculateTargetedShot(out Location, out Direction, out Force, MarbleTeam.Player);
+            }
+            else
+            {
+                bTryToHitOut = CalculateKnockoutLaunch(out Location, out Direction, out Force);
+            }
         }
         /*
         ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
@@ -126,7 +137,7 @@ public class EnemyController : MonoBehaviour
 
         if (!bTryToHitOut)
         {
-            CalculatePassiveLaunch(ref Location, ref Direction, ref Force);
+            CalculatePassiveLaunch(out Location, out Direction, out Force);
         }
 
         Debug.DrawRay(Location, Direction,Color.red,5.0f,false);
@@ -134,8 +145,11 @@ public class EnemyController : MonoBehaviour
         MarbleEvents.MarbleReadyToLaunch(MarbleTeam.Enemy, MarbleObject, Direction, Force, Location, false);
     }
 
-    private bool CalculateKnockoutLaunch(ref Vector3 location, ref Vector3 direction, ref float force)
+    private bool CalculateKnockoutLaunch(out Vector3 location, out Vector3 direction, out float force)
     {
+        location = Vector3.zero;
+        direction = Vector3.zero;
+        force = 0.0f;
         if (GameManager.Instance.GetMarblesList().Count <= 0)
         {
             return false;
@@ -177,11 +191,11 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-
+        
         return false;
     }
 
-    private bool CalculatePassiveLaunch(ref Vector3 location, ref Vector3 direction, ref float force)
+    private bool CalculatePassiveLaunch(out Vector3 location, out Vector3 direction, out float force)
     {
         ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
         CapsuleCollider capsuleCollider = (CapsuleCollider)scoreZone.GetDefaultScoringZone();
@@ -193,16 +207,67 @@ public class EnemyController : MonoBehaviour
             rand = Random.insideUnitCircle;
             position = capsuleCollider.transform.position + new Vector3(radius * rand.x,0.0f,radius * rand.y) * 0.95f;
         }
-        List<Vector3> launchPositions = GenerateValidLaunchPositions(position, LaunchLocationAttempts,
-            radius + ZoneSpacingBuffer);
-
-        location = launchPositions[Random.Range(0, launchPositions.Count)];
-        float dist = Vector3.Distance(location, position);
-        float forceScaling = dist / 3.0f;
-        direction = position - location + GenerateDirectionOffset();
-        float scale = Random.Range(1.0f, 1.0f + ForceRandomness * SkillLevel);
-        force = scale * CenterForce * forceScaling;
         
+        return CalculateCleanShot(out location, out direction, out force, position, null, radius);
+    }
+
+    private bool CalculateTargetedShot(out Vector3 location, out Vector3 direction, out float force, MarbleTeam team)
+    {
+        location = Vector3.zero;
+        direction = Vector3.zero;
+        force = 0.0f;
+        if (GameManager.Instance.GetMarblesList().Count <= 0)
+        {
+            return false;
+        }
+
+        ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
+        foreach (var marble in GameManager.Instance.GetMarblesList())
+        {
+            if (marble.Team != team || !marble.isActiveAndEnabled)
+                continue;
+            ScoringCircle scoringCircle = scoreZone.GetHighestPriorityCircle(marble);
+            if (scoringCircle == null)
+                continue;
+            float scoringRadius = scoringCircle.GetScoringCollider().radius;
+            if (CalculateCleanShot(out location, out direction, out force, marble.transform.position, marble.gameObject,
+                    scoringRadius))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool CalculateCleanShot(out Vector3 location, out Vector3 direction, out float force, Vector3 targetLocation, GameObject targetMarble, float radius)
+    {
+        location = Vector3.zero;
+        direction = Vector3.zero;
+        force = 0.0f;
+        
+        List<Vector3> launchPositions = GenerateValidLaunchPositions(targetLocation, LaunchLocationAttempts,
+            radius + ZoneSpacingBuffer);
+        int startingPositionIndex = Random.Range(0, launchPositions.Count);
+        // check for clean shot
+        for (int i = 0; i < launchPositions.Count; ++i)
+        {
+            location = launchPositions[(startingPositionIndex + i) % launchPositions.Count];
+            direction = targetLocation - location + GenerateDirectionOffset();
+            float dist = Vector3.Distance(location, targetLocation);
+            float forceScaling = dist / 2.65f;
+            float scale = Random.Range(1.0f - ForceRandomness * SkillLevel, 1.0f + ForceRandomness * SkillLevel);
+            force = scale * CenterForce * forceScaling;
+            
+            bool bBlocked = Physics.SphereCast(location, 0.3f, direction, out var hit,
+                radius * 4f, LayerMask.GetMask("MarblePhysics", "Terrain"));
+            if (!bBlocked || ((hit.collider.gameObject == targetMarble)))
+            {
+                DebugDrawX(targetLocation,Color.green);
+                return true;
+            }
+        }
+
         return false;
     }
 
