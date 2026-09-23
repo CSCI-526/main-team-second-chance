@@ -16,6 +16,6 @@ MonoBehaviour:
   abilityTriggerDelay: 0.75
   abilityMaxTriggers: 1
   teamToDamage: 0
-  damage: 0
+  damage: 999
   damageOnCollision: 0
-  turnToTriggerOn: 0
+  turnToTriggerOn: 3

@@ -7,6 +7,7 @@ namespace Editor
     public class DebugLevelData : ScriptableObject
     {
         public List<MarbleData> playerDeck;
+        public int playerHealth;
         
         [FormerlySerializedAs("EnemyDifficulty")] [SerializeField, Range(0.0f, 10.0f), Tooltip("How accurate the enemy will shoot")]
         public float enemyDifficulty = 1.0f;

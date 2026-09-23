@@ -59,6 +59,7 @@ namespace Editor
             
             List<MarbleData> debugPlayerDeck = new List<MarbleData>(levelData.playerDeck);
             debugSaveData.UpdatePlayerDeck(debugPlayerDeck);
+            debugSaveData.SetPlayerHealth(levelData.playerHealth);
             
             nodeManager.SetSaveData(debugSaveData);
         }
@@ -86,8 +87,13 @@ namespace Editor
             GUILayout.BeginVertical();
             GUILayout.Label("Debug Player Deck", EditorStyles.boldLabel);
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            if(serializedTarget != null)
-                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.playerDeck)), new GUIContent("Debug Deck"), true);
+            if (serializedTarget != null)
+            {
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.playerDeck)),
+                    new GUIContent("Debug Deck"), true);
+                EditorGUILayout.PropertyField(serializedTarget.FindProperty(nameof(_debugLevelData.playerHealth)));
+            }
+
             EditorGUILayout.EndScrollView();
         
             GUILayout.Label("Debug Level Settings", EditorStyles.boldLabel);

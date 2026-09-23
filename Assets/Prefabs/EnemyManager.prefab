@@ -49,9 +49,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ForceRandomness: 0.1
   DirectionRandomness: 0.1
-  CenterForce: 1.2
+  CenterForce: 1.6
   KnockoutForce: 6
   KnockoutTargetRatio: 0.3
+  ZoneSpacingBuffer: 0.25
+  LaunchLocationAttempts: 8
 --- !u!114 &3797704203141291860
 MonoBehaviour:
   m_ObjectHideFlags: 0
