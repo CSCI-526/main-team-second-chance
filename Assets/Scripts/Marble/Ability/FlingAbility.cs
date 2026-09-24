@@ -16,11 +16,10 @@ public class FlingAbility : Ability
 
         if (other.bIsInsideScoringCircle)
         {
-            GameManager.Instance.UpdateEntityScore(other.Team, other.GetMarbleData().Points, false);
             HealthManager manager = marble.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance
                 .GetPlayerManager().GetHealthManager();
             manager.TakeDamage(other.GetMarbleData().Points * multiplier);
-            other.gameObject.SetActive(false);
+            other.DestroyMarble();
         }
 
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);

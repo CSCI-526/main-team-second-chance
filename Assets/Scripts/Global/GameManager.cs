@@ -320,8 +320,9 @@ public class GameManager : MonoBehaviour
 
     private void RemoveMarble(Marble MarbleObject)
     {
-        MarblesList.Remove(MarbleObject);
-        Destroy(MarbleObject.gameObject);
+        //MarblesToDelete.Add(MarbleObject);
+        //MarblesList.Remove(MarbleObject);
+        //Destroy(MarbleObject.gameObject);
     }
 
     private void SettleAfterMarbleLaunch()
@@ -607,7 +608,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (Marble marble in MarblesList)
             {
-                if (!marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
+                if (marble == null || !marble.isActiveAndEnabled || !marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
                 {
                     MarblesToDelete.Add(marble);
                 }
@@ -623,7 +624,7 @@ public class GameManager : MonoBehaviour
             }
             MarblesToDelete.Clear();
         }
-        MarblesToDelete.Clear();
+        //MarblesToDelete.Clear();
     }
     
     // removes all marbles

@@ -154,4 +154,13 @@ public class Marble : MonoBehaviour
         
         return MarbleIns;
     }
+
+    public void DestroyMarble()
+    {
+        if (bIsInsideScoringCircle)
+        {
+            GameManager.Instance.UpdateEntityScore(Team, GetMarbleData().Points, false);
+        }
+        gameObject.SetActive(false);
+    }
 }
