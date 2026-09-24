@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 
 public enum TurnState
 {
+    RoundStart,
     EnemyTurn,
     EnemyEndOfTurn,
     PlayerTurn,
@@ -146,7 +147,7 @@ public class GameManager : MonoBehaviour
     {
         if (turnState == TurnState.RoundEnd)
         {
-            turnState = TurnState.EnemyTurn;
+            turnState = TurnState.RoundStart;
         }
         else
         {
@@ -225,6 +226,11 @@ public class GameManager : MonoBehaviour
             {
                 DOVirtual.DelayedCall(0.5f * turnSpeed * Time.timeScale, () => { IncrementTurnState(); }, false);
             }
+        }
+
+        if (turnState == TurnState.RoundStart)
+        {
+            StartCoroutine(RoundStartPhase());
         }
 
         if (turnState == TurnState.PlayerEndOfTurn || turnState == TurnState.EnemyEndOfTurn)
@@ -495,6 +501,32 @@ public class GameManager : MonoBehaviour
         IncrementTurnState();
     }
 
+    private IEnumerator RoundStartPhase()
+    {
+        bAreMarblesMoving = true;
+        foreach (var startSequence in RoundStartSequences)
+        {
+            Coroutine s = startSequence?.Invoke();
+            if (s != null)
+            { 
+                yield return s;
+                yield return StartCoroutine(WaitForMarblesToSettle());
+            }
+        }
+        
+        // round start abilities would go here
+        
+        bAreMarblesMoving = false;
+        
+        if (UseCombatSystem && HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
+        
+        IncrementTurnState();
+    }
+
     [SerializeField]
     private ScoringZoneManager scoringZoneManager;
     [SerializeField]
@@ -532,6 +564,7 @@ public class GameManager : MonoBehaviour
     public static bool UseEnergy;
     public static bool OneMarblePerTurn;
     public static bool UseCombatSystem;
+    public static List<Func<Coroutine>> RoundStartSequences = new List<Func<Coroutine>>();
 
     private void Awake()
     {
@@ -575,7 +608,7 @@ public class GameManager : MonoBehaviour
                     EnemyManager.GetHealthManager().SetHealth(LevelData.GetEnemyHealth(),LevelData.GetEnemyHealth());
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
-                    ForceUpdateEvents(TurnState.PlayerEndOfTurn);
+                    ForceUpdateEvents(TurnState.RoundStart);
                 }
             }
         }
