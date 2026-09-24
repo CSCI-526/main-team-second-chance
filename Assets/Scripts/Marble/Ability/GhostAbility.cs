@@ -14,7 +14,7 @@ public class GhostAbility : Ability
 
     public override void Cast(Marble marble)
     {
-        marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics");
+        marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics","Terrain");
         MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();
         MarbleRenderer.materials[0].SetColor(MarbleColor,GameManager.Instance.GetColorInfo().playerMarbleColor * ghostColor);
         MarbleRenderer.materials[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;

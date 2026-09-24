@@ -53,6 +53,10 @@ public class EnemyController : MonoBehaviour
             {
                 bTryToHitOut = CalculateTargetedShot(out Location, out Direction, out Force, MarbleTeam.Player);
             }
+            else if (MarbleObject.AbilityObject is ExplosionAbility ability)
+            {
+                bTryToHitOut = CalculateExplosionTarget(out Location, out Direction, out Force, ability);
+            }
             else
             {
                 bTryToHitOut = CalculateKnockoutLaunch(out Location, out Direction, out Force);
@@ -269,6 +273,58 @@ public class EnemyController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private bool CalculateExplosionTarget(out Vector3 location, out Vector3 direction, out float force, ExplosionAbility ability)
+    {
+        location = Vector3.zero;
+        direction = Vector3.zero;
+        force = 0.0f;
+        if (GameManager.Instance.GetMarblesList().Count <= 0)
+        {
+            return false;
+        }
+
+        Marble BestTarget = null;
+        float radius = 0.0f;
+        int bestRating = 0;
+        ScoringZoneManager scoreZone = GameManager.Instance.GetScoringZoneManager();
+        foreach (var marble in GameManager.Instance.GetMarblesList())
+        {
+            if (marble.Team == MarbleTeam.Enemy || !marble.isActiveAndEnabled)
+                continue;
+            ScoringCircle scoringCircle = scoreZone.GetHighestPriorityCircle(marble);
+            if (scoringCircle == null)
+                continue;
+            Collider[] results = new Collider[6];
+            var size = Physics.OverlapSphereNonAlloc(marble.transform.position, ability.GetRadius(), results, LayerMask.GetMask("MarblePhysics"));
+            int rating = 0;
+            foreach (Collider hit in results)
+            {
+                if (hit != null)
+                {
+                    Marble hitMarble = hit.GetComponent<Marble>();
+                    if (hitMarble != null)
+                    {
+                        rating += hitMarble.Team == MarbleTeam.Player ? 1 : -1;
+                    }
+                }
+            }
+
+            if (rating > bestRating)
+            {
+                bestRating = rating;
+                radius = scoringCircle.GetScoringCollider().radius;
+                BestTarget = marble;
+            }
+        }
+
+        if (BestTarget != null)
+        {
+            return CalculateCleanShot(out location, out direction, out force, BestTarget.transform.position, BestTarget.gameObject, radius);
+        }
+
+        return CalculateKnockoutLaunch(out location, out direction, out force);
     }
 
     private Vector3 GenerateDirectionOffset()

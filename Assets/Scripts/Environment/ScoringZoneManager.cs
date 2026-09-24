@@ -164,7 +164,8 @@ public class ScoringZoneManager : MonoBehaviour
         {
             return false;
         }
-        return true;
+        
+        return !Physics.Raycast(launchPosition - new Vector3(0.0f,2.0f,0.0f), Vector3.up, 5.0f, LayerMask.GetMask("Terrain"));
     }
     
     public bool CheckInScoringZone(Vector3 position)

@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: DebugLevelData
   m_EditorClassIdentifier: 
   playerDeck:
-  - {fileID: 11400000, guid: 513a4d4a7e83041e0ac23bbb1302a2b9, type: 2}
+  - {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816, type: 2}
+  - {fileID: 11400000, guid: 28fb7ef8859bf724180b8d3070e3e324, type: 2}
   - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
   - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659, type: 2}
+  - {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b, type: 2}
   playerHealth: 999
   enemyDifficulty: 5
   enemyAggressionLevel: 1
-  enemyDeckType: 9
+  enemyDeckType: 2
   enemyName: The Defaulter
   enemyHealth: 999
   arena: 4

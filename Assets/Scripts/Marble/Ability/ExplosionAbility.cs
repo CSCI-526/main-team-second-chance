@@ -32,4 +32,9 @@ public class ExplosionAbility : Ability
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         marble.timesCasted++;
     }
+
+    public float GetRadius()
+    {
+        return radius;
+    }
 }

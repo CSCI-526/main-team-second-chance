@@ -137,6 +137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8749701716015303071, guid: c86271d6bb5b8164c9898469e34b1c26,
         type: 3}
+      propertyPath: m_LocalScale.z
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 8749701716015303071, guid: c86271d6bb5b8164c9898469e34b1c26,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2482,6 +2487,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayPlane
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350020680135335893, guid: 7ca5a4d3d3f4ed546afdd3a45dea30ef,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350020680135335893, guid: 7ca5a4d3d3f4ed546afdd3a45dea30ef,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7350020680135335893, guid: 7ca5a4d3d3f4ed546afdd3a45dea30ef,
         type: 3}
