@@ -1361,6 +1361,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1008142316}
   shakeDatas: {fileID: 11400000, guid: fa677aebaeaa045daa3961ee6b779d3c, type: 2}
+  ZOOM_OUT_EDGE_AREA: 0.9
+  ZOOM_IN_EDGE_AREA: 0.6
+  ZOOM_IN_TIMER: 2
 --- !u!1 &1071101802
 GameObject:
   m_ObjectHideFlags: 0

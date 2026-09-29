@@ -58,6 +58,10 @@ public class PlayerController : MonoBehaviour
         {
             CameraEvents.CameraShake(CameraManager.ShakeIntensity.Medium);
         }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CameraEvents.CameraZoomIn();
+        }
 #endif
         bool isPlayerTurnAndHasSelectedMarble =
             GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
@@ -106,11 +110,12 @@ public class PlayerController : MonoBehaviour
         // Currently dragging mouse
         if (Input.GetMouseButton(0))
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Backspace))
             {
                 PowerLineRenderer.gameObject.SetActive(false);
                 bCanShootMarble = false;
                 MouseIndicator.SetActive(false);
+                CameraEvents.CameraZoomIn();
                 return;
             }
             if (bCanShootMarble)
@@ -136,7 +141,7 @@ public class PlayerController : MonoBehaviour
                 Vector3 dotEndPos = Quaternion.Euler(0.0f, 180.0f, 0.0f) * (EndLocationMouse - StartLocationMouse) / 2.0f + StartLocationMouse;
                 DottedLineRenderer.SetPosition(0, dotEndPos);
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
-
+                CameraEvents.UpdateCameraZoom(EndLocationMouse);
             }
             else
             {

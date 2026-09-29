@@ -11,9 +11,15 @@ public static class CameraEvents
         OnCameraShake?.Invoke(intensity);
     }
 
-    public static event Action<Vector2> OnCameraZoomOut;
-    public static void CameraZoomOut(Vector2 mousePos)
+    public static event Action OnCameraZoomIn;
+    public static void CameraZoomIn()
     {
-        OnCameraZoomOut?.Invoke(mousePos);
+        OnCameraZoomIn?.Invoke();
+    }
+    
+    public static event Action<Vector3> OnUpdateCameraZoom;
+    public static void UpdateCameraZoom(Vector3 pos)
+    {
+        OnUpdateCameraZoom?.Invoke(pos);
     }
 }
