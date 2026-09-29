@@ -54,6 +54,10 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.ForceUpdateEvents(TurnState.CardSelect);
         }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Medium);
+        }
 #endif
         bool isPlayerTurnAndHasSelectedMarble =
             GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&

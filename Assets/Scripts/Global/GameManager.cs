@@ -475,6 +475,7 @@ public class GameManager : MonoBehaviour
         if (playerScore > 0)
         {
             EnemyManager.GetHealthManager().TakeDamage(playerScore);
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
             yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
         }
         else
@@ -491,6 +492,7 @@ public class GameManager : MonoBehaviour
         if (enemyScore > 0)
         {
             PlayerManager.GetHealthManager().TakeDamage(enemyScore);
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
             yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
         }
         else

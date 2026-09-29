@@ -39,7 +39,7 @@ public class CrabArenaManager : ArenaManager
             if (rb != null && hit.CompareTag("Marble"))
                 rb.AddExplosionForce(power, target, radius, 0.0f, ForceMode.Impulse);
         }
-        
+        CameraEvents.CameraShake(CameraManager.ShakeIntensity.High);
         fist.DOShakePosition(0.125f * Time.timeScale);
         fist.DOMove(returnPos, 2.0f * Time.timeScale);
     }
@@ -49,7 +49,7 @@ public class CrabArenaManager : ArenaManager
         Vector3 target = Vector3.zero;
         foreach (var marble in GameManager.Instance.GetMarblesList())
         {
-            if (marble != null || !marble.bIsInsideScoringCircle || !marble.isActiveAndEnabled || marble.Team == MarbleTeam.Enemy)
+            if (marble != null || !marble.bIsInsideScoringCircle || !marble.gameObject.activeInHierarchy || marble.Team == MarbleTeam.Enemy)
             {
                 continue;
             }

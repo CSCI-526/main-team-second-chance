@@ -1221,6 +1221,7 @@ GameObject:
   - component: {fileID: 1008142316}
   - component: {fileID: 1008142315}
   - component: {fileID: 1008142318}
+  - component: {fileID: 1008142319}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1346,6 +1347,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1008142319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008142314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852543f5b655948ffb418bd6e0c01473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1008142316}
+  shakeDatas: {fileID: 11400000, guid: fa677aebaeaa045daa3961ee6b779d3c, type: 2}
 --- !u!1 &1071101802
 GameObject:
   m_ObjectHideFlags: 0
@@ -3360,6 +3375,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ScoringZoneManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5411285767831409753, guid: bf3a2cc5adbcf4dc2ac5db574edf17f6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6003408811349094491, guid: bf3a2cc5adbcf4dc2ac5db574edf17f6,
         type: 3}

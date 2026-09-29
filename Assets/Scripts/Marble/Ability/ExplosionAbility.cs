@@ -30,6 +30,7 @@ public class ExplosionAbility : Ability
 
         marble.marbleParticleSystem.Play();
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        CameraEvents.CameraShake(CameraManager.ShakeIntensity.Medium);
         marble.timesCasted++;
     }
 
