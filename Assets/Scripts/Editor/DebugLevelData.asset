@@ -21,8 +21,8 @@ MonoBehaviour:
   playerHealth: 999
   enemyDifficulty: 5
   enemyAggressionLevel: 1
-  enemyDeckType: 2
+  enemyDeckType: 0
   enemyName: The Defaulter
   enemyHealth: 999
-  arena: 5
+  arena: 0
   levelDifficulty: 1
