@@ -334,7 +334,7 @@ public class NodeManager : MonoBehaviour
         levelGraph.Add(new List<NodeInfo>());
         {
             NodeInfo nodeInfo = new NodeInfo();
-            nodeInfo.layer = 0;
+            nodeInfo.layer = Layers-1;
             nodeInfo.level = NodeManagerData.GetBossLevel();
             levelGraph[^1].Add(nodeInfo);
         }
@@ -368,7 +368,7 @@ public class NodeManager : MonoBehaviour
             {
                 if (nodeInfo.children.Count == 0)
                 {
-                    int goalIndex = Mathf.Clamp(levelGraph[layer].IndexOf(nodeInfo), 0, levelGraph[layer + 1].Count-1);
+                    int goalIndex = Mathf.Clamp(levelGraph[layer].IndexOf(nodeInfo)+1, 0, levelGraph[layer + 1].Count-1);
                     MakeEdges(nodeInfo, new List<NodeInfo>(){levelGraph[layer+1][goalIndex]});
                 }
             }
