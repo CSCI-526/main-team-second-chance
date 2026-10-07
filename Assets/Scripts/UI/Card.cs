@@ -126,6 +126,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (IsInCardSelect)
+            return;
+        
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
         {
@@ -143,6 +146,9 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (IsInCardSelect)
+            return;
+        
         if (GameManager.Instance.GetTurnState() == TurnState.PlayerTurn &&
             !GameManager.Instance.GetPlayerManager().isLaunchingMarble)
         {
@@ -153,7 +159,7 @@ public class Card : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left)
+        if (eventData.button != PointerEventData.InputButton.Left || IsInCardSelect)
         {
             return;
         }

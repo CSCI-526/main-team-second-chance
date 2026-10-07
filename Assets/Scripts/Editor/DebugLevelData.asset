@@ -18,6 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aaede1b88a05db64db45f043b3a2e38a, type: 2}
   - {fileID: 11400000, guid: 6c37e932eaa9b4b64a89513fdcd4921b, type: 2}
   - {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b, type: 2}
+  - {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b, type: 2}
   playerHealth: 999
   enemyDifficulty: 5
   enemyAggressionLevel: 1

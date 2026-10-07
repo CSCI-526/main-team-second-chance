@@ -31,6 +31,7 @@ public class ViewDeck : MonoBehaviour
     [SerializeField]
     private int MAX_NUM_TO_DISCARD;
     private int numDiscardedCards = 0;
+    private List<MarbleData> _viewedMarbles;
     public static event Action<int> OnDiscardCardPrompted;
     public static void DoDiscardCard(int Index)
     {
@@ -39,19 +40,54 @@ public class ViewDeck : MonoBehaviour
 
     private void OnEnable()
     {
-        OnDiscardCardPrompted += DisplayDiscardPanel;
+        //OnDiscardCardPrompted += DisplayDiscardPanel;
 
         if (NodeManager.Instance == null)
         {
             return;
         }
+        //DisplayDeck();
+        DeckEvents.OnMarbleDraw += UpdateDisplayedCards;
+        DeckEvents.OnMarbleUsed += UpdateDisplayedCards;
+    }
+
+    private void UpdateDisplayedCards(MarbleTeam arg1, int arg2)
+    {
         DisplayDeck();
     }
+
+    public void ViewDiscard()
+    {
+        if (GameManager.Instance == null)
+            return;
+        
+        gameObject.SetActive(true);
+        _viewedMarbles = GameManager.Instance.GetPlayerManager().GetPlayerDeck().DiscardPile;
+        DisplayDeck();
+    }
+
+    public void ViewDraw()
+    {
+        if (GameManager.Instance == null)
+            return;
+        
+        gameObject.SetActive(true);
+        _viewedMarbles = GameManager.Instance.GetPlayerManager().GetPlayerDeck().MarbleDeck;
+        DisplayDeck();
+    }
+
+    public void ViewFullDeck()
+    {
+        gameObject.SetActive(true);
+        _viewedMarbles = NodeManager.Instance.GetPlayerDeck();
+        DisplayDeck();
+    }
+    
+    
     private void DisplayDeck()
     {
         // Pull the player deck from the node manager script
-        List<MarbleData> PlayerMarbles = NodeManager.Instance.GetPlayerDeck();
-        if (PlayerMarbles == null)
+        if (_viewedMarbles == null)
         {
             return;
         }
@@ -66,7 +102,7 @@ public class ViewDeck : MonoBehaviour
             }
             DisplayedCards.Clear();
         }
-        if (PlayerMarbles.Count == 0)
+        if (_viewedMarbles.Count == 0)
         {
             DeckPanel.SetActive(false);
             NoMarblesText.gameObject.SetActive(true);
@@ -77,11 +113,11 @@ public class ViewDeck : MonoBehaviour
             NoMarblesText.gameObject.SetActive(false);
         }
         // Populate the panel with cards 
-        for (int i = 0; i < PlayerMarbles.Count; i++)
+        for (int i = 0; i < _viewedMarbles.Count; i++)
         {
             GameObject CardUI = Instantiate(CardPrefab, DeckPanel.transform, false);
             Card PrefabCard = CardUI.GetComponent<Card>();
-            PrefabCard.UpdateInformation(PlayerMarbles[i]);
+            PrefabCard.UpdateInformation(_viewedMarbles[i]);
             PrefabCard.IsInCardSelect = true;
             PrefabCard.SetHandIndex(i);
             DisplayedCards.Add(CardUI);
@@ -89,7 +125,9 @@ public class ViewDeck : MonoBehaviour
     }
     private void OnDisable()
     {
-        OnDiscardCardPrompted -= DisplayDiscardPanel;
+        //OnDiscardCardPrompted -= DisplayDiscardPanel;
+        DeckEvents.OnMarbleDraw -= UpdateDisplayedCards;
+        DeckEvents.OnMarbleUsed -= UpdateDisplayedCards;
     }
     public void DisplayDiscardPanel(int Index)
     {
