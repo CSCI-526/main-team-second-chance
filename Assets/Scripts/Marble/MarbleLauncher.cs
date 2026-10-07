@@ -40,7 +40,7 @@ public class MarbleLauncher : MonoBehaviour
         Rigidbody MarbleRigidBody = MarbleIns.GetMarbleRigidbody();
         // Normalize Direction then apply launch
         Direction.Normalize();
-        Direction *= LaunchForceScale * Force;
+        Direction *= LaunchForceScale * Force * Type.Mass;
         MarbleRigidBody.AddForce(Direction, ForceMode.Impulse);
         MarbleEvents.OnMarbleSpawn(MarbleIns);
         

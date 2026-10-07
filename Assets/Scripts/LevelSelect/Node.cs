@@ -8,16 +8,16 @@ using UnityEngine.UI;
 
 public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public static event Action<int> OnAttemptEnterLevel;
-    public static void AttemptEnterLevel(int level)
+    public static event Action<NodeManager.NodeInfo> OnAttemptEnterLevel;
+    public static void AttemptEnterLevel(NodeManager.NodeInfo nodeInfo)
     {
-        OnAttemptEnterLevel?.Invoke(level);
+        OnAttemptEnterLevel?.Invoke(nodeInfo);
     }
 
-    public static event Func<int, bool> OnCheckLevelAccessibility;
-    public static bool CheckLevelAccess(int level)
+    public static event Func<NodeManager.NodeInfo, bool> OnCheckLevelAccessibility;
+    public static bool CheckLevelAccess(NodeManager.NodeInfo nodeInfo)
     {
-        bool? ret = OnCheckLevelAccessibility?.Invoke(level);
+        bool? ret = OnCheckLevelAccessibility?.Invoke(nodeInfo);
         if (ret.HasValue)
         {
             return ret.Value;
@@ -36,8 +36,8 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     public int GetLayer() { return Layer; }
     public int GetNumParents() { return numParents; }
     public void IncrementNumParents() { numParents++; }
-    public void SetCorrespondingLevelSO(int Value) { DataRep = Value; }
-    public int GetCorrespondingLevelSO() { return DataRep; }
+    public void SetNodeInfo(NodeManager.NodeInfo Value) { _nodeInfo = Value; }
+    public NodeManager.NodeInfo GetNodeInfo() { return _nodeInfo; }
     public void AddChild(Node Child, UILineRenderer Line)
     {
         ChildrenList.Add(Child);
@@ -122,7 +122,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
             return;
         }
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
-        OnAttemptEnterLevel(DataRep);
+        OnAttemptEnterLevel?.Invoke(_nodeInfo);
     }
     public void UpdateNameOfNode(string Name)
     {
@@ -154,7 +154,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     private List<Node> ChildrenList = new List<Node>();
     private List<Node> ParentList = new List<Node>();
     private Dictionary<Node, UILineRenderer> NodeToLine = new Dictionary<Node, UILineRenderer>();
-    private int DataRep;
+    private NodeManager.NodeInfo _nodeInfo;
     private bool bHasChildren = false;
     private bool bIsTraversed = false;
     private bool bIsInaccessible = false;
@@ -187,7 +187,7 @@ public class Node : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, I
     {
         Color lineColor = NodeManager.Instance.lockedLevelOutlineColor;
         Color outLineColor = NodeManager.Instance.lockedLevelOutlineColor;
-        bool selectable = CheckLevelAccess(DataRep);
+        bool selectable = CheckLevelAccess(_nodeInfo);
         if (bIsInaccessible) 
         {
             float grayscale = NodeManager.Instance.clearedLevelOutlineColor.grayscale;

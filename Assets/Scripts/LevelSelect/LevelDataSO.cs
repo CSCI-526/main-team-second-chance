@@ -21,16 +21,6 @@ public class LevelDataSO : ScriptableObject
         return EnemyDeckType;
     }
 
-    public bool GetIsLevelVisited()
-    {
-        return bIsLevelVisited;
-    }
-
-    public void SetIsLevelVisited(bool value)
-    {
-        bIsLevelVisited = value;
-    }
-
     public int GetLevelDifficulty()
     {
         return LevelDifficulty;
@@ -66,8 +56,6 @@ public class LevelDataSO : ScriptableObject
     // Overall Rating of the level, 1 being easiest, 5 being hardest
     [SerializeField, Range(1, 5), Tooltip("Overall rating of the level, 1 being the easiest, 5 being the hardest")]
     private int LevelDifficulty = 1;
-
-    private bool bIsLevelVisited = false;
 
     public void SetLevelInfo(float enemyDifficulty, AggressionLevel enemyAggressionLevel, EnemyDeckType enemyDeckType,
         string enemyName, int enemyHealth , int arena, int levelDifficulty)

@@ -24,17 +24,11 @@ public class NodeManager : MonoBehaviour
 
     public bool ShouldRestartOrMenu()
     {
-        int LevelsLength = NodeManagerData.GetLevels().Count;
-        LevelDataSO LastLevel = NodeManagerData.GetLevels()[LevelsLength - 1];
-        if (LastLevel == NodeManagerData.GetActiveLevel())
-        {
-            return true;
-        }
-        return false;
+        return NodeManagerData.GetNumberFloors() == _activeNode.layer + 1;
     }
     public LevelDataSO GetLevelData()
     {
-        return NodeManagerData.GetActiveLevel();
+        return _activeNode.level;
     }
     public List<MarbleData> GetPlayerDeck()
     {
@@ -67,11 +61,18 @@ public class NodeManager : MonoBehaviour
     {
         NodeManagerData.SetPlayerHealth(newHealth);
     }
-
+#if UNITY_EDITOR
     public void SetSaveData(NodeManagerSO newSaveData)
     {
         NodeManagerData = newSaveData;
     }
+
+    public void SetActiveNode(NodeInfo node)
+    {
+        _activeNode = node;
+    }
+#endif
+    
     [SerializeField]
     private NodeManagerSO NodeManagerData;
     [SerializeField]
@@ -79,8 +80,7 @@ public class NodeManager : MonoBehaviour
     [SerializeField]
     private GameObject ConnectingLine;
     private static bool bHasInitialized = false;
-    public static List<int> TraversedNodes = new List<int>();
-    private Dictionary<int, Node> LevelNumToNodeComp = new Dictionary<int, Node>();
+    public static List<NodeInfo> TraversedNodes = new List<NodeInfo>();
     [SerializeField]
     private Transform StartingPosition;
     [SerializeField]
@@ -103,6 +103,7 @@ public class NodeManager : MonoBehaviour
     // Number of "Layers" that the map has
     private int Layers = 0;
     private static Vector2 previousScrollPosition = new Vector2(0, 0.5f);
+    private NodeInfo _activeNode;
 
     private void Awake()
     {
@@ -189,114 +190,94 @@ public class NodeManager : MonoBehaviour
     {
         if (TraversedNodes.Count == 0)
         {
-            if(LevelNumToNodeComp.TryGetValue(0, out Node val))
-            {
-                val.SetOutlineColor(false);
-            }
+            levelGraph[0][0].node.SetOutlineColor(false);
             return;
         }
 
         int currLayer = 0;
-        if (LevelNumToNodeComp.TryGetValue(TraversedNodes[TraversedNodes.Count - 1], out Node currNode))
-        {
-            currNode.MarkTraversed();
-            currLayer = currNode.GetLayer();
-        }
+        Node currNode = TraversedNodes[^1].node;
+        currNode.MarkTraversed();
+        currLayer = currNode.GetLayer();
+        
 
         // Mark cleared nodes on other layers.
         for (int i = 0; i < TraversedNodes.Count - 1; ++i)
         {
-            if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i], out Node val))
-            {
-                if (LevelNumToNodeComp.TryGetValue(TraversedNodes[i + 1], out _))
-                {
-                    val.MarkTraversed();
-                }
-            }
+            TraversedNodes[i].node.MarkTraversed();
         }
 
         // Mark all untraversed nodes on current or lower layers as inaccessible
-        foreach (Node node in LevelNumToNodeComp.Values)
+        foreach (var levelLayer in levelGraph)
         {
-            if (node.GetLayer() <= currLayer)
+            foreach (NodeInfo nodeInfo in levelLayer)
             {
-                node.MarkInaccessible();
-            }
-            else if (node.GetLayer() == currLayer + 1)
-            {
-                if (!CheckLevelAccess(node.GetCorrespondingLevelSO()))
-                    node.MarkInaccessible();
-            }
-            else
-            {
-
-                bool couldBeReached = false;
-                foreach (var parent in node.GetParents())
+                Node node = nodeInfo.node;
+                if (node.GetLayer() <= currLayer)
                 {
-                    if (!parent.GetIsInaccessible())
-                        couldBeReached = true;
+                    node.MarkInaccessible();
+                }
+                else if (node.GetLayer() == currLayer + 1)
+                {
+                    if (!CheckLevelAccess(node.GetNodeInfo()))
+                        node.MarkInaccessible();
+                }
+                else
+                {
+
+                    bool couldBeReached = false;
+                    foreach (var parent in node.GetParents())
+                    {
+                        if (!parent.GetIsInaccessible())
+                            couldBeReached = true;
+                    }
+
+                    if (!couldBeReached)
+                        node.MarkInaccessible();
                 }
 
-                if (!couldBeReached)
-                    node.MarkInaccessible();
+                node.SetOutlineColor(false);
             }
-            
-            node.SetOutlineColor(false);
         }
     }
 
-    private bool CheckLevelAccess(int level)
+    private bool CheckLevelAccess(NodeInfo nodeInfo)
     {
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        if (level >= Levels.Count || level < 0)
-        {
-            return false;
-        }
-        
         if (TraversedNodes.Count == 0)
         {
-            return level == 0;
+            return nodeInfo.layer == 0;
         }
 
         // Check to see if the latest node can connect to this input level
-        int lastVisitedLevel = TraversedNodes[TraversedNodes.Count - 1];
-        LevelNumToNodeComp.TryGetValue(lastVisitedLevel, out Node lastTraversedNode);
-        
-        if (LevelNumToNodeComp.TryGetValue(level, out Node node))
+        NodeInfo lastVisitedNode = TraversedNodes[^1];
+
+        if (lastVisitedNode.node.GetChildren().Contains(nodeInfo.node))
         {
-            if (lastTraversedNode.GetChildren().Contains(node))
-            {
-                return true;
-            }
+            return true;
         }
-        
         
         return false;
     }
 
-    private void DoAttemptEnterLevel(int level)
+    private void DoAttemptEnterLevel(NodeInfo nodeInfo)
     {
-        if (!CheckLevelAccess(level))
+        if (!CheckLevelAccess(nodeInfo))
         {
             return;
         }
-        
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
-        Levels[level].SetIsLevelVisited(true);
+
         previousScrollPosition = ScrollZone.normalizedPosition;
-        TraversedNodes.Add(level);
-        NodeManagerData.SetActiveLevel(level);
+        TraversedNodes.Add(nodeInfo);
+        //NodeManagerData.SetActiveLevel(level);
+        _activeNode = nodeInfo;
         SceneManagerScript.Instance.loadSceneByIndex(1);
     }
-
-    int[] LevelGraphCapacitiesByLayer = new int[]{1, 2, 4, 2, 1};
     private List<List<NodeInfo>> levelGraph = new List<List<NodeInfo>>();
 
-    private class NodeInfo 
+    public class NodeInfo 
     {
         public GameObject gameObject;
         public Node node;
-        public int level;
+        public LevelDataSO level;
         public int layer;
         public List<NodeInfo> parents = new List<NodeInfo>();
         public List<NodeInfo> children = new List<NodeInfo>();
@@ -308,21 +289,54 @@ public class NodeManager : MonoBehaviour
     private void CreateLevelGraph() 
     {
         levelGraph.Clear();
-        Layers = LevelGraphCapacitiesByLayer.Length;
+        Layers = NodeManagerData.GetNumberFloors();
+        
+        levelGraph.Add(new List<NodeInfo>());
+        {
+            NodeInfo nodeInfo = new NodeInfo();
+            nodeInfo.layer = 0;
+            nodeInfo.level = NodeManagerData.GetNormalLevel();
+            levelGraph[0].Add(nodeInfo);
+        }
         
         // Populate graph with nodes.
-        int currLevel = 0;
-        for (int layer = 0; layer < Layers; ++layer)
+        for (int layer = 1; layer < Layers-1; ++layer)
         {
             levelGraph.Add(new List<NodeInfo>());
-            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
+            int maxLevelsPerFloor = 4;
+            int floorsThisLevel = 0;
+            foreach (var parentNode in levelGraph[layer-1])
+            {
+                int nodeChildrenCount = Random.Range(1, 3);
+                nodeChildrenCount = Mathf.Clamp(nodeChildrenCount, 0, maxLevelsPerFloor - floorsThisLevel);
+                for(int levelInLayer = 0; levelInLayer < nodeChildrenCount; ++levelInLayer) 
+                {
+                    NodeInfo nodeInfo = new NodeInfo();
+                    nodeInfo.layer = layer;
+                    nodeInfo.level = NodeManagerData.GetNormalLevel();
+                    levelGraph[layer].Add(nodeInfo);
+                    MakeEdges(parentNode,new List<NodeInfo>(){nodeInfo});
+                }
+
+                floorsThisLevel += nodeChildrenCount;
+            }
+
+            if (floorsThisLevel == 0)
             {
                 NodeInfo nodeInfo = new NodeInfo();
                 nodeInfo.layer = layer;
-                nodeInfo.level = currLevel;
+                nodeInfo.level = NodeManagerData.GetNormalLevel();
                 levelGraph[layer].Add(nodeInfo);
-                currLevel++;
+                MakeEdges(levelGraph[layer-1][Random.Range(0,levelGraph[layer-1].Count)],new List<NodeInfo>(){nodeInfo});
             }
+        }
+        
+        levelGraph.Add(new List<NodeInfo>());
+        {
+            NodeInfo nodeInfo = new NodeInfo();
+            nodeInfo.layer = 0;
+            nodeInfo.level = NodeManagerData.GetBossLevel();
+            levelGraph[^1].Add(nodeInfo);
         }
 
         // Generate edges between levels.
@@ -332,10 +346,8 @@ public class NodeManager : MonoBehaviour
               |____[1,0]
               |____[1,1] 
         */
-        MakeEdges(
-            levelGraph[0][0], 
-            new NodeInfo[]{levelGraph[1][0], levelGraph[1][1]}
-        );
+
+        //MakeEdges(levelGraph[0][0], levelGraph[1]);
 
         /*
             Last level edges
@@ -344,12 +356,23 @@ public class NodeManager : MonoBehaviour
                      |
                    [4,0]
         */
-        MakeEdges(levelGraph[Layers-2][0], new NodeInfo[]{levelGraph[Layers-1][0]});
-        MakeEdges(levelGraph[Layers-2][1], new NodeInfo[]{levelGraph[Layers-1][0]});
+        foreach (var nodeInfo in levelGraph[Layers-2])
+        {
+            MakeEdges(nodeInfo, levelGraph[Layers-1]);
+        }
 
         // In-between layer edges.
         for (int layer = 1; layer < Layers-2; ++layer)
         {
+            foreach (var nodeInfo in levelGraph[layer])
+            {
+                if (nodeInfo.children.Count == 0)
+                {
+                    int goalIndex = Mathf.Clamp(levelGraph[layer].IndexOf(nodeInfo), 0, levelGraph[layer + 1].Count-1);
+                    MakeEdges(nodeInfo, new List<NodeInfo>(){levelGraph[layer+1][goalIndex]});
+                }
+            }
+            /*
             float ProbToDrawLine = 0.6f;
             for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer)
             {
@@ -367,10 +390,11 @@ public class NodeManager : MonoBehaviour
                 ProbToDrawLine -= Random.Range(0.05f, 0.4f);
                 ProbToDrawLine = Mathf.Clamp(ProbToDrawLine, 0.3f, 1.0f);
             }
+            */
         }
     }
 
-    private void MakeEdges(NodeInfo parent, NodeInfo[] children) {
+    private void MakeEdges(NodeInfo parent, List<NodeInfo> children) {
         parent.children.AddRange(children);
         foreach (NodeInfo child in children) {
             child.parents.Add(parent);
@@ -431,11 +455,9 @@ public class NodeManager : MonoBehaviour
     }
 
     private void DrawNodes() {
-        LevelNumToNodeComp.Clear();
-        List<LevelDataSO> Levels = NodeManagerData.GetLevels();
         for (int layer = 0; layer < Layers; ++layer)
         {
-            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
+            for (int levelInLayer = 0; levelInLayer < levelGraph[layer].Count; ++levelInLayer) 
             {
                 NodeInfo nodeInfo = levelGraph[layer][levelInLayer];
                 nodeInfo.gameObject = Instantiate(UIPrefab, MapParent.transform, false);
@@ -443,14 +465,12 @@ public class NodeManager : MonoBehaviour
 
                 Node nodeComp = nodeInfo.gameObject.GetComponent<Node>();
                 nodeComp.SetLayer(nodeInfo.layer);
-                nodeComp.SetCorrespondingLevelSO(nodeInfo.level);
-                nodeComp.CalculateDefaultColor(Levels[nodeInfo.level].GetLevelDifficulty());
-                nodeComp.UpdateNameOfNode(Levels[nodeInfo.level].GetEnemyName());
-
-                LevelNumToNodeComp.TryAdd(nodeInfo.level, nodeComp);
+                nodeComp.SetNodeInfo(nodeInfo);
+                nodeComp.CalculateDefaultColor(nodeInfo.level.GetLevelDifficulty());
+                nodeComp.UpdateNameOfNode(nodeInfo.level.GetEnemyName());
 
                 // Set position based on layer capacity.
-                float verticalOffset =  AdaptedVerticalOffset * (levelInLayer - (LevelGraphCapacitiesByLayer[layer] - 1) / 2.0f);
+                float verticalOffset =  AdaptedVerticalOffset * (levelInLayer - (levelGraph[layer].Count - 1) / 2.0f);
                 Vector3 newOffset = new Vector3(layer * AdaptedHorizontalOffset, verticalOffset);
                 nodeComp.transform.position = StartingPosition.position + newOffset;
             }
@@ -476,7 +496,7 @@ public class NodeManager : MonoBehaviour
     private void DrawEdges() {
         for (int layer = 0; layer < Layers; ++layer)
         {
-            for (int levelInLayer = 0; levelInLayer < LevelGraphCapacitiesByLayer[layer]; ++levelInLayer) 
+            for (int levelInLayer = 0; levelInLayer < levelGraph[layer].Count; ++levelInLayer) 
             {
                 NodeInfo parent = levelGraph[layer][levelInLayer];
                 foreach(NodeInfo child in parent.children) 

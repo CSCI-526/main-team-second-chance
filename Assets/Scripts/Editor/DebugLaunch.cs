@@ -55,12 +55,13 @@ namespace Editor
             LevelDataSO debugLevelInfo = CreateInstance<LevelDataSO>();
             debugLevelInfo.SetLevelInfo(levelData.enemyDifficulty, levelData.enemyAggressionLevel,
                     levelData.enemyDeckType, levelData.enemyName,levelData.enemyHealth, levelData.arena, levelData.levelDifficulty);
-            debugSaveData.GetLevels().Add(debugLevelInfo);
+            NodeManager.NodeInfo node = new NodeManager.NodeInfo();
+            node.level = debugLevelInfo;
             
             List<MarbleData> debugPlayerDeck = new List<MarbleData>(levelData.playerDeck);
             debugSaveData.UpdatePlayerDeck(debugPlayerDeck);
             debugSaveData.SetPlayerHealth(levelData.playerHealth);
-            
+            nodeManager.SetActiveNode(node);
             nodeManager.SetSaveData(debugSaveData);
         }
     

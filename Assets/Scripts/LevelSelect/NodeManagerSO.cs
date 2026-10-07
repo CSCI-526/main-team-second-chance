@@ -8,41 +8,79 @@ public class NodeManagerSO : ScriptableObject
 {
     public void InitializeLevelData()
     {
-        if (PossibleEasyLevels.Count == 0 || PossibleMediumLevels.Count == 0 || PossibleHardLevels.Count == 0)
+        if (PossibleEasyLevels.Count == 0 || PossibleMediumLevels.Count == 0 || PossibleEliteLevels.Count == 0 || PossibleStartLevels.Count == 0)
         {
             Debug.LogError("NodeManagerSO contains a list of levels that is empty. Please add in the correct levels.");
             return;
         }
 
-        Levels.Clear();
+        BossLevels.Clear();
+        NormalLevels.Clear();
+        EliteLevels.Clear();
 
-
+        EliteLevels.AddRange(PossibleEliteLevels);
+        NormalLevels.AddRange(PossibleEasyLevels);
+        NormalLevels.AddRange(PossibleMediumLevels);
+        
+        ShuffleLevelList(NormalLevels);
+        ShuffleLevelList(EliteLevels);
         // Forcibly make the first level default passive easy
-        Levels.Add(PossibleEasyLevels[PossibleEasyLevels.Count - 1]);
-
-        int firstThird = (int)(NumberLevels * (1.0f / 3.0f));
-        int secondThird = (int)(NumberLevels * (2.0f / 3.0f));
-        for (int i = 0; i < NumberLevels - 2; i++)
-        {
-            if (i < firstThird)
-            {
-                Levels.Add(PossibleEasyLevels[Random.Range(0, PossibleEasyLevels.Count - 1)]);
-            }
-            else if (i < secondThird)
-            {
-                Levels.Add(PossibleMediumLevels[Random.Range(0, PossibleMediumLevels.Count - 1)]);
-            }
-            else
-            {
-                Levels.Add(PossibleHardLevels[Random.Range(0, PossibleHardLevels.Count - 1)]);
-            }
-        }
-        // this index is the splitterer
-        Levels.Add(PossibleHardLevels[PossibleHardLevels.Count - 1]);
+        NormalLevels[0] = PossibleStartLevels[Random.Range(0, PossibleStartLevels.Count)];
+        
+        // add in a random boss level
+        BossLevels.Add(PossibleBossLevels[Random.Range(0, PossibleBossLevels.Count)]);
     }
-    public void SetActiveLevel(int index) { ActiveLevel = index; }
-    public LevelDataSO GetActiveLevel() { return Levels[ActiveLevel]; }
-    public List<LevelDataSO> GetLevels() { return Levels; }
+    
+    private void ShuffleLevelList(List<LevelDataSO> levelDataSOs)
+    {
+        for (int i = levelDataSOs.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            (levelDataSOs[i], levelDataSOs[randomIndex]) = (levelDataSOs[randomIndex], levelDataSOs[i]); // Swap
+        }
+    }
+    
+    public int GetNumberFloors() { return NumberFloors;}
+
+    public LevelDataSO GetBossLevel()
+    {
+        if (BossLevels.Count == 0)
+        {
+            BossLevels.AddRange(PossibleBossLevels);
+            ShuffleLevelList(BossLevels);
+        }
+        
+        LevelDataSO level = BossLevels[0];
+        BossLevels.RemoveAt(0);
+        return level;
+    }
+
+    public LevelDataSO GetEliteLevel()
+    {
+        if (EliteLevels.Count == 0)
+        {
+            EliteLevels.AddRange(PossibleEliteLevels);
+            ShuffleLevelList(EliteLevels);
+        }
+        
+        LevelDataSO level = EliteLevels[0];
+        EliteLevels.RemoveAt(0);
+        return level;
+    }
+
+    public LevelDataSO GetNormalLevel()
+    {
+        if (NormalLevels.Count == 0)
+        {
+            NormalLevels.AddRange(PossibleMediumLevels);
+            ShuffleLevelList(NormalLevels);
+        }
+        
+        LevelDataSO level = NormalLevels[0];
+        NormalLevels.RemoveAt(0);
+        return level;
+    }
+
     public List<MarbleData> GetPlayerDeck() { return PlayerDeck; }
 
     public int GetPlayerHealth() { return _playerCurHealth; }
@@ -63,17 +101,21 @@ public class NodeManagerSO : ScriptableObject
         PlayerDeck.RemoveAt(Index);
     }
     [SerializeField]
-    private int NumberLevels = 5;
+    private int NumberFloors = 6;
+    [SerializeField, Tooltip("Possible Start Levels")]
+    private List<LevelDataSO> PossibleStartLevels = new List<LevelDataSO>();
     [SerializeField, Tooltip("Possible Easy Levels")]
     private List<LevelDataSO> PossibleEasyLevels = new List<LevelDataSO>();
     [SerializeField, Tooltip("Possible Medium Levels")]
     private List<LevelDataSO> PossibleMediumLevels = new List<LevelDataSO>();
-    [SerializeField, Tooltip("Possible Hard Levels")]
-    private List<LevelDataSO> PossibleHardLevels = new List<LevelDataSO>();
-
-    [SerializeField]
-    private List<LevelDataSO> Levels = new List<LevelDataSO>();
-    private int ActiveLevel = 0;
+    [SerializeField, Tooltip("Possible Elite Levels")]
+    private List<LevelDataSO> PossibleEliteLevels = new List<LevelDataSO>();
+    [SerializeField, Tooltip("Possible Boss Levels")]
+    private List<LevelDataSO> PossibleBossLevels = new List<LevelDataSO>();
+    
+    private List<LevelDataSO> NormalLevels = new List<LevelDataSO>();
+    private List<LevelDataSO> EliteLevels = new List<LevelDataSO>();
+    private List<LevelDataSO> BossLevels = new List<LevelDataSO>();
     private List<MarbleData> PlayerDeck = new List<MarbleData>();
     private int _playerCurHealth = -1;
     private int _playerMaxHealth = 30;
