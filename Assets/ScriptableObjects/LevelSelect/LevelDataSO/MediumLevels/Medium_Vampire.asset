@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
-  m_Name: Medium_Random_Passive_Donut
+  m_Name: Medium_Vampire
   m_EditorClassIdentifier: 
-  EnemyDifficulty: 5
-  EnemyAggressionLevel: 0
-  EnemyDeckType: 1
-  EnemyName: The Randomer
-  arena: 2
+  EnemyDifficulty: 10
+  EnemyAggressionLevel: 1
+  EnemyDeckType: 9
+  EnemyName: The Vampirer
+  EnemyHealth: 15
+  Arena: 8
   LevelDifficulty: 3

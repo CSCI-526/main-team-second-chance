@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
-  m_Name: Hard_Explo_HyperAggro
+  m_Name: Elite_Splitter
   m_EditorClassIdentifier: 
-  EnemyDifficulty: 1
+  EnemyDifficulty: 1.5
   EnemyAggressionLevel: 2
-  EnemyDeckType: 2
-  EnemyName: The Exploder
-  EnemyHealth: 30
-  Arena: 0
-  LevelDifficulty: 5
+  EnemyDeckType: 10
+  EnemyName: The Splitterer
+  EnemyHealth: 25
+  Arena: 8
+  LevelDifficulty: 4

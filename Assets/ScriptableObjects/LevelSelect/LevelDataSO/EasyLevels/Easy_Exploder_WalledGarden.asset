@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
-  m_Name: Easy_Explo_Aggro
+  m_Name: Easy_Exploder_WalledGarden
   m_EditorClassIdentifier: 
   EnemyDifficulty: 10
-  EnemyAggressionLevel: 1
+  EnemyAggressionLevel: 0
   EnemyDeckType: 2
-  EnemyName: The Exploder
-  LevelDifficulty: 1
+  EnemyName: The Fify Fiftyer
+  EnemyHealth: 20
+  Arena: 8
+  LevelDifficulty: 2

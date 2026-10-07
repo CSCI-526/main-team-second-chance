@@ -313,7 +313,7 @@ public class NodeManager : MonoBehaviour
                 {
                     NodeInfo nodeInfo = new NodeInfo();
                     nodeInfo.layer = layer;
-                    nodeInfo.level = NodeManagerData.GetNormalLevel();
+                    nodeInfo.level = Random.Range(0.0f,1.0f) < .8f ? NodeManagerData.GetNormalLevel() : NodeManagerData.GetEliteLevel();
                     levelGraph[layer].Add(nodeInfo);
                     MakeEdges(parentNode,new List<NodeInfo>(){nodeInfo});
                 }

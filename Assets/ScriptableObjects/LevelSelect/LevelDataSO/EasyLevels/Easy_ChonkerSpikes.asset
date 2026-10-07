@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c54fb06172a0484794daa35739b000a, type: 3}
-  m_Name: Medium_Grower_HyperAggro
+  m_Name: Easy_ChonkerSpikes
   m_EditorClassIdentifier: 
-  EnemyDifficulty: 5
-  EnemyAggressionLevel: 2
-  EnemyDeckType: 4
-  EnemyName: The Grower
-  EnemyHealth: 20
-  Arena: 1
-  LevelDifficulty: 3
+  EnemyDifficulty: 7
+  EnemyAggressionLevel: 1
+  EnemyDeckType: 6
+  EnemyName: The Legoer
+  EnemyHealth: 15
+  Arena: 4
+  LevelDifficulty: 2
