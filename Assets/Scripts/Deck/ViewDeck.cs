@@ -91,6 +91,8 @@ public class ViewDeck : MonoBehaviour
         {
             return;
         }
+        List<MarbleData> displayedDeck = new List<MarbleData>(_viewedMarbles);
+        
         if (DisplayedCards.Count != 0)
         {
             foreach (GameObject go in DisplayedCards)
@@ -102,7 +104,7 @@ public class ViewDeck : MonoBehaviour
             }
             DisplayedCards.Clear();
         }
-        if (_viewedMarbles.Count == 0)
+        if (displayedDeck.Count == 0)
         {
             DeckPanel.SetActive(false);
             NoMarblesText.gameObject.SetActive(true);
@@ -112,12 +114,16 @@ public class ViewDeck : MonoBehaviour
             DeckPanel.SetActive(true);
             NoMarblesText.gameObject.SetActive(false);
         }
+        
+        // sort cards to prevent cheating
+        displayedDeck.Sort((MarbleData a, MarbleData b) => String.Compare(a.MarbleName, b.MarbleName, StringComparison.OrdinalIgnoreCase));
+        
         // Populate the panel with cards 
-        for (int i = 0; i < _viewedMarbles.Count; i++)
+        for (int i = 0; i < displayedDeck.Count; i++)
         {
             GameObject CardUI = Instantiate(CardPrefab, DeckPanel.transform, false);
             Card PrefabCard = CardUI.GetComponent<Card>();
-            PrefabCard.UpdateInformation(_viewedMarbles[i]);
+            PrefabCard.UpdateInformation(displayedDeck[i]);
             PrefabCard.IsInCardSelect = true;
             PrefabCard.SetHandIndex(i);
             DisplayedCards.Add(CardUI);
