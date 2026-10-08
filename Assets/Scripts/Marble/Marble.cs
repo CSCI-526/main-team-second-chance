@@ -30,6 +30,7 @@ public class Marble : MonoBehaviour
     public Collider GetPhysicsCollider() { return physicsCollider; }
 
     public Rigidbody GetMarbleRigidbody() { return rb; }
+    public int GetPoints() { return _pointsValue;}
     
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
@@ -37,6 +38,7 @@ public class Marble : MonoBehaviour
     public bool bIsInsideScoringCircle = false;
     public MarbleTeam Team;
     //public bool cool = false;
+    private int _pointsValue = 1;
 
     public int timesCasted = 0;
 
@@ -45,6 +47,16 @@ public class Marble : MonoBehaviour
     {
         //If not already set in prefab, set Marble properities based on MarbleData
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        MarbleEvents.OnMarbleKnockout += CastKnockoutAbility;
+    }
+
+    private void OnDisable()
+    {
+        MarbleEvents.OnMarbleKnockout -= CastKnockoutAbility;
     }
 
     void FixedUpdate()
@@ -63,7 +75,7 @@ public class Marble : MonoBehaviour
             if (marbleData.AbilityObject != null && otherMarble != null)
             {
                 marbleData.AbilityObject.CollisionCast(this, otherMarble);
-                MarbleEvents.OnMarbleAbilityCasted(this);
+                MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Collision);
             }
             AudioManager.TriggerSound(marbleData.CollisionSounds,transform.position);
         }
@@ -83,7 +95,7 @@ public class Marble : MonoBehaviour
             DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () =>
             {
                 marbleData.AbilityObject.Cast(this);
-                MarbleEvents.OnMarbleAbilityCasted(this);
+                MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Timed);
             },false);
     }
 
@@ -104,6 +116,24 @@ public class Marble : MonoBehaviour
             return marbleData.AbilityObject.RoundEndCast(this);
         }
         return null;
+    }
+
+    public void CastSpawnAbility()
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            marbleData.AbilityObject.SpawnCast(this);
+            MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Spawn);
+        }
+    }
+
+    private void CastKnockoutAbility(Marble knocker, Marble knocked)
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            marbleData.AbilityObject.KnockoutCast(knocker,knocked,this);
+            MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Knockout);
+        }
     }
 
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
@@ -136,6 +166,11 @@ public class Marble : MonoBehaviour
         }
     }
 
+    private void SetMarblePoints(int newPoints)
+    {
+        _pointsValue = newPoints;
+    }
+
     public static Marble CreateMarble(MarbleData marbleData, MarbleTeam team)
     {
         GameObject MarbleObject = Instantiate(marbleData.MarblePrefabOverride != null ? marbleData.MarblePrefabOverride : GameManager.Instance.GetDeckManager().GetBaseMarblePrefab());
@@ -146,6 +181,7 @@ public class Marble : MonoBehaviour
         MarbleIns.rb.drag = marbleData.Drag;
         MarbleIns.SetMarbleTeam(team);
         MarbleIns.SetMarbleSprite(marbleData.sprite);
+        MarbleIns.SetMarblePoints(marbleData.Points);
         if (marbleData.ParticlePrefab != null)
         {
             GameObject particles = Instantiate(marbleData.ParticlePrefab, MarbleIns.transform);
@@ -159,7 +195,7 @@ public class Marble : MonoBehaviour
     {
         if (bIsInsideScoringCircle)
         {
-            GameManager.Instance.UpdateEntityScore(Team, GetMarbleData().Points, false);
+            GameManager.Instance.UpdateEntityScore(Team, _pointsValue, false);
         }
         gameObject.SetActive(false);
     }

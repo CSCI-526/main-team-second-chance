@@ -18,7 +18,7 @@ public class FlingAbility : Ability
         {
             HealthManager manager = marble.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance
                 .GetPlayerManager().GetHealthManager();
-            manager.TakeDamage(other.GetMarbleData().Points * multiplier);
+            manager.TakeDamage(other.GetPoints() * multiplier);
             other.DestroyMarble();
         }
 

@@ -7,6 +7,17 @@ using UnityEngine;
 // Use "ExplosionAbility.cs" and "Explosion" scriptable object as an example
 public class Ability : ScriptableObject
 {
+    public enum AbilityCastType
+    {
+        Spawn,
+        Collision,
+        Timed,
+        Settled,
+        RoundEnd,
+        Knockout
+    }
+    
+    
     public AudioInfo AbilitySound;
     [Range(0f, 10f)] public float abilityTriggerDelay = 0.75f;
     [SerializeField] public int abilityMaxTriggers = 1;
@@ -32,5 +43,15 @@ public class Ability : ScriptableObject
     {
         Debug.Log("Round End Ability Casted: DEFAULT");
         return null;
+    }
+
+    public virtual void SpawnCast(Marble marble)
+    {
+        Debug.Log("Spawn Ability Casted: DEFAULT");
+    }
+
+    public virtual void KnockoutCast(Marble knocker, Marble knocked, Marble self)
+    {
+        Debug.Log("Knockout Ability Casted: DEFAULT");
     }
 }

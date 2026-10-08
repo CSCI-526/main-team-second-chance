@@ -47,11 +47,12 @@ public class MarbleLauncher : MonoBehaviour
         if (!bOverrideWaiting)
         {
             AudioManager.TriggerSound(launchSound,Location);
-            MarbleEvents.OnMarbleLaunch();
+            MarbleEvents.OnMarbleLaunch(MarbleIns);
         }
 
         if (triggerCast)
         {
+            MarbleIns.CastSpawnAbility();
             MarbleIns.CastAbility();
         }
         else

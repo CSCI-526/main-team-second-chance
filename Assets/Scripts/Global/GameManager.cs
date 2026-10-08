@@ -331,7 +331,7 @@ public class GameManager : MonoBehaviour
         //Destroy(MarbleObject.gameObject);
     }
 
-    private void SettleAfterMarbleLaunch()
+    private void SettleAfterMarbleLaunch(Marble marble)
     {
         StartCoroutine(WaitForSettleAfterLaunch());
     }
@@ -355,7 +355,7 @@ public class GameManager : MonoBehaviour
                 Sequence settleSequence = marble.CastSettleAbility();
                 if (settleSequence != null)
                 {
-                    MarbleEvents.OnMarbleAbilityCasted(marble);
+                    MarbleEvents.OnMarbleAbilityCasted(marble,Ability.AbilityCastType.Settled);
                     yield return settleSequence.WaitForCompletion();
                     yield return StartCoroutine(WaitForMarblesToSettle());
                 }
@@ -402,7 +402,7 @@ public class GameManager : MonoBehaviour
             Sequence roundEndSequence = marble.CastRoundEndAbility();
             if (roundEndSequence != null)
             {
-                MarbleEvents.OnMarbleAbilityCasted(marble);
+                MarbleEvents.OnMarbleAbilityCasted(marble,Ability.AbilityCastType.RoundEnd);
                 yield return roundEndSequence.WaitForCompletion();
                 yield return StartCoroutine(WaitForMarblesToSettle());
             }

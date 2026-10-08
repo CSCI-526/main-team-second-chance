@@ -15,17 +15,35 @@ public class ScoringZoneManager : MonoBehaviour
     private Dictionary<Marble, HashSet<ScoringCircle>> _marblesStates = new Dictionary<Marble, HashSet<ScoringCircle>>();
     private List<ScoringCircle> _activeScoringCircles = new List<ScoringCircle>();
     [SerializeField] private GameObject[] arenaGameObjects;
+    private Marble _activeMarble;
 
     private void OnEnable()
     {
         OnZoneStatusChange += UpdateMarbleState;
         MarbleEvents.OnMarbleSpawned += OnMarbleSpawned;
+        MarbleEvents.OnMarbleLaunched += UpdateActiveMarble;
+        MarbleEvents.OnMarbleAbilityCast += CastAbilityUpdateActiveMarble;
     }
 
     private void OnDisable()
     {
         OnZoneStatusChange -= UpdateMarbleState;
         MarbleEvents.OnMarbleSpawned -= OnMarbleSpawned;
+        MarbleEvents.OnMarbleLaunched -= UpdateActiveMarble;
+        MarbleEvents.OnMarbleAbilityCast -= CastAbilityUpdateActiveMarble;
+    }
+
+    private void CastAbilityUpdateActiveMarble(Marble marble, Ability.AbilityCastType castType)
+    {
+        if (castType == Ability.AbilityCastType.Settled || castType == Ability.AbilityCastType.RoundEnd)
+        {
+            _activeMarble = marble;
+        }
+    }
+
+    private void UpdateActiveMarble(Marble marble)
+    {
+        _activeMarble = marble;
     }
     
     
@@ -60,7 +78,12 @@ public class ScoringZoneManager : MonoBehaviour
         
         if (marble.bIsInsideScoringCircle != prevScoringCircleState)
         {
-            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetMarbleData().Points, marble.bIsInsideScoringCircle);
+            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetPoints(), marble.bIsInsideScoringCircle);
+
+            if (prevScoringCircleState && _activeMarble != marble)
+            {
+                MarbleEvents.OnMarbleKnockedOut(_activeMarble,marble);
+            }
         }
     }
 

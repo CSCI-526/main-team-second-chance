@@ -69,7 +69,7 @@ public class CameraManager : MonoBehaviour
             }, 1.0f, 1.5f * Time.timeScale));
     }
     
-    private void OnMarbleLaunched()
+    private void OnMarbleLaunched(Marble marble)
     {
         DOVirtual.DelayedCall(1.5f * Time.timeScale, () => { SetCameraZoom(1.0f); }, false);
     }

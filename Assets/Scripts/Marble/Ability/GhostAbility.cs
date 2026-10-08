@@ -12,7 +12,7 @@ public class GhostAbility : Ability
     private static readonly int MarbleColor = Shader.PropertyToID("_MarbleColor");
     private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
 
-    public override void Cast(Marble marble)
+    public override void SpawnCast(Marble marble)
     {
         marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics","Terrain");
         MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();

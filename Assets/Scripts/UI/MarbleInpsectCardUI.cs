@@ -29,7 +29,7 @@ public class MarbleInpsectCardUI : MonoBehaviour
             description += $"\n\n(Uses left {maxTriggers - marble.timesCasted}/{maxTriggers})";
         }
         descriptionText.SetText(description);
-        string points = marbleData.Points + " PT" + (marbleData.Points > 1 ? "S" : "");
+        string points = marble.GetPoints() + " PT" + (marble.GetPoints() > 1 ? "S" : "");
         pointsText.SetText(points);
         if (GameManager.UseEnergy)
         {
