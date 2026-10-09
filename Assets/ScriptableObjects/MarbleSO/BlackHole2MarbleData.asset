@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
-  m_Name: BlackHoleMarbleData
+  m_Name: BlackHole2MarbleData
   m_EditorClassIdentifier: 
-  MarblePrefabOverride: {fileID: 0}
+  MarblePrefabOverride: {fileID: 8667816103150948522, guid: f3793b80aeab72c43bf31774c6a04070,
+    type: 3}
   sprite: {fileID: 21300000, guid: ae4400ee11a104d179fb831abd748255, type: 3}
   EnergyCost: 1
   Points: 1
-  Mass: 1
+  Mass: 2
   UniformScale: 0.5
   Drag: 0.7
-  MarbleName: Black Hole
-  MarbleDescription: After a delay, this marble sucks in nearby marbles towards this
-    marble's current position.
+  MarbleName: Black Hole 2.0
+  MarbleDescription: Sucks in nearby marbles
   CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
-  ParticlePrefab: {fileID: 1199972911613655881, guid: 9a7f790f1007a48e6849b8c8f543a1c5,
-    type: 3}
-  AbilityObject: {fileID: 11400000, guid: 1d594021edf40444bb618b84365e0915, type: 2}
+  ParticlePrefab: {fileID: 0}
+  AbilityObject: {fileID: 0}

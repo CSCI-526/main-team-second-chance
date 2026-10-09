@@ -17,7 +17,7 @@ public class MarbleData : ScriptableObject
     [Min(0)] public int EnergyCost = 1;
     [Min(0)] public int Points = 1;
     [Min(0.1f)] public float Mass = 1f;
-    [Min(0.1f)] public float UniformScale = 1f;
+    [Min(0.1f)] public float UniformScale = 0.5f;
     [Min(0.1f)] public float Drag = 0.7f;
     public string MarbleName;
     public string MarbleDescription;

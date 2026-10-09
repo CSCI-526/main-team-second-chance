@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewBlackHoleAbility", menuName = "ScriptableObjects/Abilities/BlackHole")]
@@ -10,7 +11,6 @@ public class BlackHoleAbility : Ability
     public override void Cast(Marble marble)
     {
         Debug.Log("Ability Casted: BLACK HOLE");
-        if (marble == null) return;
         BlackHole(marble, radius, power);
     }
 
@@ -18,7 +18,8 @@ public class BlackHoleAbility : Ability
     {
         Vector3 castPos = marble.gameObject.transform.position;
         Collider[] colliders = Physics.OverlapSphere(castPos, radius, LayerMask.GetMask("MarblePhysics"));
-
+        marble.GetMarbleRigidbody().mass *= 4.0f;
+        DOVirtual.DelayedCall(2.0f, () => { marble.GetMarbleRigidbody().mass *= 0.25f; }, false);
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
