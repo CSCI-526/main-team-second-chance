@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b8008d00ed7444991c8729c27c07fa, type: 3}
+  m_Name: LandingZone
+  m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: a2f83be2b70664753a1c1c1239d669f1, type: 2}
+  abilityTriggerDelay: 0.75
+  abilityMaxTriggers: 1
+  LaunchZonePrefab: {fileID: 4709751377446576649, guid: 3aadd74f2baed489c932df52d47f8568,
+    type: 3}
+  spawnTime: 1.5

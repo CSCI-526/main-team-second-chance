@@ -27,10 +27,9 @@ public class GhostAbility : Ability
             return null;
         
         marble.GetPhysicsCollider().excludeLayers = 0;
-        marble.SetMarbleTeam(marble.Team);
-        Sequence rematerializeSequence = DOTween.Sequence();
-        rematerializeSequence.AppendInterval(rematerializeTime * Time.timeScale);
+        // borrow set team to change the color back
+        marble.SetMarblePoints(marble.Team,marble.GetPoints());
         marble.timesCasted++;
-        return rematerializeSequence;
+        return WaitForSecondsSequence(rematerializeTime);
     }
 }

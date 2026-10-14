@@ -286,18 +286,21 @@ public class GameManager : MonoBehaviour
         return shrinkSequence;
     }
     
-    public void UpdateEntityScore(MarbleTeam Team, int points, bool bIsInScoreZone)
+    public void UpdateEntityScore(MarbleTeam Team, int points)
     {
+        if (points == 0)
+            return;
+        
         if (Team == MarbleTeam.Player)
         {
-            playerScore += bIsInScoreZone ? points : -points;
+            playerScore += points;
         }
         else
         {
-            enemyScore += bIsInScoreZone ? points : -points;
+            enemyScore += points;
         }
 
-        if (bIsInScoreZone)
+        if (points > 0)
         {
             AudioManager.TriggerSound(GainPoints, transform.position);
         }

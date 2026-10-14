@@ -3219,21 +3219,6 @@ PrefabInstance:
       propertyPath: Priority
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7016736959944798445, guid: 789933f9e8181354fac7538e8e2d50c0,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7016736959944798445, guid: 789933f9e8181354fac7538e8e2d50c0,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7016736959944798445, guid: 789933f9e8181354fac7538e8e2d50c0,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 7151011619980216258, guid: 789933f9e8181354fac7538e8e2d50c0,
         type: 3}
       propertyPath: m_Radius

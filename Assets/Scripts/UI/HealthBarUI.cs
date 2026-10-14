@@ -36,7 +36,7 @@ public class HealthBarUI : MonoBehaviour
         {
             healthBar.value = (float)curHealth / maxHealth;
             healthText.text = curHealth + "/" + maxHealth;
-            Sequence jump = transform.DOJump(transform.position, 30.0f, 1, 0.3f * Time.timeScale);
+            Sequence jump = transform.DOJump(transform.position, -30.0f, 1, 0.3f * Time.timeScale);
         }
     }
 }

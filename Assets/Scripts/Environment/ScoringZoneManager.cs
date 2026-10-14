@@ -78,7 +78,7 @@ public class ScoringZoneManager : MonoBehaviour
         
         if (marble.bIsInsideScoringCircle != prevScoringCircleState)
         {
-            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetPoints(), marble.bIsInsideScoringCircle);
+            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetPoints() * (marble.bIsInsideScoringCircle ? 1 : -1));
 
             if (prevScoringCircleState && _activeMarble != marble)
             {
@@ -148,6 +148,11 @@ public class ScoringZoneManager : MonoBehaviour
         arenaGameObjects[index].SetActive(true);
         _activeScoringCircles.AddRange(arenaGameObjects[index].GetComponentsInChildren<ScoringCircle>());
         _activeScoringCircles.Sort((a,b) => b.Priority.CompareTo(a.Priority)); // sort descending
+    }
+
+    public void AddScoringZone(GameObject circle)
+    {
+        _activeScoringCircles.AddRange(circle.GetComponentsInChildren<ScoringCircle>());
     }
 
     public void SetScoringCircleScales(float t)

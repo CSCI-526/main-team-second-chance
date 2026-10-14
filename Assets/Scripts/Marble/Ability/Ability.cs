@@ -54,4 +54,16 @@ public class Ability : ScriptableObject
     {
         Debug.Log("Knockout Ability Casted: DEFAULT");
     }
+
+    protected Sequence WaitForSecondsSequence(float time)
+    {
+        float t = 0.0f;
+        Sequence waitSequence = DOTween.Sequence();
+        waitSequence.Append(
+            DOTween.To(() => t, x =>
+            {
+                t = x;
+            }, 1.0f, time * Time.timeScale));
+        return waitSequence;
+    }
 }

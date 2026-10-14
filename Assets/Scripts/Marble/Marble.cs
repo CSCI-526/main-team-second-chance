@@ -139,7 +139,7 @@ public class Marble : MonoBehaviour
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
     #endregion
 
-    public void SetMarbleTeam(MarbleTeam team)
+    private void SetMarbleTeam(MarbleTeam team)
     {
         Team = team;
         
@@ -171,6 +171,32 @@ public class Marble : MonoBehaviour
         _pointsValue = newPoints;
     }
 
+    public void SetMarblePoints(MarbleTeam team, int newPoints)
+    {
+        // only need to update the score if it is currently counted
+        if (bIsInsideScoringCircle)
+        {
+            bool teamSwap = team != Team;
+            if (teamSwap)
+            {
+                // remove the old value from the prev team
+                GameManager.Instance.UpdateEntityScore(Team, -_pointsValue);
+                // add the new value to the new team
+                GameManager.Instance.UpdateEntityScore(team, newPoints);
+            }
+            else
+            {
+                // if not just apply the difference between the new and old points
+                GameManager.Instance.UpdateEntityScore(Team, newPoints - _pointsValue);
+            }
+        }
+
+
+
+        SetMarblePoints(newPoints);
+        SetMarbleTeam(team);
+    }
+
     public static Marble CreateMarble(MarbleData marbleData, MarbleTeam team)
     {
         GameObject MarbleObject = Instantiate(marbleData.MarblePrefabOverride != null ? marbleData.MarblePrefabOverride : GameManager.Instance.GetDeckManager().GetBaseMarblePrefab());
@@ -195,7 +221,7 @@ public class Marble : MonoBehaviour
     {
         if (bIsInsideScoringCircle)
         {
-            GameManager.Instance.UpdateEntityScore(Team, _pointsValue, false);
+            GameManager.Instance.UpdateEntityScore(Team, -_pointsValue);
         }
         gameObject.SetActive(false);
     }
