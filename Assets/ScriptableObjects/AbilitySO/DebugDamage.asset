@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6153bc4ffb6534a1cb1490a845f58c37, type: 3}
   m_Name: DebugDamage
   m_EditorClassIdentifier: 
-  AbilitySound: {fileID: 0}
+  AbilitySound: {fileID: 11400000, guid: f6e130fd02a934e13b8038290901025d, type: 2}
   abilityTriggerDelay: 0.75
   abilityMaxTriggers: 1
   teamToDamage: 0

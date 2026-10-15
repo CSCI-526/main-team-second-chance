@@ -35,6 +35,7 @@ public class ConstellationAbility : Ability
 
     private Sequence DealDamageHelper(Marble marble)
     {
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         HealthManager manager = marble.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance
             .GetPlayerManager().GetHealthManager();
         manager.TakeDamage(constellationDamage);

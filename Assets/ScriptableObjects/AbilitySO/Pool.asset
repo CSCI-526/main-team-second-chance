@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AbilitySound: {fileID: 11400000, guid: f6e130fd02a934e13b8038290901025d, type: 2}
   abilityTriggerDelay: 0.75
-  abilityMaxTriggers: 1
+  abilityMaxTriggers: 0
   knockoutsForDamage: 5
   knockoutBigDamage: 88

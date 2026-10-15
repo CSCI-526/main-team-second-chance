@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DebugLevelData
   m_EditorClassIdentifier: 
   playerDeck:
-  - {fileID: 11400000, guid: ee7f1aeb34e0d44d38716f53f0e262c1, type: 2}
-  - {fileID: 11400000, guid: cb72fe2600c144cf78921dffb939b847, type: 2}
-  - {fileID: 11400000, guid: ad868da20b6744b96912ba840ebe3db8, type: 2}
-  - {fileID: 11400000, guid: ee7f1aeb34e0d44d38716f53f0e262c1, type: 2}
-  - {fileID: 11400000, guid: b5a7d379343254e8f822e6fc97080816, type: 2}
+  - {fileID: 11400000, guid: 75758929869714f5f9505b3982134dc6, type: 2}
+  - {fileID: 11400000, guid: a55a778eb1fc34deb9c7c1cefd6348d3, type: 2}
+  - {fileID: 11400000, guid: 9845cd28181794e028bc380cd5da7bf4, type: 2}
+  - {fileID: 11400000, guid: 164ae3e3cefc6457f9dabaeb40259a74, type: 2}
+  - {fileID: 11400000, guid: 6b6f4294f68e6ca4f95d5860e8e0f2f1, type: 2}
   playerHealth: 999
   enemyDifficulty: 5
   enemyAggressionLevel: 1

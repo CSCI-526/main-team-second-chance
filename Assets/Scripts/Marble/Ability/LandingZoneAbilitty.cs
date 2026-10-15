@@ -19,7 +19,7 @@ public class LandingZoneAbilitty : Ability
 
         Vector3 pos = marble.transform.position;
         pos.y = 0.005f;
-
+        AudioManager.TriggerSound(AbilitySound,pos);
         GameManager.Instance.GetScoringZoneManager().AddScoringZone(Instantiate(LaunchZonePrefab, pos, Quaternion.identity));
 
         return WaitForSecondsSequence(spawnTime);

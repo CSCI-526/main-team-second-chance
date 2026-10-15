@@ -6,35 +6,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewFriendAbility", menuName = "ScriptableObjects/Abilities/Friend")]
 public class FriendAbility : Ability
 {
-    [SerializeField] private float radius = 1.5f;
-
-    public override Sequence SettledCast (Marble marble)
+    public override void CollisionCast(Marble marble, Marble other)
     {
-        Debug.Log("Ability Casted: FRIEND");
-        if (marble == null) return null;
-
-        Vector3 marblePos = marble.gameObject.transform.position;
-        //Collider[] colliders = Physics.OverlapSphere(explosionPos, r);
-
-        //Enumerate between all marbles in scene?
-
-
-        //Use raycasts?
-        RaycastHit[] raycasts = Physics.SphereCastAll(marblePos, radius, Vector3.zero, 0.0f);
-
-        foreach (RaycastHit hit in raycasts)
+        if (marble.Team == other.Team)
         {
-            //Do something with raycasts?
-            //Rigidbody rb = hit.GetComponent<Rigidbody>();
-
-            //if (rb != null && hit.CompareTag("Marble") && hit != marble.GetComponent<SphereCollider>())
-            //    return 0.0f;
+            HealthManager manager = marble.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance
+                .GetPlayerManager().GetHealthManager();
+            manager.TakeDamage(other.GetPoints());
+            AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         }
-
-        //Make friend shaped particles? Need to set up
-        //marble.GetComponentInChildren<ParticleSystem>().Play();
-        AudioManager.TriggerSound(AbilitySound, marble.transform.position);
-        return null;
     }
-
 }

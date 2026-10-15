@@ -19,7 +19,7 @@ public class PoolAbility : Ability
         if (self == knocked)
         {
             _marblesKnockedOut += 1;
-
+            AudioManager.TriggerSound(AbilitySound,self.transform.position);
             if (_marblesKnockedOut >= knockoutsForDamage)
             {
                 HealthManager manager = self.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance

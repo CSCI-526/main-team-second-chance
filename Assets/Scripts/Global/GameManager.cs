@@ -395,22 +395,26 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
-        
-        foreach (var marble in MarblesList)
+
+        if (turnState == TurnState.PlayerEndOfTurn)
         {
-            if (!marble.isActiveAndEnabled)
+            foreach (var marble in MarblesList)
             {
-                continue;
-            }
-            Sequence roundEndSequence = marble.CastRoundEndAbility();
-            if (roundEndSequence != null)
-            {
-                MarbleEvents.OnMarbleAbilityCasted(marble,Ability.AbilityCastType.RoundEnd);
-                yield return roundEndSequence.WaitForCompletion();
-                yield return StartCoroutine(WaitForMarblesToSettle());
+                if (!marble.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                Sequence roundEndSequence = marble.CastRoundEndAbility();
+                if (roundEndSequence != null)
+                {
+                    MarbleEvents.OnMarbleAbilityCasted(marble, Ability.AbilityCastType.RoundEnd);
+                    yield return roundEndSequence.WaitForCompletion();
+                    yield return StartCoroutine(WaitForMarblesToSettle());
+                }
             }
         }
-        
+
         bAreMarblesMoving = false;
         
         if (UseCombatSystem && HasGameEnded())

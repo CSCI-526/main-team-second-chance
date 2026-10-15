@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LandingZoneMarbleData
   m_EditorClassIdentifier: 
   MarblePrefabOverride: {fileID: 0}
-  sprite: {fileID: 21300000, guid: 2a3a731c9bd354ef59603d2fd8ca3f70, type: 3}
+  sprite: {fileID: 21300000, guid: e7c204e64e68b4743a291d47372c5c08, type: 3}
   EnergyCost: 1
   Points: 0
   Mass: 1

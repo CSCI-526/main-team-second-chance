@@ -30,6 +30,7 @@ public class GhostAbility : Ability
         // borrow set team to change the color back
         marble.SetMarblePoints(marble.Team,marble.GetPoints());
         marble.timesCasted++;
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
         return WaitForSecondsSequence(rematerializeTime);
     }
 }

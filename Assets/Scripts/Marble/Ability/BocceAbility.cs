@@ -35,6 +35,7 @@ public class BocceAbility : Ability
         HealthManager manager = marble.Team == MarbleTeam.Player ? GameManager.Instance.GetEnemyManager().GetHealthManager() : GameManager.Instance
             .GetPlayerManager().GetHealthManager();
         manager.TakeDamage((int)(totalDamage * scoreMultiplier));
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
 
         return WaitForSecondsSequence(damageTime);
     }

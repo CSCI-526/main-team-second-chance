@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2554b1b9ca18247298a234be20e28113, type: 3}
   m_Name: Ghost
   m_EditorClassIdentifier: 
-  AbilitySound: {fileID: 0}
+  AbilitySound: {fileID: 11400000, guid: ec4e73af1a50a48c4bb54b4c2d3fa25c, type: 2}
   abilityTriggerDelay: 0
   abilityMaxTriggers: 1
   rematerializeTime: 1.5
+  ghostColor: 0.2

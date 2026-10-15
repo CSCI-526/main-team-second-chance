@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PoolMarbleData
   m_EditorClassIdentifier: 
   MarblePrefabOverride: {fileID: 0}
-  sprite: {fileID: 21300000, guid: 99d7e777338ab8f4ba890cc738794dba, type: 3}
+  sprite: {fileID: 21300000, guid: 0ea48589724fc452aaedd434c2c9510e, type: 3}
   EnergyCost: 1
   Points: 1
   Mass: 1
