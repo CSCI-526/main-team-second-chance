@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 609c9928ea5ec40b2b46532bcdf8d9cd, type: 3}
+  m_Name: Constellation
+  m_EditorClassIdentifier: 
+  AbilitySound: {fileID: 11400000, guid: a2f83be2b70664753a1c1c1239d669f1, type: 2}
+  abilityTriggerDelay: 0.75
+  abilityMaxTriggers: 0
+  damageTime: 2
+  placementAllowance: 0.5
+  constellationDamage: 15

@@ -19,12 +19,7 @@ public class StealAbility : Ability
 
         if (other.Team != marble.Team)
         {
-            if (other.bIsInsideScoringCircle)
-            {
-                GameManager.Instance.UpdateEntityScore(other.Team,other.GetMarbleData().Points, false);
-                GameManager.Instance.UpdateEntityScore(marble.Team,other.GetMarbleData().Points, true);
-            }
-            other.SetMarbleTeam(marble.Team);
+            other.SetMarblePoints(marble.Team,other.GetPoints());
         }
     }
 }

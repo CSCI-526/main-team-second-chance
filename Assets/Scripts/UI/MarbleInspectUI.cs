@@ -13,7 +13,7 @@ public class MarbleInspectUI : MonoBehaviour
         MarbleEvents.OnMarbleAbilityCast += MarbleEventsOnOnMarbleAbilityCast;
     }
 
-    private void MarbleEventsOnOnMarbleAbilityCast(Marble obj)
+    private void MarbleEventsOnOnMarbleAbilityCast(Marble obj, Ability.AbilityCastType castType)
     {
         if (_hoveredMarble == obj)
         {

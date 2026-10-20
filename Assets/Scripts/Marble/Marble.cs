@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum MarbleTeam
 {
@@ -18,7 +19,7 @@ public class Marble : MonoBehaviour
     [SerializeField]
     private MarbleData marbleData;
 
-    public ParticleSystem particleSystem;
+    [FormerlySerializedAs("particleSystem")] public ParticleSystem marbleParticleSystem;
     [SerializeField] private Collider scoringCollider;
     [SerializeField] private Collider physicsCollider;
     [SerializeField] private SpriteRenderer marbleImage;
@@ -29,6 +30,7 @@ public class Marble : MonoBehaviour
     public Collider GetPhysicsCollider() { return physicsCollider; }
 
     public Rigidbody GetMarbleRigidbody() { return rb; }
+    public int GetPoints() { return _pointsValue;}
     
     public string GetMarbleName() { return marbleData ? marbleData.MarbleName : "NULL MARBLE DATA"; }
     public string GetMarbleDescription() { return marbleData ? marbleData.MarbleDescription : "NULL MARBLE DATA"; }
@@ -36,6 +38,7 @@ public class Marble : MonoBehaviour
     public bool bIsInsideScoringCircle = false;
     public MarbleTeam Team;
     //public bool cool = false;
+    private int _pointsValue = 1;
 
     public int timesCasted = 0;
 
@@ -43,22 +46,24 @@ public class Marble : MonoBehaviour
     private void Awake()
     {
         //If not already set in prefab, set Marble properities based on MarbleData
-        if (marbleData != null)
-        {
-            rb = GetComponent<Rigidbody>();
-            var currentScale = this.gameObject.transform.localScale;
+        rb = GetComponent<Rigidbody>();
+    }
 
-            this.gameObject.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
-            rb.mass = marbleData.Mass;
-            rb.drag = marbleData.Drag;
-        }
+    private void OnEnable()
+    {
+        MarbleEvents.OnMarbleKnockout += CastKnockoutAbility;
+    }
+
+    private void OnDisable()
+    {
+        MarbleEvents.OnMarbleKnockout -= CastKnockoutAbility;
     }
 
     void FixedUpdate()
     {
-        if (particleSystem != null)
+        if (marbleParticleSystem != null)
         {
-            particleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
+            marbleParticleSystem.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -70,7 +75,7 @@ public class Marble : MonoBehaviour
             if (marbleData.AbilityObject != null && otherMarble != null)
             {
                 marbleData.AbilityObject.CollisionCast(this, otherMarble);
-                MarbleEvents.OnMarbleAbilityCasted(this);
+                MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Collision);
             }
             AudioManager.TriggerSound(marbleData.CollisionSounds,transform.position);
         }
@@ -90,7 +95,7 @@ public class Marble : MonoBehaviour
             DOVirtual.DelayedCall(marbleData.AbilityObject.abilityTriggerDelay * Time.timeScale, () =>
             {
                 marbleData.AbilityObject.Cast(this);
-                MarbleEvents.OnMarbleAbilityCasted(this);
+                MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Timed);
             },false);
     }
 
@@ -113,10 +118,28 @@ public class Marble : MonoBehaviour
         return null;
     }
 
+    public void CastSpawnAbility()
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            marbleData.AbilityObject.SpawnCast(this);
+            MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Spawn);
+        }
+    }
+
+    private void CastKnockoutAbility(Marble knocker, Marble knocked)
+    {
+        if (marbleData.AbilityObject != null)
+        {
+            marbleData.AbilityObject.KnockoutCast(knocker,knocked,this);
+            MarbleEvents.OnMarbleAbilityCasted(this,Ability.AbilityCastType.Knockout);
+        }
+    }
+
     // ...and we put other abilities here vvv; probably should be a separate script, but this should suffice
     #endregion
 
-    public void SetMarbleTeam(MarbleTeam team)
+    private void SetMarbleTeam(MarbleTeam team)
     {
         Team = team;
         
@@ -133,7 +156,7 @@ public class Marble : MonoBehaviour
         MarbleRenderer.materials[1].SetColor(OutlineColor, team == MarbleTeam.Player ? colorInfo.playerOutlineColor : colorInfo.enemyOutlineColor);
     }
 
-    public void SetMarbleSprite(Sprite sprite)
+    private void SetMarbleSprite(Sprite sprite)
     {
         marbleImage.sprite = sprite;
         if (sprite != null)
@@ -141,5 +164,65 @@ public class Marble : MonoBehaviour
             float scale = 0.25f * 256.0f / sprite.rect.size.y;
             marbleImage.transform.localScale = new Vector3(scale, scale, scale);
         }
+    }
+
+    private void SetMarblePoints(int newPoints)
+    {
+        _pointsValue = newPoints;
+    }
+
+    public void SetMarblePoints(MarbleTeam team, int newPoints)
+    {
+        // only need to update the score if it is currently counted
+        if (bIsInsideScoringCircle)
+        {
+            bool teamSwap = team != Team;
+            if (teamSwap)
+            {
+                // remove the old value from the prev team
+                GameManager.Instance.UpdateEntityScore(Team, -_pointsValue);
+                // add the new value to the new team
+                GameManager.Instance.UpdateEntityScore(team, newPoints);
+            }
+            else
+            {
+                // if not just apply the difference between the new and old points
+                GameManager.Instance.UpdateEntityScore(Team, newPoints - _pointsValue);
+            }
+        }
+
+
+
+        SetMarblePoints(newPoints);
+        SetMarbleTeam(team);
+    }
+
+    public static Marble CreateMarble(MarbleData marbleData, MarbleTeam team)
+    {
+        GameObject MarbleObject = Instantiate(marbleData.MarblePrefabOverride != null ? marbleData.MarblePrefabOverride : GameManager.Instance.GetDeckManager().GetBaseMarblePrefab());
+        Marble MarbleIns = MarbleObject.GetComponent<Marble>();
+        MarbleIns.marbleData = marbleData;
+        MarbleIns.transform.localScale = new Vector3(marbleData.UniformScale, marbleData.UniformScale, marbleData.UniformScale);
+        MarbleIns.rb.mass = marbleData.Mass;
+        MarbleIns.rb.drag = marbleData.Drag;
+        MarbleIns.SetMarbleTeam(team);
+        MarbleIns.SetMarbleSprite(marbleData.sprite);
+        MarbleIns.SetMarblePoints(marbleData.Points);
+        if (marbleData.ParticlePrefab != null)
+        {
+            GameObject particles = Instantiate(marbleData.ParticlePrefab, MarbleIns.transform);
+            MarbleIns.marbleParticleSystem = particles.GetComponent<ParticleSystem>();
+        }
+        
+        return MarbleIns;
+    }
+
+    public void DestroyMarble()
+    {
+        if (bIsInsideScoringCircle)
+        {
+            GameManager.Instance.UpdateEntityScore(Team, -_pointsValue);
+        }
+        gameObject.SetActive(false);
     }
 }

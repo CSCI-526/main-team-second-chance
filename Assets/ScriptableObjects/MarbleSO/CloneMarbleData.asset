@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: CloneMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 8896970215918674003, guid: 288a8225c4a8f3940822e26aac764ed7,
-    type: 3}
+  MarblePrefabOverride: {fileID: 0}
   sprite: {fileID: 21300000, guid: d4b58386805e24e53890811941e46516, type: 3}
   EnergyCost: 2
   Points: 1
@@ -22,5 +21,6 @@ MonoBehaviour:
   Drag: 0.7
   MarbleName: Cloner
   MarbleDescription: Spawns a copy of the first marble hit
-  CollisionSounds: {fileID: 11400000, guid: 4489f1e5e45e05d4184ddb6362601de2, type: 2}
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
+  ParticlePrefab: {fileID: 0}
   AbilityObject: {fileID: 11400000, guid: 60b7dd17f97dcf7469496a79717f96fb, type: 2}

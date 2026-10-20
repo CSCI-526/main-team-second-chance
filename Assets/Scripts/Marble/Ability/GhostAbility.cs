@@ -12,9 +12,9 @@ public class GhostAbility : Ability
     private static readonly int MarbleColor = Shader.PropertyToID("_MarbleColor");
     private static readonly int OutlineColor = Shader.PropertyToID("_OutlineColor");
 
-    public override void Cast(Marble marble)
+    public override void SpawnCast(Marble marble)
     {
-        marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics");
+        marble.GetPhysicsCollider().excludeLayers = LayerMask.GetMask("MarblePhysics","Terrain");
         MeshRenderer MarbleRenderer = marble.GetComponent<MeshRenderer>();
         MarbleRenderer.materials[0].SetColor(MarbleColor,GameManager.Instance.GetColorInfo().playerMarbleColor * ghostColor);
         MarbleRenderer.materials[0].renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
@@ -27,10 +27,10 @@ public class GhostAbility : Ability
             return null;
         
         marble.GetPhysicsCollider().excludeLayers = 0;
-        marble.SetMarbleTeam(marble.Team);
-        Sequence rematerializeSequence = DOTween.Sequence();
-        rematerializeSequence.AppendInterval(rematerializeTime * Time.timeScale);
+        // borrow set team to change the color back
+        marble.SetMarblePoints(marble.Team,marble.GetPoints());
         marble.timesCasted++;
-        return rematerializeSequence;
+        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        return WaitForSecondsSequence(rematerializeTime);
     }
 }

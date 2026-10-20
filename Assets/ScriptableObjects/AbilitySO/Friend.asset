@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714ff7691a7f8a443ad6a7b2af73bad9, type: 3}
   m_Name: Friend
   m_EditorClassIdentifier: 
-  AbilitySound: {fileID: 0}
-  radius: 1.5
+  AbilitySound: {fileID: 11400000, guid: fcaa9e910bea347e5817b0be288becb6, type: 2}
+  abilityTriggerDelay: 0.75
+  abilityMaxTriggers: 0

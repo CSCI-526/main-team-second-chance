@@ -7,10 +7,12 @@ using Random = UnityEngine.Random;
 
 public enum TurnState
 {
+    RoundStart,
     EnemyTurn,
-    WaitingOnPlayerTurn,
+    EnemyEndOfTurn,
     PlayerTurn,
-    WaitingOnEnemyTurn,
+    PlayerEndOfTurn,
+    RoundEnd,
     GameOver,
     CardSelect,
     MatchEnd
@@ -116,6 +118,11 @@ public class GameManager : MonoBehaviour
         return colorInfo;
     }
 
+    public static void SetGamePaused(bool bPaused)
+    {
+        Time.timeScale = bPaused ? 0 : gameSpeed;
+    }
+
     private void OverrideTurnState(TurnState newTurnState)
     {
         turnState = newTurnState;
@@ -138,9 +145,9 @@ public class GameManager : MonoBehaviour
 
     private void IncrementTurnState()
     {
-        if (turnState == TurnState.WaitingOnEnemyTurn)
+        if (turnState == TurnState.RoundEnd)
         {
-            turnState = TurnState.EnemyTurn;
+            turnState = TurnState.RoundStart;
         }
         else
         {
@@ -198,7 +205,7 @@ public class GameManager : MonoBehaviour
                 TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
             }
         }
-        else if (turnState == TurnState.WaitingOnPlayerTurn)
+        else if (turnState == TurnState.EnemyEndOfTurn)
         {
             if (TutorialManager.Instance.ShouldDisplayAnymore)
             {
@@ -209,7 +216,24 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (turnState == TurnState.WaitingOnEnemyTurn || turnState == TurnState.WaitingOnPlayerTurn)
+        if (turnState == TurnState.RoundEnd)
+        {
+            if (UseCombatSystem)
+            {
+                StartCoroutine(RoundEndDamagePhase());
+            }
+            else
+            {
+                DOVirtual.DelayedCall(0.5f * turnSpeed * Time.timeScale, () => { IncrementTurnState(); }, false);
+            }
+        }
+
+        if (turnState == TurnState.RoundStart)
+        {
+            StartCoroutine(RoundStartPhase());
+        }
+
+        if (turnState == TurnState.PlayerEndOfTurn || turnState == TurnState.EnemyEndOfTurn)
         {
             SettleAfterRoundEnd();
         }
@@ -230,11 +254,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnPlayerDied(MarbleTeam team)
+    {
+        _someoneHasDied = true;
+    }
+
     private bool HasGameEnded()
     {
         if (UseCombatSystem)
         {
-            return _enemyHealth <= 0 || _playerHealth <= 0;
+            return EnemyManager.GetHealthManager().GetCurHealth() <= 0 || PlayerManager.GetHealthManager().GetCurHealth() <= 0;
         }
         return numPlayerTurns > gameLength;
         //return PlayerManager.GetPlayerDeck().GetNumMarblesUsed() + 1 > PlayerManager.GetPlayerDeck().GetDeckSize();
@@ -257,18 +286,21 @@ public class GameManager : MonoBehaviour
         return shrinkSequence;
     }
     
-    public void UpdateEntityScore(MarbleTeam Team, int points, bool bIsInScoreZone)
+    public void UpdateEntityScore(MarbleTeam Team, int points)
     {
+        if (points == 0)
+            return;
+        
         if (Team == MarbleTeam.Player)
         {
-            playerScore += bIsInScoreZone ? points : -points;
+            playerScore += points;
         }
         else
         {
-            enemyScore += bIsInScoreZone ? points : -points;
+            enemyScore += points;
         }
 
-        if (bIsInScoreZone)
+        if (points > 0)
         {
             AudioManager.TriggerSound(GainPoints, transform.position);
         }
@@ -297,11 +329,12 @@ public class GameManager : MonoBehaviour
 
     private void RemoveMarble(Marble MarbleObject)
     {
-        MarblesList.Remove(MarbleObject);
-        Destroy(MarbleObject.gameObject);
+        //MarblesToDelete.Add(MarbleObject);
+        //MarblesList.Remove(MarbleObject);
+        //Destroy(MarbleObject.gameObject);
     }
 
-    private void SettleAfterMarbleLaunch()
+    private void SettleAfterMarbleLaunch(Marble marble)
     {
         StartCoroutine(WaitForSettleAfterLaunch());
     }
@@ -312,19 +345,33 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
-        
-        foreach (var marble in MarblesList)
+        // need to make a copy of the list to ensure we don't alter it during the settle routines
+        List<Marble> marblesToSettle = new List<Marble>(MarblesList);
+        foreach (var marble in marblesToSettle)
         {
-            Sequence settleSequence = marble.CastSettleAbility();
-            if (settleSequence != null)
+            if (marble != null)
             {
-                MarbleEvents.OnMarbleAbilityCasted(marble);
-                yield return settleSequence.WaitForCompletion();
-                yield return StartCoroutine(WaitForMarblesToSettle());
+                if (!marble.isActiveAndEnabled)
+                {
+                    continue;
+                }
+                Sequence settleSequence = marble.CastSettleAbility();
+                if (settleSequence != null)
+                {
+                    MarbleEvents.OnMarbleAbilityCasted(marble,Ability.AbilityCastType.Settled);
+                    yield return settleSequence.WaitForCompletion();
+                    yield return StartCoroutine(WaitForMarblesToSettle());
+                }
             }
         }
         
         bAreMarblesMoving = false;
+        
+        if (UseCombatSystem && HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
         if (OneMarblePerTurn)
         {
             IncrementTurnState();
@@ -348,27 +395,34 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f * Time.timeScale * turnSpeed);
         
         yield return StartCoroutine(WaitForMarblesToSettle());
-        
-        foreach (var marble in MarblesList)
+
+        if (turnState == TurnState.PlayerEndOfTurn)
         {
-            Sequence roundEndSequence = marble.CastRoundEndAbility();
-            if (roundEndSequence != null)
+            foreach (var marble in MarblesList)
             {
-                MarbleEvents.OnMarbleAbilityCasted(marble);
-                yield return roundEndSequence.WaitForCompletion();
-                yield return StartCoroutine(WaitForMarblesToSettle());
+                if (!marble.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                Sequence roundEndSequence = marble.CastRoundEndAbility();
+                if (roundEndSequence != null)
+                {
+                    MarbleEvents.OnMarbleAbilityCasted(marble, Ability.AbilityCastType.RoundEnd);
+                    yield return roundEndSequence.WaitForCompletion();
+                    yield return StartCoroutine(WaitForMarblesToSettle());
+                }
             }
         }
-        
+
         bAreMarblesMoving = false;
-        if (TurnState.WaitingOnEnemyTurn == turnState)
+        
+        if (UseCombatSystem && HasGameEnded())
         {
-            _playerHealth -= enemyScore;
-            _enemyHealth -= playerScore;
-            TurnStateEvents.OnHealthUpdated(_playerHealth, _playerMaxHealth,MarbleTeam.Player);
-            TurnStateEvents.OnHealthUpdated(_enemyHealth, _enemyMaxHealth,MarbleTeam.Enemy);
-            NodeManager.Instance.SetPlayerHealth(_playerHealth);
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
         }
+        
         TurnStateEvents.OnMarblesSettled(turnState);
         IncrementTurnState();
     }
@@ -423,6 +477,65 @@ public class GameManager : MonoBehaviour
         CleanupMarbles();
     }
 
+    private IEnumerator RoundEndDamagePhase()
+    {
+        if (playerScore > 0)
+        {
+            EnemyManager.GetHealthManager().TakeDamage(playerScore);
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
+            yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f * turnSpeed * Time.timeScale);
+        }
+
+        if (HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
+
+        if (enemyScore > 0)
+        {
+            PlayerManager.GetHealthManager().TakeDamage(enemyScore);
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
+            yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f * turnSpeed * Time.timeScale);
+        }
+
+        IncrementTurnState();
+    }
+
+    private IEnumerator RoundStartPhase()
+    {
+        bAreMarblesMoving = true;
+        foreach (var startSequence in RoundStartSequences)
+        {
+            Coroutine s = startSequence?.Invoke();
+            if (s != null)
+            { 
+                yield return s;
+                yield return StartCoroutine(WaitForMarblesToSettle());
+            }
+        }
+        
+        // round start abilities would go here
+        
+        bAreMarblesMoving = false;
+        
+        if (UseCombatSystem && HasGameEnded())
+        {
+            OverrideTurnState(TurnState.MatchEnd);
+            yield break;
+        }
+        
+        IncrementTurnState();
+    }
+
     [SerializeField]
     private ScoringZoneManager scoringZoneManager;
     [SerializeField]
@@ -438,21 +551,19 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private ColorInfo colorInfo;
     [SerializeField] private int gameLength = 3;
-    [SerializeField] private float gameSpeed = 2.0f;
-    [SerializeField] private float turnSpeed = 1.5f;
+    private static float gameSpeed = 3.0f;
+    private static float turnSpeed = 1.0f;
 
     private List<Marble> MarblesList = new List<Marble>();
     private List<Marble> MarblesToDelete = new List<Marble>();
     private int playerScore = 0;
     private int enemyScore = 0;
-    private int _playerHealth = 30;
-    private int _playerMaxHealth = 30;
-    private int _enemyHealth = 20;
-    private int _enemyMaxHealth = 20;
+
     private bool bAreMarblesMoving = false;
     private bool bInSuddenDeath = false;
     private int numPlayerTurns = 0;
     private bool _advanceToNextTurn = false;
+    private bool _someoneHasDied = false;
 
     [SerializeField] private AudioInfo GainPoints;
     [SerializeField] private AudioInfo LosePoints;
@@ -462,6 +573,7 @@ public class GameManager : MonoBehaviour
     public static bool UseEnergy;
     public static bool OneMarblePerTurn;
     public static bool UseCombatSystem;
+    public static List<Func<Coroutine>> RoundStartSequences = new List<Func<Coroutine>>();
 
     private void Awake()
     {
@@ -497,23 +609,15 @@ public class GameManager : MonoBehaviour
                 if (PlayerManager)
                 {
                     PlayerManager.InitializePlayerDeck();
-                    _playerHealth = PlayerManager.GetStoredPlayerHealth();
-                    if (_playerHealth < 0)
-                    {
-                        _playerHealth = _playerMaxHealth;
-                        NodeManager.Instance.SetPlayerHealth(_playerHealth);
-                    }
-                    
-                    TurnStateEvents.OnHealthUpdated(_playerHealth, _playerMaxHealth, MarbleTeam.Player);
+                    PlayerManager.GetHealthManager().SetHealth(PlayerManager.GetStoredPlayerHealth(),PlayerManager.GetStoredPlayerMaxHealth());
                 }
 
                 if (EnemyManager)
                 {
-                    _enemyMaxHealth = _enemyHealth = LevelData.GetEnemyHealth();
-                    TurnStateEvents.OnHealthUpdated(_enemyHealth,_enemyMaxHealth, MarbleTeam.Enemy);
+                    EnemyManager.GetHealthManager().SetHealth(LevelData.GetEnemyHealth(),LevelData.GetEnemyHealth());
                     scoringZoneManager.SetArena(LevelData.GetArena());
                     EnemyManager.InitializeLevelData(LevelData.GetAggressionLevel(), LevelData.GetEnemyDifficulty());
-                    ForceUpdateEvents(TurnState.WaitingOnEnemyTurn);
+                    ForceUpdateEvents(TurnState.RoundStart);
                 }
             }
         }
@@ -526,6 +630,7 @@ public class GameManager : MonoBehaviour
         MarbleEvents.OnMarbleSpawned += RegisterMarble;
         TurnStateEvents.OnEndTurnPress += OnEndTurnPress;
         TurnStateEvents.OnTurnProgress += OnTurnProgress;
+        HealthEvents.OnKill += OnPlayerDied;
     }
 
     private void OnDisable()
@@ -535,6 +640,7 @@ public class GameManager : MonoBehaviour
         MarbleEvents.OnMarbleSpawned -= RegisterMarble;
         TurnStateEvents.OnEndTurnPress -= OnEndTurnPress;
         TurnStateEvents.OnTurnProgress -= OnTurnProgress;
+        HealthEvents.OnKill -= OnPlayerDied;
     }
 
     // removes all marbles not within scoring zone
@@ -544,7 +650,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (Marble marble in MarblesList)
             {
-                if (!marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
+                if (marble == null || !marble.isActiveAndEnabled || !marble.bIsInsideScoringCircle || !marble.bIsInsideGameplayCircle)
                 {
                     MarblesToDelete.Add(marble);
                 }
@@ -560,7 +666,7 @@ public class GameManager : MonoBehaviour
             }
             MarblesToDelete.Clear();
         }
-        MarblesToDelete.Clear();
+        //MarblesToDelete.Clear();
     }
     
     // removes all marbles
@@ -593,7 +699,7 @@ public class GameManager : MonoBehaviour
             .EnemyWin;
         if (UseCombatSystem)
         {
-            result = _playerHealth > 0
+            result = PlayerManager.GetHealthManager().GetCurHealth() > 0
                 ? TurnStateEvents.MatchResult.PlayerWin
                 : TurnStateEvents.MatchResult.EnemyWin;
         }

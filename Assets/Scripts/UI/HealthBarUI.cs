@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,12 +22,12 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnEnable()
     {
-        TurnStateEvents.OnHealthUpdate += UpdateHealth;
+        HealthEvents.OnHealthUpdate += UpdateHealth;
     }
 
     private void OnDisable()
     {
-        TurnStateEvents.OnHealthUpdate -= UpdateHealth;
+        HealthEvents.OnHealthUpdate -= UpdateHealth;
     }
 
     private void UpdateHealth(int curHealth, int maxHealth, MarbleTeam team)
@@ -35,6 +36,7 @@ public class HealthBarUI : MonoBehaviour
         {
             healthBar.value = (float)curHealth / maxHealth;
             healthText.text = curHealth + "/" + maxHealth;
+            Sequence jump = transform.DOJump(transform.position, -30.0f, 1, 0.3f * Time.timeScale);
         }
     }
 }

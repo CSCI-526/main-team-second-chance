@@ -175,4 +175,9 @@ public class DeckManager : MonoBehaviour
     {
         return MarbleSpace.MarblePrefabs[0];
     }
+
+    public GameObject GetBaseMarblePrefab()
+    {
+        return MarbleSpace.BaseMarblePrefab;
+    }
 }

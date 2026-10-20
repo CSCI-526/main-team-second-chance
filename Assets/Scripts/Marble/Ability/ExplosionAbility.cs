@@ -28,8 +28,14 @@ public class ExplosionAbility : Ability
                 rb.AddExplosionForce(p, explosionPos, r, 0.0f, ForceMode.Impulse);
         }
 
-        marble.GetComponentInChildren<ParticleSystem>().Play();
+        marble.marbleParticleSystem.Play();
         AudioManager.TriggerSound(AbilitySound,marble.transform.position);
+        CameraEvents.CameraShake(CameraManager.ShakeIntensity.Medium);
         marble.timesCasted++;
+    }
+
+    public float GetRadius()
+    {
+        return radius;
     }
 }

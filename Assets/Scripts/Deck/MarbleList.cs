@@ -4,5 +4,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewMarbleList", menuName = "ScriptableObjects/MarbleList")]
 public class MarbleList : ScriptableObject
 {
+    public GameObject BaseMarblePrefab;
     public List<MarbleData> MarblePrefabs;
 }

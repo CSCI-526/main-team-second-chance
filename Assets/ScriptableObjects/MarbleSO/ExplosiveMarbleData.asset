@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: ExplosiveMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 8667816103150948522, guid: 8050337de420c114c8caa88550de5f0e,
+  MarblePrefab: {fileID: 8587685720238935741, guid: 8bbc196ee2bdc3240be1770d11a9b100,
     type: 3}
   sprite: {fileID: 21300000, guid: 2a3a731c9bd354ef59603d2fd8ca3f70, type: 3}
+  EnergyCost: 1
+  Points: 1
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Bomble
   MarbleDescription: Sends nearby marbles flying after a small delay
   CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
+  ParticlePrefab: {fileID: 5295229486485499466, guid: 38031b4dd620b437f9ef12d50471f8e4,
+    type: 3}
   AbilityObject: {fileID: 11400000, guid: 8fa2399df0d3e8847889fbe810f1fc93, type: 2}

@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: FriendMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 8896970215918674003, guid: 23525d785c1ec664b84cd7a74bfce11d,
-    type: 3}
-  sprite: {fileID: 21300000, guid: 119f93d0bcbf1e743bf5fcf237507d39, type: 3}
+  MarblePrefabOverride: {fileID: 0}
+  sprite: {fileID: 21300000, guid: df915d1e9fb2043b8afa57fa4e3ff760, type: 3}
+  EnergyCost: 2
+  Points: 0
   Mass: 1
   UniformScale: 0.5
   Drag: 0.7
   MarbleName: Friend Marble
-  MarbleDescription: Befriends the nearest enemy marble and adds them to your team.
-  CollisionSounds: {fileID: 11400000, guid: 94a8d4ca3bc09574abf00a329ad195ce, type: 2}
+  MarbleDescription: Whenever this marble hits another marble, deal damage to the
+    enemy.
+  CollisionSounds: {fileID: 11400000, guid: f938db884b53a40e594767128270fb7c, type: 2}
+  ParticlePrefab: {fileID: 0}
   AbilityObject: {fileID: 11400000, guid: 22919a6f9db847846af6a782c287e2f4, type: 2}

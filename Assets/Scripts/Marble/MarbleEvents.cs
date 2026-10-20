@@ -12,10 +12,10 @@ public static class MarbleEvents
     {
         OnMarbleSpawned?.Invoke(marble);
     }
-    public static event Action OnMarbleLaunched;
-    public static void OnMarbleLaunch()
+    public static event Action<Marble> OnMarbleLaunched;
+    public static void OnMarbleLaunch(Marble marble)
     {
-        OnMarbleLaunched?.Invoke();
+        OnMarbleLaunched?.Invoke(marble);
     }
     public static event Action<MarbleTeam, MarbleData, Vector3, float, Vector3, bool, bool> OnMarbleReadyToLaunch;
     public static void MarbleReadyToLaunch(MarbleTeam Team, MarbleData Type, Vector3 Direction, float Force, Vector3 Location, bool bOverrideWaiting, bool bTriggerCast = true)
@@ -35,10 +35,16 @@ public static class MarbleEvents
         OnMarbleHover?.Invoke(marble);
     }
 
-    public static event Action<Marble> OnMarbleAbilityCast;
+    public static event Action<Marble,Ability.AbilityCastType> OnMarbleAbilityCast;
 
-    public static void OnMarbleAbilityCasted(Marble marble)
+    public static void OnMarbleAbilityCasted(Marble marble,Ability.AbilityCastType castType)
     {
-        OnMarbleAbilityCast?.Invoke(marble);
+        OnMarbleAbilityCast?.Invoke(marble,castType);
+    }
+
+    public static event Action<Marble, Marble> OnMarbleKnockout;
+    public static void OnMarbleKnockedOut(Marble knocker, Marble knocked)
+    {
+        OnMarbleKnockout?.Invoke(knocker,knocked);
     }
 }

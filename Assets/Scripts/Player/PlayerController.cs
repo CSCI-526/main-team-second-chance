@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     private Vector3 StartLocationMouse = Vector3.zero;
     private Vector3 EndLocationMouse = Vector3.zero;
-    private LineRenderer LineRenderer;
+    [FormerlySerializedAs("LineRenderer")] [SerializeField]private LineRenderer PowerLineRenderer;
+    [SerializeField]private LineRenderer DottedLineRenderer;
+    [SerializeField] private float targetingRenderHeight = 0.2f;
     private bool bCanShootMarble = false;
     private Marble _hoveredMarble;
 
@@ -31,8 +34,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 MouseOffset = Vector3.zero;
     void Start()
     {
-        LineRenderer = GetComponent<LineRenderer>();
-        LineRenderer.enabled = false;
+        PowerLineRenderer.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -51,6 +53,14 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             GameManager.Instance.ForceUpdateEvents(TurnState.CardSelect);
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CameraEvents.CameraShake(CameraManager.ShakeIntensity.Medium);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CameraEvents.CameraZoomIn();
         }
 #endif
         bool isPlayerTurnAndHasSelectedMarble =
@@ -86,32 +96,36 @@ public class PlayerController : MonoBehaviour
             bCanShootMarble = CanShootMarble(StartLocationMouse);
             // Must set this after CanShootMarble() to avoid problems in IsNotInButtonsZone().
             // Must be higher than 0 so that the line renders above the PlayPlane.
-            StartLocationMouse.y = 1;
+            StartLocationMouse.y = targetingRenderHeight;
             if (bCanShootMarble)
             {
-                LineRenderer.enabled = true;
-                LineRenderer.SetPosition(0, StartLocationMouse);
-                LineRenderer.SetPosition(1, StartLocationMouse);
+                PowerLineRenderer.gameObject.SetActive(true);
+                PowerLineRenderer.SetPosition(0, StartLocationMouse);
+                PowerLineRenderer.SetPosition(1, StartLocationMouse);
+                
+                DottedLineRenderer.SetPosition(0, StartLocationMouse);
+                DottedLineRenderer.SetPosition(1, StartLocationMouse);
             }
         }
         // Currently dragging mouse
         if (Input.GetMouseButton(0))
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Backspace))
             {
-                LineRenderer.enabled = false;
+                PowerLineRenderer.gameObject.SetActive(false);
                 bCanShootMarble = false;
                 MouseIndicator.SetActive(false);
+                CameraEvents.CameraZoomIn();
                 return;
             }
             if (bCanShootMarble)
             {
                 Vector3 MouseSpace = ConvertMouseIntoWorldSpace();
-                MouseSpace.y = 1;
+                MouseSpace.y = targetingRenderHeight;
                 if (Vector3.Distance(StartLocationMouse, MouseSpace) < MAX_DRAG_DISTANCE)
                 {
                     EndLocationMouse = MouseSpace;
-                    EndLocationMouse.y = 1;
+                    EndLocationMouse.y = targetingRenderHeight;
                 }
                 else
                 {
@@ -121,11 +135,13 @@ public class PlayerController : MonoBehaviour
 
                     // modify end location mouse to also match 
                     EndLocationMouse = StartLocationMouse + StartToMouse * MAX_DRAG_DISTANCE;
-                    EndLocationMouse.y = 1;
+                    EndLocationMouse.y = targetingRenderHeight;
                 }
-                LineRenderer.SetPosition(1, EndLocationMouse);
+                PowerLineRenderer.SetPosition(1, EndLocationMouse);
+                Vector3 dotEndPos = Quaternion.Euler(0.0f, 180.0f, 0.0f) * (EndLocationMouse - StartLocationMouse) / 2.0f + StartLocationMouse;
+                DottedLineRenderer.SetPosition(0, dotEndPos);
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = true;
-
+                CameraEvents.UpdateCameraZoom(EndLocationMouse);
             }
             else
             {
@@ -142,7 +158,7 @@ public class PlayerController : MonoBehaviour
             if (bCanShootMarble)
             {
                 GameManager.Instance.GetPlayerManager().isLaunchingMarble = false;
-                LineRenderer.enabled = false;
+                PowerLineRenderer.gameObject.SetActive(false);
                 EndLocationMouse = ConvertMouseIntoWorldSpace();
                 EndLocationMouse.y = 1;
                 Vector3 Direction = StartLocationMouse - EndLocationMouse;
@@ -186,7 +202,7 @@ public class PlayerController : MonoBehaviour
         {
             Cursor.SetCursor(restrictedCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }
-        else if (LineRenderer.enabled)
+        else if (PowerLineRenderer.gameObject.activeInHierarchy)
         {
             Cursor.SetCursor(launchingCursorTexture, new Vector2(12, 12), CursorMode.Auto);
         }

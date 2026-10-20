@@ -20,14 +20,14 @@ public class PauseUI : MonoBehaviour
 
     public void Pause()
     {
-        Time.timeScale = 0.0f;
+        GameManager.SetGamePaused(true);
         pausePanel.SetActive(true);
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }
 
     public void Unpause()
     {
-        Time.timeScale = 2.0f;
+        GameManager.SetGamePaused(false);
         pausePanel.SetActive(false);
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
     }

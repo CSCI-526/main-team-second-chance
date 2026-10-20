@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0360a3cedafd3242ab5038138e6d279, type: 3}
   m_Name: SquarbleMarbleData
   m_EditorClassIdentifier: 
-  MarblePrefab: {fileID: 6395808697406203147, guid: 94bdc20f8d05948e5a81f45a02a857b5,
+  MarblePrefabOverride: {fileID: 6395808697406203147, guid: 94bdc20f8d05948e5a81f45a02a857b5,
     type: 3}
   sprite: {fileID: 21300000, guid: 119f93d0bcbf1e743bf5fcf237507d39, type: 3}
   EnergyCost: 2
@@ -23,4 +23,5 @@ MonoBehaviour:
   MarbleName: Squarble
   MarbleDescription: A heavy square-shaped marble
   CollisionSounds: {fileID: 11400000, guid: 52e120976e02443488dc00cbbf537628, type: 2}
+  ParticlePrefab: {fileID: 0}
   AbilityObject: {fileID: 0}

@@ -15,17 +15,35 @@ public class ScoringZoneManager : MonoBehaviour
     private Dictionary<Marble, HashSet<ScoringCircle>> _marblesStates = new Dictionary<Marble, HashSet<ScoringCircle>>();
     private List<ScoringCircle> _activeScoringCircles = new List<ScoringCircle>();
     [SerializeField] private GameObject[] arenaGameObjects;
+    private Marble _activeMarble;
 
     private void OnEnable()
     {
         OnZoneStatusChange += UpdateMarbleState;
         MarbleEvents.OnMarbleSpawned += OnMarbleSpawned;
+        MarbleEvents.OnMarbleLaunched += UpdateActiveMarble;
+        MarbleEvents.OnMarbleAbilityCast += CastAbilityUpdateActiveMarble;
     }
 
     private void OnDisable()
     {
         OnZoneStatusChange -= UpdateMarbleState;
         MarbleEvents.OnMarbleSpawned -= OnMarbleSpawned;
+        MarbleEvents.OnMarbleLaunched -= UpdateActiveMarble;
+        MarbleEvents.OnMarbleAbilityCast -= CastAbilityUpdateActiveMarble;
+    }
+
+    private void CastAbilityUpdateActiveMarble(Marble marble, Ability.AbilityCastType castType)
+    {
+        if (castType == Ability.AbilityCastType.Settled || castType == Ability.AbilityCastType.RoundEnd)
+        {
+            _activeMarble = marble;
+        }
+    }
+
+    private void UpdateActiveMarble(Marble marble)
+    {
+        _activeMarble = marble;
     }
     
     
@@ -49,28 +67,45 @@ public class ScoringZoneManager : MonoBehaviour
     private void CalculateMarbleState(Marble marble)
     {
         bool prevScoringCircleState = marble.bIsInsideScoringCircle;
-
-        if (_marblesStates.TryGetValue(marble, out HashSet<ScoringCircle> scoringCircles))
+        ZoneType type = ZoneType.Launch;
+        ScoringCircle highestPrio = GetHighestPriorityCircle(marble);
+        if (highestPrio != null)
         {
-            int highestPrio = -1;
-            ZoneType type = ZoneType.Launch;
-
-            foreach (var scoringCircle in scoringCircles)
-            {
-                if (scoringCircle.Priority > highestPrio)
-                {
-                    highestPrio = scoringCircle.Priority;
-                    type = scoringCircle.Type;
-                }
-            }
-            
-            marble.bIsInsideScoringCircle = type == ZoneType.Scoring;
+            type = highestPrio.Type;
         }
-
+            
+        marble.bIsInsideScoringCircle = type == ZoneType.Scoring;
+        
         if (marble.bIsInsideScoringCircle != prevScoringCircleState)
         {
-            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetMarbleData().Points, marble.bIsInsideScoringCircle);
+            GameManager.Instance.UpdateEntityScore(marble.Team, marble.GetPoints() * (marble.bIsInsideScoringCircle ? 1 : -1));
+
+            if (prevScoringCircleState && _activeMarble != marble)
+            {
+                MarbleEvents.OnMarbleKnockedOut(_activeMarble,marble);
+            }
         }
+    }
+
+    public ScoringCircle GetHighestPriorityCircle(Marble marble)
+    {
+        ScoringCircle highestPrio = null;
+        if (_marblesStates.TryGetValue(marble, out HashSet<ScoringCircle> scoringCircles))
+        {
+            foreach (var scoringCircle in scoringCircles)
+            {
+                if (highestPrio == null)
+                {
+                    highestPrio = scoringCircle;
+                }
+                else if (scoringCircle.Priority > highestPrio.Priority)
+                {
+                    highestPrio = scoringCircle;
+                }
+            }
+        }
+
+        return highestPrio;
     }
 
     private void OnMarbleSpawned(Marble marble)
@@ -115,6 +150,11 @@ public class ScoringZoneManager : MonoBehaviour
         _activeScoringCircles.Sort((a,b) => b.Priority.CompareTo(a.Priority)); // sort descending
     }
 
+    public void AddScoringZone(GameObject circle)
+    {
+        _activeScoringCircles.AddRange(circle.GetComponentsInChildren<ScoringCircle>());
+    }
+
     public void SetScoringCircleScales(float t)
     {
         foreach (var scoringCircle in _activeScoringCircles)
@@ -127,27 +167,65 @@ public class ScoringZoneManager : MonoBehaviour
     {
         // project the position down
         launchPosition.y = 0.0f;
-
+        ScoringCircle highestPrio = null;
         for(int i = 0; i < _activeScoringCircles.Count; ++i)
         {
             Collider circleCollider = _activeScoringCircles[i].GetScoringCollider();
             if (circleCollider != null)
             {
                 Vector3 closestPoint = circleCollider.ClosestPoint(launchPosition);
-                if ((closestPoint-launchPosition).sqrMagnitude < 0.01f)
+                if ((closestPoint - launchPosition).sqrMagnitude < 0.01f)
                 {
-                    if (_activeScoringCircles[i].Type == ZoneType.Blocked ||
-                        _activeScoringCircles[i].Type == ZoneType.Scoring)
+                    if (highestPrio == null)
                     {
-                        return false;
+                        highestPrio = _activeScoringCircles[i];
                     }
-
-                    return true;
+                    else if (_activeScoringCircles[i].Priority > highestPrio.Priority)
+                    {
+                        highestPrio = _activeScoringCircles[i];
+                    }
                 }
             }
         }
-
-        return true;
+        
+        if (highestPrio != null && (highestPrio.Type == ZoneType.Blocked || highestPrio.Type == ZoneType.Scoring))
+        {
+            return false;
+        }
+        
+        return !Physics.Raycast(launchPosition - new Vector3(0.0f,2.0f,0.0f), Vector3.up, 5.0f, LayerMask.GetMask("Terrain"));
+    }
+    
+    public bool CheckInScoringZone(Vector3 position)
+    {
+        // project the position down
+        position.y = 0.0f;
+        ScoringCircle highestPrio = null;
+        for(int i = 0; i < _activeScoringCircles.Count; ++i)
+        {
+            Collider circleCollider = _activeScoringCircles[i].GetScoringCollider();
+            if (circleCollider != null)
+            {
+                Vector3 closestPoint = circleCollider.ClosestPoint(position);
+                if ((closestPoint - position).sqrMagnitude < 0.01f)
+                {
+                    if (highestPrio == null)
+                    {
+                        highestPrio = _activeScoringCircles[i];
+                    }
+                    else if (_activeScoringCircles[i].Priority > highestPrio.Priority)
+                    {
+                        highestPrio = _activeScoringCircles[i];
+                    }
+                }
+            }
+        }
+        
+        if (highestPrio != null && highestPrio.Type == ZoneType.Scoring)
+        {
+            return true;
+        }
+        return false;
     }
 
     public Collider GetDefaultScoringZone()
