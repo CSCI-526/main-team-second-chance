@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,10 @@ public enum TutorialPhases
 {
     SELECT_MARBLE = 0,
     LAUNCH_MARBLE = 1,
-    SCORE_POINTS = 2,
-    DRAW_CARD = 3,
-    END_GAME = 4,
+    ENERGY_SPENDING = 2,
+    ENDING_TURN = 3,
+    DAMAGING_ENEMY = 4,
+    END_GAME = 5,
 }
 public class TutorialManager : MonoBehaviour
 {
@@ -26,6 +28,9 @@ public class TutorialManager : MonoBehaviour
         get { return bIsLaunchCalled; }
         set { bIsLaunchCalled = value; }
     }
+
+    private bool SpentEnergy = false;
+    
     private void OnLevelWasLoaded(int level)
     {
         // if a level is loaded and we are not in endgame and we can still display, we reset 
@@ -59,5 +64,35 @@ public class TutorialManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             Instance = this;
         }
+    }
+
+    private void OnEnable()
+    {
+        if (TutorialManager.Instance.ShouldDisplayAnymore)
+        {
+            EnergyEvents.OnEnergyUpdate += EnergyEventsOnOnEnergyUpdate;
+        }
+    }
+
+    private void EnergyEventsOnOnEnergyUpdate(int obj)
+    {
+        if (!SpentEnergy && obj < 3)
+        {
+            TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
+            TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
+            SpentEnergy = true;
+        }
+        else if (obj == 0)
+        {
+            TutorialEvents.DoTutorialItemDisplayed(TutorialManager.Instance.CurrentTutorialPhase);
+            TutorialEvents.DoTryDisplayTutorialItem(TutorialManager.Instance.CurrentTutorialPhase);
+            EnergyEvents.OnEnergyUpdate -= EnergyEventsOnOnEnergyUpdate;
+        }
+        
+    }
+
+    private void OnDisable()
+    {
+        EnergyEvents.OnEnergyUpdate -= EnergyEventsOnOnEnergyUpdate;
     }
 }
