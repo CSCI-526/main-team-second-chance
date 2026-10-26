@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDeck:
   - {fileID: 11400000, guid: 75758929869714f5f9505b3982134dc6, type: 2}
-  - {fileID: 11400000, guid: a55a778eb1fc34deb9c7c1cefd6348d3, type: 2}
-  - {fileID: 11400000, guid: 9845cd28181794e028bc380cd5da7bf4, type: 2}
-  - {fileID: 11400000, guid: 164ae3e3cefc6457f9dabaeb40259a74, type: 2}
+  - {fileID: 11400000, guid: b7191bb3487304c259bbc879faf74a3d, type: 2}
+  - {fileID: 11400000, guid: 6b6f4294f68e6ca4f95d5860e8e0f2f1, type: 2}
+  - {fileID: 11400000, guid: 44588121eb2ac45ceaa14fae7d9bcf7e, type: 2}
   - {fileID: 11400000, guid: 6b6f4294f68e6ca4f95d5860e8e0f2f1, type: 2}
   playerHealth: 999
   enemyDifficulty: 5
   enemyAggressionLevel: 1
-  enemyDeckType: 0
+  enemyDeckType: 9
   enemyName: The Defaulter
   enemyHealth: 999
   arena: 0

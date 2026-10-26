@@ -13,12 +13,11 @@ public class StealAbility : Ability
         {
             return;
         }
-
-        marble.timesCasted++;
-        AudioManager.TriggerSound(AbilitySound,marble.transform.position);
-
+        
         if (other.Team != marble.Team)
         {
+            marble.timesCasted++;
+            AudioManager.TriggerSound(AbilitySound,marble.transform.position);
             other.SetMarblePoints(marble.Team,other.GetPoints());
         }
     }
