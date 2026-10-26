@@ -506,6 +506,10 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f * turnSpeed * Time.timeScale);
         }
+        
+        AnalyticsManager.SendMetric("round_result", 
+            new AnalyticsManager.RoundEndMetric(PlayerManager.GetHealthManager().GetCurHealth(),EnemyManager.GetHealthManager().GetCurHealth(),playerScore,enemyScore));
+
 
         IncrementTurnState();
     }
@@ -704,9 +708,12 @@ public class GameManager : MonoBehaviour
                 : TurnStateEvents.MatchResult.EnemyWin;
         }
 
-        AnalyticsManager.SendMetric("round_result", new AnalyticsManager.IntMetric(
-            playerScore - enemyScore
-        ));
+        var metric = new AnalyticsManager.RoundEndMetric(PlayerManager.GetHealthManager().GetCurHealth(),
+            EnemyManager.GetHealthManager().GetCurHealth(), playerScore, enemyScore);
+        AnalyticsManager.SendMetric("game_result", metric
+            );
+        AnalyticsManager.SendMetric("round_result", metric
+        );
 
         TurnStateEvents.OnMatchEnded(result);
         

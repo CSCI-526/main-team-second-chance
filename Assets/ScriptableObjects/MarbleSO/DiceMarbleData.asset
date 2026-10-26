@@ -17,8 +17,8 @@ MonoBehaviour:
   sprite: {fileID: 0}
   EnergyCost: 2
   Points: 1
-  Mass: 0.75
-  UniformScale: 0.5
+  Mass: 0.5
+  UniformScale: 0.3
   Drag: 0.7
   MarbleName: Diceble
   MarbleDescription: Worth points equal to the upright side.

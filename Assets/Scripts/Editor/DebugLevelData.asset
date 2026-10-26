@@ -22,7 +22,7 @@ MonoBehaviour:
   enemyDifficulty: 5
   enemyAggressionLevel: 1
   enemyDeckType: 9
-  enemyName: The Defaulter
+  enemyName: testing
   enemyHealth: 999
   arena: 0
   levelDifficulty: 1

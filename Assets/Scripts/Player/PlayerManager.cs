@@ -68,7 +68,7 @@ public class PlayerManager : MonoBehaviour
         //PlayerDeck.AddMarbleToDeck(Team, gameObject);
         NodeManager.Instance.GetPlayerDeck().Add(gameObject);
 
-        AnalyticsManager.SendMetric("new_marble_choice", new AnalyticsManager.StringMetric(
+        AnalyticsManager.SendMetric("marble_added", new AnalyticsManager.CardAddedMetric(
                 gameObject.MarbleName
         ));
 

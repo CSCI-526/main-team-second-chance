@@ -1714,6 +1714,11 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1388115626478669101, guid: 8bbc196ee2bdc3240be1770d11a9b100,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1443773429252767011, guid: 8bbc196ee2bdc3240be1770d11a9b100,
         type: 3}
       propertyPath: m_IsActive
