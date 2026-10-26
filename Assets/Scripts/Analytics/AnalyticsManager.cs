@@ -6,26 +6,67 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class AnalyticsManager : MonoBehaviour
-{
-    public struct BoolMetric
+{ 
+    public struct CardAddedMetric
     {
-        public bool value;
-        public BoolMetric(bool val) { value = val; }
+        public string card;
+        public CardAddedMetric(string val) { card = val; }
     }
-    public struct StringMetric
+    public struct RoundEndMetric
     {
-        public string value;
-        public StringMetric(string val) { value = val; }
+        public int playerHealth;
+        public int enemyHealth;
+        public int playerScore;
+        public int enemyScore;
+        public int round;
+        public EnemyRoomMetric room;
+        public RoundEndMetric(int player, int enemy, int pScore, int eScore)
+        {
+            playerHealth = player;
+            enemyHealth = enemy;
+            playerScore = pScore;
+            enemyScore = eScore;
+            round = GameManager.Instance.GetTurnCount();;
+            room = EnemyRoomMetric.GetEnemyRoomMetrics();
+        }
     }
-    public struct IntMetric
+    public struct MarbleLaunchMetric
     {
-        public int value;
-        public IntMetric(int val) { value = val; }
+        public string type;
+        public Vector2 position;
+        public Vector2 direction;
+        public EnemyRoomMetric room;
+        public int round;
+        public MarbleTeam team;
+
+        public MarbleLaunchMetric(string marbleType, Vector2 pos, Vector2 dir, MarbleTeam owner)
+        {
+            type = marbleType;
+            position = pos;
+            direction = dir;
+            room = EnemyRoomMetric.GetEnemyRoomMetrics();
+            round = GameManager.Instance.GetTurnCount();
+            team = owner;
+        }
     }
-    public struct Vector2Metric
+
+    public struct EnemyRoomMetric
     {
-        public Vector2 value;
-        public Vector2Metric(Vector2 val) { value = val; }
+        public string enemyName;
+        public int arenaId;
+
+        public EnemyRoomMetric(string name, int id)
+        {
+            enemyName = name;
+            arenaId = id;
+        }
+
+        public static EnemyRoomMetric GetEnemyRoomMetrics()
+        {
+            LevelDataSO level = NodeManager.Instance.GetLevelData();
+            
+            return new EnemyRoomMetric(level.GetEnemyName(), level.GetArena());
+        }
     }
 
     private struct MetricItem
@@ -40,7 +81,7 @@ public class AnalyticsManager : MonoBehaviour
         }
     }
 
-    private const string PROJECT_ID = "team-second-chance";
+    private const string PROJECT_ID = "marble-rivals";
     private const string API_KEY = "AIzaSyAoXTy6p6rtSSHtduwgQ86zpAdlCNtq08w";
     private static readonly string BASE_URL = $"https://{PROJECT_ID}-default-rtdb.firebaseio.com";
 
@@ -164,13 +205,13 @@ public class AnalyticsManager : MonoBehaviour
             yield break;
         }
 
-        string deviceId = GetDeviceIdentifier();
-        string sessionId = GetSessionId();
+        string deviceId = "user" + GetDeviceIdentifier();
+        string sessionId = "session" + GetSessionId();
         string timestamp = DateTime.UtcNow.ToString("o");
         string entryId = Guid.NewGuid().ToString();
 
         string databasePath = $"{GAME_VERSION}/{deviceId}/{sessionId}/{metricId}/{entryId}.json";
-        string fullUrl = $"{BASE_URL}/{databasePath}?auth={API_KEY}";
+        string fullUrl = $"{BASE_URL}/{databasePath}";//?auth={API_KEY}";
         string metricDataJson = JsonUtility.ToJson(metricData);
 
         string jsonPayload = $@"{{

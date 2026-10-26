@@ -33,13 +33,13 @@ public class TutorialCanvasUI : MonoBehaviour
     }
     private void OnEnable()
     {
-        //TutorialEvents.OnTutorialItemDisplayed += DisplayedTutorialItem;
-        //TutorialEvents.OnTryDisplayTutorialItem += TryDisplayTutorialItem;
+        TutorialEvents.OnTutorialItemDisplayed += DisplayedTutorialItem;
+        TutorialEvents.OnTryDisplayTutorialItem += TryDisplayTutorialItem;
     }
     private void OnDisable()
     {
-        //TutorialEvents.OnTutorialItemDisplayed -= DisplayedTutorialItem;
-        //TutorialEvents.OnTryDisplayTutorialItem -= TryDisplayTutorialItem;
+        TutorialEvents.OnTutorialItemDisplayed -= DisplayedTutorialItem;
+        TutorialEvents.OnTryDisplayTutorialItem -= TryDisplayTutorialItem;
     }
 
     void Update()
@@ -57,10 +57,12 @@ public class TutorialCanvasUI : MonoBehaviour
         newPosition.y = newPosY;
 
         TutorialItem.transform.position = newPosition;
+        /*
         TutorialItem.fontMaterial.SetFloat(
             ShaderUtilities.ID_GlowPower, 
             Mathf.Lerp(GlowPowerStart, GlowPowerEnd, AnimTimer / ANIM_DURATION)
             );
+            */
         
         AnimTimer += Time.deltaTime;
         if (AnimTimer >= ANIM_DURATION) 
@@ -85,7 +87,7 @@ public class TutorialCanvasUI : MonoBehaviour
             // if it's a bad phase, we just hide all tutorials (JIC)
             foreach (var tutorial in TutorialTexts)
             {
-                tutorial.alpha = 0.0f;
+                tutorial.gameObject.SetActive(false);
             }
             return;
         }
@@ -101,7 +103,7 @@ public class TutorialCanvasUI : MonoBehaviour
 
         if (TutorialTextIndex < TutorialTexts.Length)
         {
-            TutorialTexts[TutorialTextIndex].alpha = 0.0f;
+            TutorialTexts[TutorialTextIndex].gameObject.SetActive(false);
         }
 
         // Now we update the phase of the tutorial manager to go to next
@@ -118,7 +120,7 @@ public class TutorialCanvasUI : MonoBehaviour
             // if it's a bad phase, we just hide all tutorials (JIC)
             foreach (var tutorial in TutorialTexts)
             {
-                tutorial.alpha = 0.0f;
+                tutorial.gameObject.SetActive(false);
             }
             return;
         }
@@ -138,7 +140,7 @@ public class TutorialCanvasUI : MonoBehaviour
             TextMeshProUGUI TutorialItem = TutorialTexts[TutorialTextIndex];
 
 
-            TutorialItem.alpha = 1.0f;
+            TutorialItem.gameObject.SetActive(true);
             PosYStart = TutorialItem.transform.position.y;
             PosYEnd = PosYStart + POS_Y_OFFSET;
             TutorialItem.fontMaterial.SetFloat(ShaderUtilities.ID_GlowOuter, 1f);

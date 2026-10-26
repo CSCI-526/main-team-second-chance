@@ -48,6 +48,9 @@ public class MarbleLauncher : MonoBehaviour
         {
             AudioManager.TriggerSound(launchSound,Location);
             MarbleEvents.OnMarbleLaunch(MarbleIns);
+            
+            AnalyticsManager.SendMetric("marble_launch", new AnalyticsManager.MarbleLaunchMetric(
+                Type.MarbleName, new Vector2(Location.x, Location.z), new Vector2(Direction.x,Direction.z),Team));
         }
 
         if (triggerCast)
@@ -58,12 +61,6 @@ public class MarbleLauncher : MonoBehaviour
         else
         {
             MarbleIns.timesCasted = MarbleIns.GetMarbleData().AbilityObject.abilityMaxTriggers;
-        }
-
-        if (Team == MarbleTeam.Player)
-        {
-            AnalyticsManager.SendMetric("launch_position", new AnalyticsManager.Vector2Metric(
-                new Vector2(Location.x, Location.z)));
         }
     }
 }

@@ -55,7 +55,11 @@ public class DeckManager : MonoBehaviour
         for (int i = 0; i < secondHalf; ++i)
         {
             int randomIndex = Random.Range(1, MarbleSpace.MarblePrefabs.Count);
-            marbles.Add(MarbleSpace.MarblePrefabs[randomIndex]);
+            MarbleData m = MarbleSpace.MarblePrefabs[randomIndex];
+            marbles.Add(m);
+            AnalyticsManager.SendMetric("marble_added", new AnalyticsManager.CardAddedMetric(
+                m.MarbleName
+            ));
         }
 
 

@@ -6,6 +6,7 @@ public class TitleUI : MonoBehaviour
 {
     public void Play()
     {
+        AnalyticsManager.NewSession();
         // we move to the level select now instead
         SceneManagerScript.Instance.loadSceneByIndex(2);
         AudioManager.TriggerSound(AudioManager.Instance.ClickSound,Vector3.zero);
