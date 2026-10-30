@@ -30,7 +30,7 @@ public class DebugSettingsUI : MonoBehaviour
         drawHandToggle.isOn = PlayerPrefs.GetInt("DrawNewHand") == 1;
         combatToggle.isOn = PlayerPrefs.GetInt("UseCombat") == 1;
 
-        versionText.text = "version " + AnalyticsManager.GAME_VERSION;
+        versionText.text = "v" + AnalyticsManager.GAME_VERSION;
         DontDestroyOnLoad(textCanvas);
     }
 
