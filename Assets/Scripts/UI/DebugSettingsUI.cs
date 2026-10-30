@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,12 +11,27 @@ public class DebugSettingsUI : MonoBehaviour
     [SerializeField] private Toggle marbleToggle;
     [SerializeField] private Toggle combatToggle;
     [SerializeField] private Toggle drawHandToggle;
+    [SerializeField] private TMP_Text versionText;
+    [SerializeField] private GameObject textCanvas;
     public void Awake()
     {
+        if (PlayerPrefs.GetInt("EverBeenOpened") == 0)
+        {
+            PlayerPrefs.SetInt("UseEnergy",1);
+            PlayerPrefs.SetInt("OneMarble",0);
+            PlayerPrefs.SetInt("DrawNewHand",1);
+            PlayerPrefs.SetInt("UseCombat",1);
+            PlayerPrefs.SetInt("EverBeenOpened",1);
+        }
+        
+        
         energyToggle.isOn = PlayerPrefs.GetInt("UseEnergy") == 1;
         marbleToggle.isOn = PlayerPrefs.GetInt("OneMarble") == 1;
         drawHandToggle.isOn = PlayerPrefs.GetInt("DrawNewHand") == 1;
         combatToggle.isOn = PlayerPrefs.GetInt("UseCombat") == 1;
+
+        versionText.text = "v" + AnalyticsManager.GAME_VERSION;
+        DontDestroyOnLoad(textCanvas);
     }
 
     public void SetEnergyUse(bool useEnergy)

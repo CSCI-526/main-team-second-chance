@@ -85,7 +85,7 @@ public class AnalyticsManager : MonoBehaviour
     private const string API_KEY = "AIzaSyAoXTy6p6rtSSHtduwgQ86zpAdlCNtq08w";
     private static readonly string BASE_URL = $"https://{PROJECT_ID}-default-rtdb.firebaseio.com";
 
-    private const int GAME_VERSION = 3; // increment this as we release new versions of the game
+    public const string GAME_VERSION = "0.3.1"; // increment this as we release new versions of the game
 
     private const string DEVICE_ID_KEY = "FirebaseMetrics_DeviceId";
 

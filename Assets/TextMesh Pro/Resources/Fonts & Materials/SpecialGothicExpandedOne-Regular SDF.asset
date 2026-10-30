@@ -2762,7 +2762,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _OutlineWidth: 0.1
+    - _OutlineWidth: 0.177
     - _ScaleRatioA: 0.8333333
     m_Colors: []
   m_BuildTextureStacks: []
