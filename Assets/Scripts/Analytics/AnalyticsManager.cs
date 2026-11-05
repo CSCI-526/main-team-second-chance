@@ -202,15 +202,16 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (Application.isEditor)
         {
-            yield break;
+            //yield break;
         }
 
         string deviceId = "user" + GetDeviceIdentifier();
         string sessionId = "session" + GetSessionId();
         string timestamp = DateTime.UtcNow.ToString("o");
         string entryId = Guid.NewGuid().ToString();
-
-        string databasePath = $"{GAME_VERSION}/{deviceId}/{sessionId}/{metricId}/{entryId}.json";
+        string version = GAME_VERSION.Replace(".", "_");
+        
+        string databasePath = $"{version}/{deviceId}/{sessionId}/{metricId}/{entryId}.json";
         string fullUrl = $"{BASE_URL}/{databasePath}";//?auth={API_KEY}";
         string metricDataJson = JsonUtility.ToJson(metricData);
 
