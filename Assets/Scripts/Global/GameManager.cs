@@ -481,6 +481,7 @@ public class GameManager : MonoBehaviour
     {
         if (playerScore > 0)
         {
+            yield return StartCoroutine(DamageVFXSequence(_enemyHealthTarget, MarbleTeam.Player));
             EnemyManager.GetHealthManager().TakeDamage(playerScore);
             CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
             yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
@@ -498,6 +499,7 @@ public class GameManager : MonoBehaviour
 
         if (enemyScore > 0)
         {
+            yield return StartCoroutine(DamageVFXSequence(_playerHealthTarget, MarbleTeam.Enemy));
             PlayerManager.GetHealthManager().TakeDamage(enemyScore);
             CameraEvents.CameraShake(CameraManager.ShakeIntensity.Low);
             yield return new WaitForSeconds(1.0f * turnSpeed * Time.timeScale);
@@ -512,6 +514,25 @@ public class GameManager : MonoBehaviour
 
 
         IncrementTurnState();
+    }
+
+    private IEnumerator DamageVFXSequence(Vector3 target, MarbleTeam teamDealingDamage)
+    {
+        Sequence s = null;
+        foreach (var marble in MarblesList)
+        {
+            if (marble.Team == teamDealingDamage)
+            {
+                DamageVFX vfx = Instantiate(damageVFX, marble.transform.position, Quaternion.identity).GetComponent<DamageVFX>();
+                s = vfx.FlyToTarget(target, 0.75f,
+                    teamDealingDamage == MarbleTeam.Player ? colorInfo.playerUIColor : colorInfo.enemyUIColor);
+            }
+        }
+
+        if (s != null)
+        {
+            yield return s.WaitForCompletion();
+        }
     }
 
     private IEnumerator RoundStartPhase()
@@ -573,6 +594,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioInfo LosePoints;
     [SerializeField] private AudioInfo SuddenDeath;
 
+    [SerializeField] private GameObject damageVFX;
+    [SerializeField] private RectTransform playerHealthLocation;
+    [SerializeField] private RectTransform enemyHealthLocation;
+
+    private Vector3 _playerHealthTarget;
+    private Vector3 _enemyHealthTarget;
+
     public static bool DrawnNewHandEachTurn;
     public static bool UseEnergy;
     public static bool OneMarblePerTurn;
@@ -596,6 +624,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Time.timeScale = gameSpeed;
+
+        _playerHealthTarget = Camera.main.ScreenToWorldPoint(playerHealthLocation.position);
+        _playerHealthTarget.y = 1.0f;
+        _enemyHealthTarget = Camera.main.ScreenToWorldPoint(enemyHealthLocation.position);
+        _enemyHealthTarget.y = 1.0f;
         
         if (!scoringZoneManager)
         {

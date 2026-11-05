@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: DebugLevelData
   m_EditorClassIdentifier: 
   playerDeck:
-  - {fileID: 11400000, guid: 3ed04d5157a8244be8fd488cec7ccb3e, type: 2}
-  - {fileID: 11400000, guid: 1a2ee737ae90c0849aafb1ee834ec659, type: 2}
   - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
-  - {fileID: 11400000, guid: 44588121eb2ac45ceaa14fae7d9bcf7e, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
+  - {fileID: 11400000, guid: 4b52109e01deb9c49ae8c195c05dd6d8, type: 2}
   - {fileID: 11400000, guid: 1c309847f3ae9cf46b8d60100a5dc93b, type: 2}
   playerHealth: 999
-  enemyDifficulty: 5
-  enemyAggressionLevel: 1
-  enemyDeckType: 2
-  enemyName: testing
-  enemyHealth: 999
+  enemyDifficulty: 10
+  enemyAggressionLevel: 0
+  enemyDeckType: 0
+  enemyName: The Defaulter
+  enemyHealth: 18
   arena: 0
   levelDifficulty: 1

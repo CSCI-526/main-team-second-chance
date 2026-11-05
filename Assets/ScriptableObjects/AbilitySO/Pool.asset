@@ -16,4 +16,4 @@ MonoBehaviour:
   abilityTriggerDelay: 0.75
   abilityMaxTriggers: 0
   knockoutsForDamage: 5
-  knockoutBigDamage: 88
+  knockoutBigDamage: 99
