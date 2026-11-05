@@ -202,7 +202,7 @@ public class AnalyticsManager : MonoBehaviour
     {
         if (Application.isEditor)
         {
-            //yield break;
+            yield break;
         }
 
         string deviceId = "user" + GetDeviceIdentifier();
